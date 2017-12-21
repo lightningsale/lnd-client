@@ -2,13 +2,15 @@
 
 namespace LightningSale\LndRest\Normalizer;
 
+use LightningSale\LndRest\Jane\ReferenceNormalizer;
+
 class NormalizerFactory
 {
     public static function create()
     {
         $normalizers = array();
         $normalizers[] = new \Symfony\Component\Serializer\Normalizer\ArrayDenormalizer();
-        $normalizers[] = new \Joli\Jane\Runtime\Normalizer\ReferenceNormalizer();
+        $normalizers[] = new ReferenceNormalizer();
         $normalizers[] = new PendingChannelResponseClosedChannelNormalizer();
         $normalizers[] = new PendingChannelResponseForceClosedChannelNormalizer();
         $normalizers[] = new PendingChannelResponsePendingChannelNormalizer();
