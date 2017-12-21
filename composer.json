@@ -14,7 +14,13 @@
             "LightningSale\\LndRest\\": "src/"
         }
     },
-    "require": {
+    "require-dev": {
         "jane/open-api": "^3.1"
-    }
+    },
+    "repositories": [
+        {
+            "type":"vcs",
+            "url":"/home/richard/Projects/openapi"
+        }
+    ]
 }

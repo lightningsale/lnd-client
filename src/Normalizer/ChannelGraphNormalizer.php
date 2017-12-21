@@ -2,7 +2,7 @@
 
 namespace LightningSale\LndRest\Normalizer;
 
-use Joli\Jane\Runtime\Reference;
+use LightningSale\LndRest\Jane\Reference;
 use LightningSale\LndRest\Model\ChannelGraph;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;

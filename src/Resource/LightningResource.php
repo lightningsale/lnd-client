@@ -2,8 +2,8 @@
 
 namespace LightningSale\LndRest\Resource;
 
-use Joli\Jane\OpenApi\Runtime\Client\QueryParam;
-use Joli\Jane\OpenApi\Runtime\Client\Resource;
+use LightningSale\LndRest\Jane\QueryParam;
+use LightningSale\LndRest\Jane\Resource;
 use LightningSale\LndRest\Model\ConnectPeerRequest;
 use LightningSale\LndRest\Model\FeeUpdateRequest;
 use LightningSale\LndRest\Model\Invoice;
