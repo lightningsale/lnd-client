@@ -1,26 +1,40 @@
 {
-    "name": "lightningsale/lnd-rest",
-    "description": "A LND REST Client",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Richard Hagen",
-            "email": "richard.hagen@gmail.com"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "LightningSale\\LndRest\\": "src/"
-        }
-    },
-    "require-dev": {
-        "jane/open-api": "^3.1"
-    },
-    "repositories": [
-        {
-            "type":"vcs",
-            "url":"/home/richard/Projects/openapi"
-        }
-    ]
+  "name": "lightningsale/lnd-rest",
+  "description": "A LND REST Client",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Richard Hagen",
+      "email": "richard.hagen@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "LightningSale\\LndRest\\": "src/"
+    }
+  },
+  "require": {
+    "nikic/php-parser": "^3.0",
+    "doctrine/inflector": "^1.0",
+    "php-http/httplug": "^1.1",
+    "php-http/promise": "^1.0",
+    "psr/http-message": "^1.0",
+    "php-http/message-factory": "^1.0",
+    "php-http/client-common": "^1.1",
+    "symfony/property-access": "^4.0",
+    "symfony/options-resolver": "^4.0",
+    "symfony/serializer": "^4.0",
+    "symfony/yaml": "^4.0",
+    "symfony/console": "^4.0",
+    "league/uri": "^4.2",
+    "php-jsonpointer/php-jsonpointer": "^3.0",
+    "fitbug/symfony-yaml-serializer-encoder-decoder": "dev-master",
+  },
+  "repositories": [
+    {
+      "type":"vcs",
+      "url":"/home/richard/Projects/symfony-yaml-serializer-encoder-decoder"
+    }
+  ]
 }
