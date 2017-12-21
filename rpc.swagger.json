@@ -1,0 +1,2095 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "rpc.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/balance/blockchain": {
+      "get": {
+        "summary": "* lncli: `walletbalance`\nWalletBalance returns total unspent outputs(confirmed and unconfirmed), all confirmed unspent outputs and all unconfirmed unspent outputs under control\nby the wallet. This method can be modified by having the request specify\nonly witness outputs should be factored into the final output sum.",
+        "operationId": "WalletBalance",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/WalletBalanceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "witness_only",
+            "description": "/ If only witness outputs should be considered when calculating the wallet's balance.",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          }
+        ],
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/balance/channels": {
+      "get": {
+        "summary": "* lncli: `channelbalance`\nChannelBalance returns the total funds available across all open channels\nin satoshis.",
+        "operationId": "ChannelBalance",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ChannelBalanceResponse"
+            }
+          }
+        },
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/channels": {
+      "get": {
+        "summary": "* lncli: `listchannels`\nListChannels returns a description of all the open channels that this node\nis a participant in.",
+        "operationId": "ListChannels",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ListChannelsResponse"
+            }
+          }
+        },
+        "tags": [
+          "Lightning"
+        ]
+      },
+      "post": {
+        "summary": "*\nOpenChannelSync is a synchronous version of the OpenChannel RPC call. This\ncall is meant to be consumed by clients to the REST proxy. As with all\nother sync calls, all byte slices are intended to be populated as hex\nencoded strings.",
+        "operationId": "OpenChannelSync",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ChannelPoint"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OpenChannelRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/channels/pending": {
+      "get": {
+        "summary": "* lncli: `pendingchannels`\nPendingChannels returns a list of all the channels that are currently\nconsidered \"pending\". A channel is pending if it has finished the funding\nworkflow and is waiting for confirmations for the funding txn, or is in the\nprocess of closure, either initiated cooperatively or non-cooperatively.",
+        "operationId": "PendingChannels",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/PendingChannelResponse"
+            }
+          }
+        },
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/channels/transactions": {
+      "post": {
+        "summary": "*\nSendPaymentSync is the synchronous non-streaming version of SendPayment.\nThis RPC is intended to be consumed by clients of the REST proxy.\nAdditionally, this RPC expects the destination's public key and the payment\nhash (if any) to be encoded as hex strings.",
+        "operationId": "SendPaymentSync",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SendResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SendRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/channels/{channel_point.funding_txid}/{channel_point.output_index}": {
+      "delete": {
+        "summary": "* lncli: `closechannel`\nCloseChannel attempts to close an active channel identified by its channel\noutpoint (ChannelPoint). The actions of this method can additionally be\naugmented to attempt a force close after a timeout period in the case of an\ninactive peer. If a non-force close (cooperative closure) is requested,\nthen the user can specify either a target number of blocks until the\nclosure transaction is confirmed, or a manual fee rate. If neither are\nspecified, then a default lax, block confirmation target is used.",
+        "operationId": "CloseChannel",
+        "responses": {
+          "200": {
+            "description": "(streaming responses)",
+            "schema": {
+              "$ref": "#/definitions/CloseStatusUpdate"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "channel_point.funding_txid",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "channel_point.output_index",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/createwallet": {
+      "post": {
+        "summary": "* lncli: `create`\nCreateWallet is used at lnd startup to set the encryption password for\nthe wallet database.",
+        "operationId": "CreateWallet",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/CreateWalletResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateWalletRequest"
+            }
+          }
+        ],
+        "tags": [
+          "WalletUnlocker"
+        ]
+      }
+    },
+    "/v1/fees": {
+      "get": {
+        "summary": "* lncli: `feereport`\nFeeReport allows the caller to obtain a report detailing the current fee\nschedule enforced by the node globally for each channel.",
+        "operationId": "FeeReport",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/FeeReportResponse"
+            }
+          }
+        },
+        "tags": [
+          "Lightning"
+        ]
+      },
+      "post": {
+        "summary": "* lncli: `updatefees`\nUpdateFees allows the caller to update the fee schedule for all channels\nglobally, or a particular channel.",
+        "operationId": "UpdateFees",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/FeeUpdateResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FeeUpdateRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/getinfo": {
+      "get": {
+        "summary": "* lncli: `getinfo`\nGetInfo returns general information concerning the lightning node including\nit's identity pubkey, alias, the chains it is connected to, and information\nconcerning the number of open+pending channels.",
+        "operationId": "GetInfo",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/GetInfoResponse"
+            }
+          }
+        },
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/graph": {
+      "get": {
+        "summary": "* lncli: `describegraph`\nDescribeGraph returns a description of the latest graph state from the\npoint of view of the node. The graph information is partitioned into two\ncomponents: all the nodes/vertexes, and all the edges that connect the\nvertexes themselves.  As this is a directed graph, the edges also contain\nthe node directional specific routing policy which includes: the time lock\ndelta, fee information, etc.",
+        "operationId": "DescribeGraph",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ChannelGraph"
+            }
+          }
+        },
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/graph/edge/{chan_id}": {
+      "get": {
+        "summary": "* lncli: `getchaninfo`\nGetChanInfo returns the latest authenticated network announcement for the\ngiven channel identified by its channel ID: an 8-byte integer which\nuniquely identifies the location of transaction's funding output within the\nblockchain.",
+        "operationId": "GetChanInfo",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ChannelEdge"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "chan_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/graph/info": {
+      "get": {
+        "summary": "* lncli: `getnetworkinfo`\nGetNetworkInfo returns some basic stats about the known channel graph from\nthe point of view of the node.",
+        "operationId": "GetNetworkInfo",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/NetworkInfo"
+            }
+          }
+        },
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/graph/node/{pub_key}": {
+      "get": {
+        "summary": "* lncli: `getnodeinfo`\nGetNodeInfo returns the latest advertised, aggregated, and authenticated\nchannel information for the specified node identified by its public key.",
+        "operationId": "GetNodeInfo",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/NodeInfo"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pub_key",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/graph/routes/{pub_key}/{amt}": {
+      "get": {
+        "summary": "* lncli: `queryroutes`\nQueryRoutes attempts to query the daemon's Channel Router for a possible\nroute to a target destination capable of carrying a specific amount of\nsatoshis. The retuned route contains the full details required to craft and\nsend an HTLC, also including the necessary information that should be\npresent within the Sphinx packet encapsualted within the HTLC.",
+        "operationId": "QueryRoutes",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/QueryRoutesResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pub_key",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "amt",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/invoices": {
+      "post": {
+        "summary": "* lncli: `addinvoice`\nAddInvoice attempts to add a new invoice to the invoice database. Any\nduplicated invoices are rejected, therefore all invoices *must* have a\nunique payment preimage.",
+        "operationId": "AddInvoice",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/AddInvoiceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Invoice"
+            }
+          }
+        ],
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/invoices/subscribe": {
+      "get": {
+        "summary": "*\nSubscribeInvoices returns a uni-directional stream (sever -\u003e client) for\nnotifying the client of newly added/settled invoices.",
+        "operationId": "SubscribeInvoices",
+        "responses": {
+          "200": {
+            "description": "(streaming responses)",
+            "schema": {
+              "$ref": "#/definitions/Invoice"
+            }
+          }
+        },
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/invoices/{pending_only}": {
+      "get": {
+        "summary": "* lncli: `listinvoices`\nListInvoices returns a list of all the invoices currently stored within the\ndatabase. Any active debug invoices are ignored.",
+        "operationId": "ListInvoices",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ListInvoiceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pending_only",
+            "in": "path",
+            "required": true,
+            "type": "boolean",
+            "format": "boolean"
+          }
+        ],
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/invoices/{r_hash_str}": {
+      "get": {
+        "summary": "* lncli: `lookupinvoice`\nLookupInvoice attemps to look up an invoice according to its payment hash.\nThe passed payment hash *must* be exactly 32 bytes, if not, an error is\nreturned.",
+        "operationId": "LookupInvoice",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Invoice"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "r_hash_str",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "r_hash",
+            "description": "/ The payment hash of the invoice to be looked up.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          }
+        ],
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/newaddress": {
+      "get": {
+        "summary": "*\nNewWitnessAddress creates a new witness address under control of the local wallet.",
+        "operationId": "NewWitnessAddress",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/NewAddressResponse"
+            }
+          }
+        },
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/payments": {
+      "get": {
+        "summary": "* lncli: `listpayments`\nListPayments returns a list of all outgoing payments.",
+        "operationId": "ListPayments",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ListPaymentsResponse"
+            }
+          }
+        },
+        "tags": [
+          "Lightning"
+        ]
+      },
+      "delete": {
+        "summary": "*\nDeleteAllPayments deletes all outgoing payments from DB.",
+        "operationId": "DeleteAllPayments",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/DeleteAllPaymentsResponse"
+            }
+          }
+        },
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/payreq/{pay_req}": {
+      "get": {
+        "summary": "* lncli: `decodepayreq`\nDecodePayReq takes an encoded payment request string and attempts to decode\nit, returning a full description of the conditions encoded within the\npayment request.",
+        "operationId": "DecodePayReq",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/PayReq"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pay_req",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/peers": {
+      "get": {
+        "summary": "* lncli: `listpeers`\nListPeers returns a verbose listing of all currently active peers.",
+        "operationId": "ListPeers",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ListPeersResponse"
+            }
+          }
+        },
+        "tags": [
+          "Lightning"
+        ]
+      },
+      "post": {
+        "summary": "* lncli: `connect`\nConnectPeer attempts to establish a connection to a remote peer. This is at\nthe networking level, and is used for communication between nodes. This is\ndistinct from establishing a channel with a peer.",
+        "operationId": "ConnectPeer",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ConnectPeerResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ConnectPeerRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/peers/{pub_key}": {
+      "delete": {
+        "summary": "* lncli: `disconnect`\nDisconnectPeer attempts to disconnect one peer from another identified by a\ngiven pubKey. In the case that we currently have a pending or active channel\nwith the target peer, then this action will be not be allowed.",
+        "operationId": "DisconnectPeer",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/DisconnectPeerResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pub_key",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/transactions": {
+      "get": {
+        "summary": "* lncli: `listchaintxns`\nGetTransactions returns a list describing all the known transactions\nrelevant to the wallet.",
+        "operationId": "GetTransactions",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/TransactionDetails"
+            }
+          }
+        },
+        "tags": [
+          "Lightning"
+        ]
+      },
+      "post": {
+        "summary": "* lncli: `sendcoins`\nSendCoins executes a request to send coins to a particular address. Unlike\nSendMany, this RPC call only allows creating a single output at a time. If\nneither target_conf, or sat_per_byte are set, then the internal wallet will\nconsult its fee model to determine a fee for the default confirmation\ntarget.",
+        "operationId": "SendCoins",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SendCoinsResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SendCoinsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/unlockwallet": {
+      "post": {
+        "summary": "* lncli: `unlock`\nUnlockWallet is used at startup of lnd to provide a password to unlock\nthe wallet database.",
+        "operationId": "UnlockWallet",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnlockWalletResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UnlockWalletRequest"
+            }
+          }
+        ],
+        "tags": [
+          "WalletUnlocker"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "PendingChannelResponseClosedChannel": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "$ref": "#/definitions/PendingChannelResponsePendingChannel",
+          "title": "/ The pending channel to be closed"
+        },
+        "closing_txid": {
+          "type": "string",
+          "title": "/ The transaction id of the closing transaction"
+        }
+      }
+    },
+    "PendingChannelResponseForceClosedChannel": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "$ref": "#/definitions/PendingChannelResponsePendingChannel",
+          "title": "/ The pending channel to be force closed"
+        },
+        "closing_txid": {
+          "type": "string",
+          "title": "/ The transaction id of the closing transaction"
+        },
+        "limbo_balance": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ The balance in satoshis encumbered in this pending channel"
+        },
+        "maturity_height": {
+          "type": "integer",
+          "format": "int64",
+          "title": "/ The height at which funds can be sweeped into the wallet"
+        },
+        "blocks_til_maturity": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Remaining # of blocks until the commitment output can be swept.\nNegative values indicate how many blocks have passed since becoming\nmature."
+        },
+        "recovered_balance": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ The total value of funds successfully recovered from this channel"
+        },
+        "pending_htlcs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PendingHTLC"
+          }
+        }
+      }
+    },
+    "PendingChannelResponsePendingChannel": {
+      "type": "object",
+      "properties": {
+        "remote_node_pub": {
+          "type": "string"
+        },
+        "channel_point": {
+          "type": "string"
+        },
+        "capacity": {
+          "type": "string",
+          "format": "int64"
+        },
+        "local_balance": {
+          "type": "string",
+          "format": "int64"
+        },
+        "remote_balance": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "PendingChannelResponsePendingOpenChannel": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "$ref": "#/definitions/PendingChannelResponsePendingChannel",
+          "title": "/ The pending channel"
+        },
+        "confirmation_height": {
+          "type": "integer",
+          "format": "int64",
+          "title": "/ The height at which this channel will be confirmed"
+        },
+        "blocks_till_open": {
+          "type": "integer",
+          "format": "int32",
+          "title": "/ The number of blocks until this channel is open"
+        },
+        "commit_fee": {
+          "type": "string",
+          "format": "int64",
+          "description": "*\nThe amount calculated to be paid in fees for the current set of\ncommitment transactions. The fee amount is persisted with the channel\nin order to allow the fee amount to be removed and recalculated with\neach channel state update, including updates that happen after a system\nrestart."
+        },
+        "commit_weight": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ The weight of the commitment transaction"
+        },
+        "fee_per_kw": {
+          "type": "string",
+          "format": "int64",
+          "description": "*\nThe required number of satoshis per kilo-weight that the requester will\npay at all times, for both the funding transaction and commitment\ntransaction. This value can later be updated once the channel is open."
+        }
+      }
+    },
+    "ActiveChannel": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "type": "boolean",
+          "format": "boolean",
+          "title": "/ Whether this channel is active or not"
+        },
+        "remote_pubkey": {
+          "type": "string",
+          "title": "/ The identity pubkey of the remote node"
+        },
+        "channel_point": {
+          "type": "string",
+          "description": "*\nThe outpoint (txid:index) of the funding transaction. With this value, Bob\nwill be able to generate a signature for Alice's version of the commitment\ntransaction."
+        },
+        "chan_id": {
+          "type": "string",
+          "format": "uint64",
+          "description": "*\nThe unique channel ID for the channel. The first 3 bytes are the block\nheight, the next 3 the index within the block, and the last 2 bytes are the\noutput index for the channel."
+        },
+        "capacity": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ The total amount of funds held in this channel"
+        },
+        "local_balance": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ This node's current balance in this channel"
+        },
+        "remote_balance": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ The counterparty's current balance in this channel"
+        },
+        "commit_fee": {
+          "type": "string",
+          "format": "int64",
+          "description": "*\nThe amount calculated to be paid in fees for the current set of commitment\ntransactions. The fee amount is persisted with the channel in order to\nallow the fee amount to be removed and recalculated with each channel state\nupdate, including updates that happen after a system restart."
+        },
+        "commit_weight": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ The weight of the commitment transaction"
+        },
+        "fee_per_kw": {
+          "type": "string",
+          "format": "int64",
+          "description": "*\nThe required number of satoshis per kilo-weight that the requester will pay\nat all times, for both the funding transaction and commitment transaction.\nThis value can later be updated once the channel is open."
+        },
+        "unsettled_balance": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ The unsettled balance in this channel"
+        },
+        "total_satoshis_sent": {
+          "type": "string",
+          "format": "int64",
+          "description": "*\nThe total number of satoshis we've sent within this channel."
+        },
+        "total_satoshis_received": {
+          "type": "string",
+          "format": "int64",
+          "description": "*\nThe total number of satoshis we've received within this channel."
+        },
+        "num_updates": {
+          "type": "string",
+          "format": "uint64",
+          "description": "*\nThe total number of updates conducted within this channel."
+        },
+        "pending_htlcs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HTLC"
+          },
+          "description": "*\nThe list of active, uncleared HTLCs currently pending within the channel."
+        },
+        "csv_delay": {
+          "type": "integer",
+          "format": "int64",
+          "description": "*\nThe CSV delay expressed in relative blocks. If the channel is force\nclosed, we'll need to wait for this many blocks before we can regain our\nfunds."
+        }
+      }
+    },
+    "AddInvoiceResponse": {
+      "type": "object",
+      "properties": {
+        "r_hash": {
+          "type": "string",
+          "format": "byte"
+        },
+        "payment_request": {
+          "type": "string",
+          "description": "*\nA bare-bones invoice for a payment within the Lightning Network.  With the\ndetails of the invoice, the sender has all the data necessary to send a\npayment to the recipient."
+        }
+      }
+    },
+    "ChannelBalanceResponse": {
+      "type": "object",
+      "properties": {
+        "balance": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ Sum of channels balances denominated in satoshis"
+        }
+      }
+    },
+    "ChannelCloseUpdate": {
+      "type": "object",
+      "properties": {
+        "closing_txid": {
+          "type": "string",
+          "format": "byte"
+        },
+        "success": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      }
+    },
+    "ChannelEdge": {
+      "type": "object",
+      "properties": {
+        "channel_id": {
+          "type": "string",
+          "format": "uint64",
+          "description": "*\nThe unique channel ID for the channel. The first 3 bytes are the block\nheight, the next 3 the index within the block, and the last 2 bytes are the\noutput index for the channel."
+        },
+        "chan_point": {
+          "type": "string"
+        },
+        "last_update": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "node1_pub": {
+          "type": "string"
+        },
+        "node2_pub": {
+          "type": "string"
+        },
+        "capacity": {
+          "type": "string",
+          "format": "int64"
+        },
+        "node1_policy": {
+          "$ref": "#/definitions/RoutingPolicy"
+        },
+        "node2_policy": {
+          "$ref": "#/definitions/RoutingPolicy"
+        }
+      },
+      "description": "*\nA fully authenticated channel along with all its unique attributes.\nOnce an authenticated channel announcement has been processed on the network,\nthen a instance of ChannelEdgeInfo encapsulating the channels attributes is\nstored. The other portions relevant to routing policy of a channel are stored\nwithin a ChannelEdgePolicy for each direction of the channel."
+    },
+    "ChannelEdgeUpdate": {
+      "type": "object",
+      "properties": {
+        "chan_id": {
+          "type": "string",
+          "format": "uint64",
+          "description": "*\nThe unique channel ID for the channel. The first 3 bytes are the block\nheight, the next 3 the index within the block, and the last 2 bytes are the\noutput index for the channel."
+        },
+        "chan_point": {
+          "$ref": "#/definitions/ChannelPoint"
+        },
+        "capacity": {
+          "type": "string",
+          "format": "int64"
+        },
+        "routing_policy": {
+          "$ref": "#/definitions/RoutingPolicy"
+        },
+        "advertising_node": {
+          "type": "string"
+        },
+        "connecting_node": {
+          "type": "string"
+        }
+      }
+    },
+    "ChannelFeeReport": {
+      "type": "object",
+      "properties": {
+        "chan_point": {
+          "type": "string",
+          "description": "/ The channel that this fee report belongs to."
+        },
+        "base_fee_msat": {
+          "type": "string",
+          "format": "int64",
+          "description": "/ The base fee charged regardless of the number of milli-satoshis sent."
+        },
+        "fee_per_mil": {
+          "type": "string",
+          "format": "int64",
+          "description": "/ The amount charged per milli-satoshis transferred expressed in millionths of a satoshi."
+        },
+        "fee_rate": {
+          "type": "number",
+          "format": "double",
+          "description": "/ The effective fee rate in milli-satoshis. Computed by dividing the fee_per_mil value by 1 million."
+        }
+      }
+    },
+    "ChannelGraph": {
+      "type": "object",
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LightningNode"
+          },
+          "title": "/ The list of `LightningNode`s in this channel graph"
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ChannelEdge"
+          },
+          "title": "/ The list of `ChannelEdge`s in this channel graph"
+        }
+      },
+      "description": "/ Returns a new instance of the directed channel graph."
+    },
+    "ChannelOpenUpdate": {
+      "type": "object",
+      "properties": {
+        "channel_point": {
+          "$ref": "#/definitions/ChannelPoint"
+        }
+      }
+    },
+    "ChannelPoint": {
+      "type": "object",
+      "properties": {
+        "funding_txid": {
+          "type": "string",
+          "format": "byte",
+          "title": "/ Txid of the funding transaction"
+        },
+        "funding_txid_str": {
+          "type": "string",
+          "title": "/ Hex-encoded string representing the funding transaction"
+        },
+        "output_index": {
+          "type": "integer",
+          "format": "int64",
+          "title": "/ The index of the output of the funding transaction"
+        }
+      }
+    },
+    "CloseStatusUpdate": {
+      "type": "object",
+      "properties": {
+        "close_pending": {
+          "$ref": "#/definitions/PendingUpdate"
+        },
+        "confirmation": {
+          "$ref": "#/definitions/ConfirmationUpdate"
+        },
+        "chan_close": {
+          "$ref": "#/definitions/ChannelCloseUpdate"
+        }
+      }
+    },
+    "ClosedChannelUpdate": {
+      "type": "object",
+      "properties": {
+        "chan_id": {
+          "type": "string",
+          "format": "uint64",
+          "description": "*\nThe unique channel ID for the channel. The first 3 bytes are the block\nheight, the next 3 the index within the block, and the last 2 bytes are the\noutput index for the channel."
+        },
+        "capacity": {
+          "type": "string",
+          "format": "int64"
+        },
+        "closed_height": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "chan_point": {
+          "$ref": "#/definitions/ChannelPoint"
+        }
+      }
+    },
+    "ConfirmationUpdate": {
+      "type": "object",
+      "properties": {
+        "block_sha": {
+          "type": "string",
+          "format": "byte"
+        },
+        "block_height": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "num_confs_left": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "ConnectPeerRequest": {
+      "type": "object",
+      "properties": {
+        "addr": {
+          "$ref": "#/definitions/LightningAddress",
+          "title": "/ Lightning address of the peer, in the format `\u003cpubkey\u003e@host`"
+        },
+        "perm": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": "* If set, the daemon will attempt to persistently connect to the target\npeer.  Otherwise, the call will be synchronous."
+        }
+      }
+    },
+    "ConnectPeerResponse": {
+      "type": "object",
+      "properties": {
+        "peer_id": {
+          "type": "integer",
+          "format": "int32",
+          "title": "/ The id of the newly connected peer"
+        }
+      }
+    },
+    "CreateWalletRequest": {
+      "type": "object",
+      "properties": {
+        "password": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "CreateWalletResponse": {
+      "type": "object"
+    },
+    "DebugLevelResponse": {
+      "type": "object",
+      "properties": {
+        "sub_systems": {
+          "type": "string"
+        }
+      }
+    },
+    "DeleteAllPaymentsResponse": {
+      "type": "object"
+    },
+    "DisconnectPeerResponse": {
+      "type": "object"
+    },
+    "FeeReportResponse": {
+      "type": "object",
+      "properties": {
+        "channel_fees": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ChannelFeeReport"
+          },
+          "description": "/ An array of channel fee reports which describes the current fee schedule for each channel."
+        }
+      }
+    },
+    "FeeUpdateRequest": {
+      "type": "object",
+      "properties": {
+        "global": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": "/ If set, then this fee update applies to all currently active channels."
+        },
+        "chan_point": {
+          "$ref": "#/definitions/ChannelPoint",
+          "description": "/ If set, this fee update will target a specific channel."
+        },
+        "base_fee_msat": {
+          "type": "string",
+          "format": "int64",
+          "description": "/ The base fee charged regardless of the number of milli-satoshis sent."
+        },
+        "fee_rate": {
+          "type": "number",
+          "format": "double",
+          "description": "/ The effective fee rate in milli-satoshis. The precision of this value goes up to 6 decimal places, so 1e-6."
+        }
+      }
+    },
+    "FeeUpdateResponse": {
+      "type": "object"
+    },
+    "GetInfoResponse": {
+      "type": "object",
+      "properties": {
+        "identity_pubkey": {
+          "type": "string",
+          "description": "/ The identity pubkey of the current node."
+        },
+        "alias": {
+          "type": "string",
+          "title": "/ If applicable, the alias of the current node, e.g. \"bob\""
+        },
+        "num_pending_channels": {
+          "type": "integer",
+          "format": "int64",
+          "title": "/ Number of pending channels"
+        },
+        "num_active_channels": {
+          "type": "integer",
+          "format": "int64",
+          "title": "/ Number of active channels"
+        },
+        "num_peers": {
+          "type": "integer",
+          "format": "int64",
+          "title": "/ Number of peers"
+        },
+        "block_height": {
+          "type": "integer",
+          "format": "int64",
+          "title": "/ The node's current view of the height of the best block"
+        },
+        "block_hash": {
+          "type": "string",
+          "title": "/ The node's current view of the hash of the best block"
+        },
+        "synced_to_chain": {
+          "type": "boolean",
+          "format": "boolean",
+          "title": "/ Whether the wallet's view is synced to the main chain"
+        },
+        "testnet": {
+          "type": "boolean",
+          "format": "boolean",
+          "title": "/ Whether the current node is connected to testnet"
+        },
+        "chains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "/ A list of active chains the node is connected to"
+        }
+      }
+    },
+    "GraphTopologyUpdate": {
+      "type": "object",
+      "properties": {
+        "node_updates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NodeUpdate"
+          }
+        },
+        "channel_updates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ChannelEdgeUpdate"
+          }
+        },
+        "closed_chans": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ClosedChannelUpdate"
+          }
+        }
+      }
+    },
+    "HTLC": {
+      "type": "object",
+      "properties": {
+        "incoming": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "amount": {
+          "type": "string",
+          "format": "int64"
+        },
+        "hash_lock": {
+          "type": "string",
+          "format": "byte"
+        },
+        "expiration_height": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "Hop": {
+      "type": "object",
+      "properties": {
+        "chan_id": {
+          "type": "string",
+          "format": "uint64",
+          "description": "*\nThe unique channel ID for the channel. The first 3 bytes are the block\nheight, the next 3 the index within the block, and the last 2 bytes are the\noutput index for the channel."
+        },
+        "chan_capacity": {
+          "type": "string",
+          "format": "int64"
+        },
+        "amt_to_forward": {
+          "type": "string",
+          "format": "int64"
+        },
+        "fee": {
+          "type": "string",
+          "format": "int64"
+        },
+        "expiry": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "Invoice": {
+      "type": "object",
+      "properties": {
+        "memo": {
+          "type": "string",
+          "description": "*\nAn optional memo to attach along with the invoice. Used for record keeping\npurposes for the invoice's creator, and will also be set in the description\nfield of the encoded payment request if the description_hash field is not\nbeing used."
+        },
+        "receipt": {
+          "type": "string",
+          "format": "byte",
+          "title": "/ An optional cryptographic receipt of payment"
+        },
+        "r_preimage": {
+          "type": "string",
+          "format": "byte",
+          "title": "*\nThe hex-encoded preimage (32 byte) which will allow settling an incoming\nHTLC payable to this preimage"
+        },
+        "r_hash": {
+          "type": "string",
+          "format": "byte",
+          "title": "/ The hash of the preimage"
+        },
+        "value": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ The value of this invoice in satoshis"
+        },
+        "settled": {
+          "type": "boolean",
+          "format": "boolean",
+          "title": "/ Whether this invoice has been fulfilled"
+        },
+        "creation_date": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ When this invoice was created"
+        },
+        "settle_date": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ When this invoice was settled"
+        },
+        "payment_request": {
+          "type": "string",
+          "description": "*\nA bare-bones invoice for a payment within the Lightning Network.  With the\ndetails of the invoice, the sender has all the data necessary to send a\npayment to the recipient."
+        },
+        "description_hash": {
+          "type": "string",
+          "format": "byte",
+          "description": "*\nHash (SHA-256) of a description of the payment. Used if the description of\npayment (memo) is too long to naturally fit within the description field\nof an encoded payment request."
+        },
+        "expiry": {
+          "type": "string",
+          "format": "int64",
+          "description": "/ Payment request expiry time in seconds. Default is 3600 (1 hour)."
+        },
+        "fallback_addr": {
+          "type": "string",
+          "description": "/ Fallback on-chain address."
+        },
+        "cltv_expiry": {
+          "type": "string",
+          "format": "uint64",
+          "description": "/ Delta to use for the time-lock of the CLTV extended to the final hop."
+        }
+      }
+    },
+    "LightningAddress": {
+      "type": "object",
+      "properties": {
+        "pubkey": {
+          "type": "string",
+          "title": "/ The identity pubkey of the Lightning node"
+        },
+        "host": {
+          "type": "string",
+          "title": "/ The network location of the lightning node, e.g. `69.69.69.69:1337` or `localhost:10011`"
+        }
+      }
+    },
+    "LightningNode": {
+      "type": "object",
+      "properties": {
+        "last_update": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pub_key": {
+          "type": "string"
+        },
+        "alias": {
+          "type": "string"
+        },
+        "addresses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NodeAddress"
+          }
+        },
+        "color": {
+          "type": "string"
+        }
+      },
+      "description": "*\nAn individual vertex/node within the channel graph. A node is\nconnected to other nodes by one or more channel edges emanating from it. As the\ngraph is directed, a node will also have an incoming edge attached to it for\neach outgoing edge."
+    },
+    "ListChannelsResponse": {
+      "type": "object",
+      "properties": {
+        "channels": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ActiveChannel"
+          },
+          "title": "/ The list of active channels"
+        }
+      }
+    },
+    "ListInvoiceResponse": {
+      "type": "object",
+      "properties": {
+        "invoices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Invoice"
+          }
+        }
+      }
+    },
+    "ListPaymentsResponse": {
+      "type": "object",
+      "properties": {
+        "payments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Payment"
+          },
+          "title": "/ The list of payments"
+        }
+      }
+    },
+    "ListPeersResponse": {
+      "type": "object",
+      "properties": {
+        "peers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Peer"
+          },
+          "title": "/ The list of currently connected peers"
+        }
+      }
+    },
+    "NetworkInfo": {
+      "type": "object",
+      "properties": {
+        "graph_diameter": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "avg_out_degree": {
+          "type": "number",
+          "format": "double"
+        },
+        "max_out_degree": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "num_nodes": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "num_channels": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "total_network_capacity": {
+          "type": "string",
+          "format": "int64"
+        },
+        "avg_channel_size": {
+          "type": "number",
+          "format": "double"
+        },
+        "min_channel_size": {
+          "type": "string",
+          "format": "int64"
+        },
+        "max_channel_size": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "NewAddressResponse": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "title": "/ The newly generated wallet address"
+        }
+      }
+    },
+    "NodeAddress": {
+      "type": "object",
+      "properties": {
+        "network": {
+          "type": "string"
+        },
+        "addr": {
+          "type": "string"
+        }
+      }
+    },
+    "NodeInfo": {
+      "type": "object",
+      "properties": {
+        "node": {
+          "$ref": "#/definitions/LightningNode",
+          "description": "*\nAn individual vertex/node within the channel graph. A node is\nconnected to other nodes by one or more channel edges emanating from it. As\nthe graph is directed, a node will also have an incoming edge attached to\nit for each outgoing edge."
+        },
+        "num_channels": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "total_capacity": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "NodeUpdate": {
+      "type": "object",
+      "properties": {
+        "addresses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "identity_key": {
+          "type": "string"
+        },
+        "global_features": {
+          "type": "string",
+          "format": "byte"
+        },
+        "alias": {
+          "type": "string"
+        }
+      }
+    },
+    "OpenChannelRequest": {
+      "type": "object",
+      "properties": {
+        "target_peer_id": {
+          "type": "integer",
+          "format": "int32",
+          "title": "/ The peer_id of the node to open a channel with"
+        },
+        "node_pubkey": {
+          "type": "string",
+          "format": "byte",
+          "title": "/ The pubkey of the node to open a channel with"
+        },
+        "node_pubkey_string": {
+          "type": "string",
+          "title": "/ The hex encorded pubkey of the node to open a channel with"
+        },
+        "local_funding_amount": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ The number of satoshis the wallet should commit to the channel"
+        },
+        "push_sat": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ The number of satoshis to push to the remote side as part of the initial commitment state"
+        },
+        "target_conf": {
+          "type": "integer",
+          "format": "int32",
+          "description": "/ The target number of blocks that the closure transaction should be confirmed by."
+        },
+        "sat_per_byte": {
+          "type": "string",
+          "format": "int64",
+          "description": "/ A manual fee rate set in sat/byte that should be used when crafting the closure transaction."
+        },
+        "private": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": "/ Whether this channel should be private, not announced to the greater network."
+        }
+      }
+    },
+    "OpenStatusUpdate": {
+      "type": "object",
+      "properties": {
+        "chan_pending": {
+          "$ref": "#/definitions/PendingUpdate"
+        },
+        "confirmation": {
+          "$ref": "#/definitions/ConfirmationUpdate"
+        },
+        "chan_open": {
+          "$ref": "#/definitions/ChannelOpenUpdate"
+        }
+      }
+    },
+    "PayReq": {
+      "type": "object",
+      "properties": {
+        "destination": {
+          "type": "string"
+        },
+        "payment_hash": {
+          "type": "string"
+        },
+        "num_satoshis": {
+          "type": "string",
+          "format": "int64"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "int64"
+        },
+        "expiry": {
+          "type": "string",
+          "format": "int64"
+        },
+        "description": {
+          "type": "string"
+        },
+        "description_hash": {
+          "type": "string"
+        },
+        "fallback_addr": {
+          "type": "string"
+        },
+        "cltv_expiry": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "Payment": {
+      "type": "object",
+      "properties": {
+        "payment_hash": {
+          "type": "string",
+          "title": "/ The payment hash"
+        },
+        "value": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ The value of the payment in satoshis"
+        },
+        "creation_date": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ The date of this payment"
+        },
+        "path": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "/ The path this payment took"
+        },
+        "fee": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ The fee paid for this payment in satoshis"
+        }
+      }
+    },
+    "Peer": {
+      "type": "object",
+      "properties": {
+        "pub_key": {
+          "type": "string",
+          "title": "/ The identity pubkey of the peer"
+        },
+        "peer_id": {
+          "type": "integer",
+          "format": "int32",
+          "title": "/ The peer's id from the local point of view"
+        },
+        "address": {
+          "type": "string",
+          "title": "/ Network address of the peer; eg `127.0.0.1:10011`"
+        },
+        "bytes_sent": {
+          "type": "string",
+          "format": "uint64",
+          "title": "/ Bytes of data transmitted to this peer"
+        },
+        "bytes_recv": {
+          "type": "string",
+          "format": "uint64",
+          "title": "/ Bytes of data transmitted from this peer"
+        },
+        "sat_sent": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ Satoshis sent to this peer"
+        },
+        "sat_recv": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ Satoshis received from this peer"
+        },
+        "inbound": {
+          "type": "boolean",
+          "format": "boolean",
+          "title": "/ A channel is inbound if the counterparty initiated the channel"
+        },
+        "ping_time": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ Ping time to this peer"
+        }
+      }
+    },
+    "PendingChannelResponse": {
+      "type": "object",
+      "properties": {
+        "total_limbo_balance": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ The balance in satoshis encumbered in pending channels"
+        },
+        "pending_open_channels": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PendingChannelResponsePendingOpenChannel"
+          },
+          "title": "/ Channels pending opening"
+        },
+        "pending_closing_channels": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PendingChannelResponseClosedChannel"
+          },
+          "title": "/ Channels pending closing"
+        },
+        "pending_force_closing_channels": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PendingChannelResponseForceClosedChannel"
+          },
+          "title": "/ Channels pending force closing"
+        }
+      }
+    },
+    "PendingHTLC": {
+      "type": "object",
+      "properties": {
+        "incoming": {
+          "type": "boolean",
+          "format": "boolean",
+          "title": "/ The direction within the channel that the htlc was sent"
+        },
+        "amount": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ The total value of the htlc"
+        },
+        "outpoint": {
+          "type": "string",
+          "title": "/ The final output to be swept back to the user's wallet"
+        },
+        "maturity_height": {
+          "type": "integer",
+          "format": "int64",
+          "title": "/ The next block height at which we can spend the current stage"
+        },
+        "blocks_til_maturity": {
+          "type": "integer",
+          "format": "int32",
+          "description": "*\nThe number of blocks remaining until the current stage can be swept.\nNegative values indicate how many blocks have passed since becoming\nmature."
+        },
+        "stage": {
+          "type": "integer",
+          "format": "int64",
+          "title": "/ Indicates whether the htlc is in its first or second stage of recovery"
+        }
+      }
+    },
+    "PendingUpdate": {
+      "type": "object",
+      "properties": {
+        "txid": {
+          "type": "string",
+          "format": "byte"
+        },
+        "output_index": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "QueryRoutesResponse": {
+      "type": "object",
+      "properties": {
+        "routes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Route"
+          }
+        }
+      }
+    },
+    "Route": {
+      "type": "object",
+      "properties": {
+        "total_time_lock": {
+          "type": "integer",
+          "format": "int64",
+          "description": "*\nThe cumulative (final) time lock across the entire route.  This is the CLTV\nvalue that should be extended to the first hop in the route. All other hops\nwill decrement the time-lock as advertised, leaving enough time for all\nhops to wait for or present the payment preimage to complete the payment."
+        },
+        "total_fees": {
+          "type": "string",
+          "format": "int64",
+          "description": "*\nThe sum of the fees paid at each hop within the final route.  In the case\nof a one-hop payment, this value will be zero as we don't need to pay a fee\nit ourself."
+        },
+        "total_amt": {
+          "type": "string",
+          "format": "int64",
+          "description": "*\nThe total amount of funds required to complete a payment over this route.\nThis value includes the cumulative fees at each hop. As a result, the HTLC\nextended to the first-hop in the route will need to have at least this many\nsatoshis, otherwise the route will fail at an intermediate node due to an\ninsufficient amount of fees."
+        },
+        "hops": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Hop"
+          },
+          "description": "*\nContains details concerning the specific forwarding details at each hop."
+        }
+      },
+      "description": "*\nA path through the channel graph which runs over one or more channels in\nsuccession. This struct carries all the information required to craft the\nSphinx onion packet, and send the payment along the first hop in the path. A\nroute is only selected as valid if all the channels have sufficient capacity to\ncarry the initial payment amount after fees are accounted for."
+    },
+    "RoutingPolicy": {
+      "type": "object",
+      "properties": {
+        "time_lock_delta": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "min_htlc": {
+          "type": "string",
+          "format": "int64"
+        },
+        "fee_base_msat": {
+          "type": "string",
+          "format": "int64"
+        },
+        "fee_rate_milli_msat": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "SendCoinsRequest": {
+      "type": "object",
+      "properties": {
+        "addr": {
+          "type": "string",
+          "title": "/ The address to send coins to"
+        },
+        "amount": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ The amount in satoshis to send"
+        },
+        "target_conf": {
+          "type": "integer",
+          "format": "int32",
+          "description": "/ The target number of blocks that this transaction should be confirmed by."
+        },
+        "sat_per_byte": {
+          "type": "string",
+          "format": "int64",
+          "description": "/ A manual fee rate set in sat/byte that should be used when crafting the transaction."
+        }
+      }
+    },
+    "SendCoinsResponse": {
+      "type": "object",
+      "properties": {
+        "txid": {
+          "type": "string",
+          "title": "/ The transaction ID of the transaction"
+        }
+      }
+    },
+    "SendManyResponse": {
+      "type": "object",
+      "properties": {
+        "txid": {
+          "type": "string",
+          "title": "/ The id of the transaction"
+        }
+      }
+    },
+    "SendRequest": {
+      "type": "object",
+      "properties": {
+        "dest": {
+          "type": "string",
+          "format": "byte",
+          "title": "/ The identity pubkey of the payment recipient"
+        },
+        "dest_string": {
+          "type": "string",
+          "title": "/ The hex-encoded identity pubkey of the payment recipient"
+        },
+        "amt": {
+          "type": "string",
+          "format": "int64",
+          "description": "/ Number of satoshis to send."
+        },
+        "payment_hash": {
+          "type": "string",
+          "format": "byte",
+          "title": "/ The hash to use within the payment's HTLC"
+        },
+        "payment_hash_string": {
+          "type": "string",
+          "title": "/ The hex-encoded hash to use within the payment's HTLC"
+        },
+        "payment_request": {
+          "type": "string",
+          "description": "*\nA bare-bones invoice for a payment within the Lightning Network.  With the\ndetails of the invoice, the sender has all the data necessary to send a\npayment to the recipient."
+        }
+      }
+    },
+    "SendResponse": {
+      "type": "object",
+      "properties": {
+        "payment_error": {
+          "type": "string"
+        },
+        "payment_preimage": {
+          "type": "string",
+          "format": "byte"
+        },
+        "payment_route": {
+          "$ref": "#/definitions/Route"
+        }
+      }
+    },
+    "SetAliasResponse": {
+      "type": "object"
+    },
+    "SignMessageResponse": {
+      "type": "object",
+      "properties": {
+        "signature": {
+          "type": "string",
+          "title": "/ The signature for the given message"
+        }
+      }
+    },
+    "StopResponse": {
+      "type": "object"
+    },
+    "Transaction": {
+      "type": "object",
+      "properties": {
+        "tx_hash": {
+          "type": "string",
+          "title": "/ The transaction hash"
+        },
+        "amount": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ The transaction ammount, denominated in satoshis"
+        },
+        "num_confirmations": {
+          "type": "integer",
+          "format": "int32",
+          "title": "/ The number of confirmations"
+        },
+        "block_hash": {
+          "type": "string",
+          "title": "/ The hash of the block this transaction was included in"
+        },
+        "block_height": {
+          "type": "integer",
+          "format": "int32",
+          "title": "/ The height of the block this transaction was included in"
+        },
+        "time_stamp": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ Timestamp of this transaction"
+        },
+        "total_fees": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ Fees paid for this transaction"
+        },
+        "dest_addresses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "/ Addresses that received funds for this transaction"
+        }
+      }
+    },
+    "TransactionDetails": {
+      "type": "object",
+      "properties": {
+        "transactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Transaction"
+          },
+          "description": "/ The list of transactions relevant to the wallet."
+        }
+      }
+    },
+    "UnlockWalletRequest": {
+      "type": "object",
+      "properties": {
+        "password": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "UnlockWalletResponse": {
+      "type": "object"
+    },
+    "VerifyMessageResponse": {
+      "type": "object",
+      "properties": {
+        "valid": {
+          "type": "boolean",
+          "format": "boolean",
+          "title": "/ Whether the signature was valid over the given message"
+        },
+        "pubkey": {
+          "type": "string",
+          "title": "/ The pubkey recovered from the signature"
+        }
+      }
+    },
+    "WalletBalanceResponse": {
+      "type": "object",
+      "properties": {
+        "total_balance": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ The balance of the wallet"
+        },
+        "confirmed_balance": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ The confirmed balance of a wallet(with \u003e= 1 confirmations)"
+        },
+        "unconfirmed_balance": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ The unconfirmed balance of a wallet(with 0 confirmations)"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+    "name": "lightningsale/lnd-rest",
+    "description": "A LND REST Client",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Richard Hagen",
+            "email": "richard.hagen@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "LightningSale\\LndRest\\": "src/"
+        }
+    },
+    "require": {
+        "jane/open-api": "^3.1"
+    }
+}
