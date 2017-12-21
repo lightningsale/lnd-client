@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "57eb788e529e912e785cbdbd97a0ef5b",
+    "content-hash": "637de3a0e000aeea08f1855791f8644b",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -124,47 +124,6 @@
                 "string"
             ],
             "time": "2017-07-22T12:18:28+00:00"
-        },
-        {
-            "name": "fitbug/symfony-yaml-serializer-encoder-decoder",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "/home/richard/Projects/symfony-yaml-serializer-encoder-decoder",
-                "reference": "4e85bde5ad376434c9c17c1cb1fab3e2f64d9e05"
-            },
-            "require": {
-                "symfony/serializer": "^v2.0.0 || ^3.0.0 || ^4.0.0",
-                "symfony/yaml": "^v2.0.0 || ^3.0.0 | ^4.0.0"
-            },
-            "require-dev": {
-                "phpspec/phpspec": "^2.0.0 || ^3.0.0",
-                "squizlabs/php_codesniffer": "^2.6"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Fitbug\\SymfonySerializer\\YamlEncoderDecoder\\": "src/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Billie Thompson",
-                    "email": "billie.thompson@fitbug.com"
-                }
-            ],
-            "description": "A encoder and decoder for Yaml for the Symfony Serializer Component.",
-            "keywords": [
-                "encoder",
-                "serializer",
-                "symfony",
-                "symfony-serializer",
-                "yaml"
-            ],
-            "time": "2017-12-21T10:15:47+00:00"
         },
         {
             "name": "jeremykendall/php-domain-parser",
@@ -635,58 +594,6 @@
                 "promise"
             ],
             "time": "2016-01-26T13:27:02+00:00"
-        },
-        {
-            "name": "php-jsonpointer/php-jsonpointer",
-            "version": "v3.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/raphaelstolt/php-jsonpointer.git",
-                "reference": "4428f86c6f23846e9faa5a420c4ef14e485b3afb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/raphaelstolt/php-jsonpointer/zipball/4428f86c6f23846e9faa5a420c4ef14e485b3afb",
-                "reference": "4428f86c6f23846e9faa5a420c4ef14e485b3afb",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^1.11",
-                "phpunit/phpunit": "4.6.*"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Rs\\Json": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Raphael Stolt",
-                    "email": "raphael.stolt@gmail.com",
-                    "homepage": "http://raphaelstolt.blogspot.com/"
-                }
-            ],
-            "description": "Implementation of JSON Pointer (http://tools.ietf.org/html/rfc6901)",
-            "homepage": "https://github.com/raphaelstolt/php-jsonpointer",
-            "keywords": [
-                "json",
-                "json pointer",
-                "json traversal"
-            ],
-            "time": "2016-08-29T08:51:01+00:00"
         },
         {
             "name": "psr/http-message",
@@ -1183,9 +1090,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "fitbug/symfony-yaml-serializer-encoder-decoder": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
