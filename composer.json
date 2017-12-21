@@ -29,7 +29,7 @@
     "symfony/console": "^4.0",
     "league/uri": "^4.2",
     "php-jsonpointer/php-jsonpointer": "^3.0",
-    "fitbug/symfony-yaml-serializer-encoder-decoder": "dev-master",
+    "fitbug/symfony-yaml-serializer-encoder-decoder": "dev-master"
   },
   "repositories": [
     {
