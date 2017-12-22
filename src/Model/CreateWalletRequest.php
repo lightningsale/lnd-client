@@ -2,27 +2,29 @@
 
 namespace LightningSale\LndRest\Model;
 
-class CreateWalletRequest
+class CreateWalletRequest implements \JsonSerializable
 {
     /**
      * @var string
      */
     protected $password;
-    /**
-     * @return string
-     */
-    public function getPassword()
+
+    public function getPassword(): string
     {
         return $this->password;
     }
-    /**
-     * @param string $password
-     *
-     * @return self
-     */
-    public function setPassword($password = null)
+
+    public function __construct(string $password)
     {
         $this->password = $password;
-        return $this;
     }
+
+    public function jsonSerialize()
+    {
+        return [
+            'password' => $this->password
+        ];
+    }
+
+
 }

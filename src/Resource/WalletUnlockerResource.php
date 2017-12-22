@@ -2,69 +2,26 @@
 
 namespace LightningSale\LndRest\Resource;
 
-use Joli\Jane\OpenApi\Runtime\Client\QueryParam;
-use Joli\Jane\OpenApi\Runtime\Client\Resource;
+use GuzzleHttp\Client;
 use LightningSale\LndRest\Model\CreateWalletRequest;
 use LightningSale\LndRest\Model\UnlockWalletRequest;
 
-class WalletUnlockerResource extends Resource
+class WalletUnlockerResource
 {
-    /**
-     * 
-     *
-     * @param CreateWalletRequest $body 
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|null
-     */
-    public function createWallet(CreateWalletRequest $body, $parameters = [], $fetch = self::FETCH_OBJECT)
+    private $httpClient;
+
+    public function __construct(Client $client)
     {
-        $queryParam = new QueryParam();
-        $url = '/v1/createwallet';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $this->serializer->serialize($body, 'json');
-        $request = $this->messageFactory->createRequest('POST', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return null;
-            }
-        }
-        return $response;
+        $this->httpClient = $client;
     }
-    /**
-     * 
-     *
-     * @param UnlockWalletRequest $body 
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|null
-     */
-    public function unlockWallet(UnlockWalletRequest $body, $parameters = [], $fetch = self::FETCH_OBJECT)
+
+    public function createWallet(CreateWalletRequest $body): void
     {
-        $queryParam = new QueryParam();
-        $url = '/v1/unlockwallet';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $this->serializer->serialize($body, 'json');
-        $request = $this->messageFactory->createRequest('POST', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return null;
-            }
-        }
-        return $response;
+        $this->httpClient->post("/v1/createwallet", ['json' => $body]);
+    }
+
+    public function unlockWallet(UnlockWalletRequest $body): void
+    {
+        $this->httpClient->post('/v1/unlockwallet', ['json' => $body]);
     }
 }
