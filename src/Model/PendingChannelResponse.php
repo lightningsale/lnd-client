@@ -68,10 +68,10 @@ class PendingChannelResponse
     public static function fromResponse(array $body): self
     {
         return new self(
-            $body['total_limbo_balance'],
-            array_map(function($i) {return PendingChannelResponsePendingOpenChannel::fromResponse($i);}, $body['pending_open_channels']),
-            array_map(function($i) {return PendingChannelResponseClosedChannel::fromResponse($i);}, $body['pending_closing_channels']),
-            array_map(function($i) {return PendingChannelResponseForceClosedChannel::fromResponse($i);}, $body['pending_force_closing_channels'])
+            $body['total_limbo_balance'] ?? 0,
+            array_map(function($i) {return PendingChannelResponsePendingOpenChannel::fromResponse($i);}, $body['pending_open_channels'] ?? []),
+            array_map(function($i) {return PendingChannelResponseClosedChannel::fromResponse($i);}, $body['pending_closing_channels'] ?? []),
+            array_map(function($i) {return PendingChannelResponseForceClosedChannel::fromResponse($i);}, $body['pending_force_closing_channels'] ?? [])
         );
     }
 }

@@ -104,7 +104,7 @@ class NetworkInfo
     public static function fromResponse(array $body): self
     {
         return new self(
-            $body['graph_diameter'],
+            $body['graph_diameter'] ?? 0,
             $body['avg_out_degree'],
             $body['max_out_degree'],
             $body['num_nodes'],

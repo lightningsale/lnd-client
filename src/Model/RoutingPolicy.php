@@ -52,9 +52,9 @@ class RoutingPolicy
     public static function fromResponse(array $data) {
         return new self(
             $data['time_lock_delta'],
-            $data['min_htlc'],
-            $data['fee_base_msat'],
-            $data['fee_rate_milli_msat']
+            $data['min_htlc'] ?? "",
+            $data['fee_base_msat'] ?? "",
+            $data['fee_rate_milli_msat'] ?? ""
         );
     }
 }

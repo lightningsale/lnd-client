@@ -33,6 +33,11 @@ use LightningSale\LndRest\Model\ListChannelsResponse;
 use LightningSale\LndRest\Model\ChannelBalanceResponse;
 use LightningSale\LndRest\Model\WalletBalanceResponse;
 
+/**
+ * Class LightningResource
+ * @package LightningSale\LndRest\Resource
+ * Documentation at http://api.lightning.community/
+ */
 class LightningResource
 {
     private $httpClient;

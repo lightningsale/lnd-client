@@ -2,7 +2,7 @@
 
 namespace LightningSale\LndRest\Model;
 
-class OpenChannelRequest
+class OpenChannelRequest implements \JsonSerializable
 {
     /**
      * @var int
@@ -36,140 +36,70 @@ class OpenChannelRequest
      * @var bool
      */
     protected $private;
-    /**
-     * @return int
-     */
-    public function getTargetPeerId()
+
+    public function getTargetPeerId(): int
     {
         return $this->targetPeerId;
     }
-    /**
-     * @param int $targetPeerId
-     *
-     * @return self
-     */
-    public function setTargetPeerId($targetPeerId = null)
-    {
-        $this->targetPeerId = $targetPeerId;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getNodePubkey()
+
+    public function getNodePubkey(): string
     {
         return $this->nodePubkey;
     }
-    /**
-     * @param string $nodePubkey
-     *
-     * @return self
-     */
-    public function setNodePubkey($nodePubkey = null)
-    {
-        $this->nodePubkey = $nodePubkey;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getNodePubkeyString()
+    
+    public function getNodePubkeyString(): string
     {
         return $this->nodePubkeyString;
     }
-    /**
-     * @param string $nodePubkeyString
-     *
-     * @return self
-     */
-    public function setNodePubkeyString($nodePubkeyString = null)
-    {
-        $this->nodePubkeyString = $nodePubkeyString;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getLocalFundingAmount()
+    
+    public function getLocalFundingAmount(): string
     {
         return $this->localFundingAmount;
     }
-    /**
-     * @param string $localFundingAmount
-     *
-     * @return self
-     */
-    public function setLocalFundingAmount($localFundingAmount = null)
-    {
-        $this->localFundingAmount = $localFundingAmount;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getPushSat()
+    
+    public function getPushSat(): string
     {
         return $this->pushSat;
     }
-    /**
-     * @param string $pushSat
-     *
-     * @return self
-     */
-    public function setPushSat($pushSat = null)
-    {
-        $this->pushSat = $pushSat;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getTargetConf()
+    
+    public function getTargetConf(): int
     {
         return $this->targetConf;
     }
-    /**
-     * @param int $targetConf
-     *
-     * @return self
-     */
-    public function setTargetConf($targetConf = null)
-    {
-        $this->targetConf = $targetConf;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getSatPerByte()
+    
+    public function getSatPerByte(): string
     {
         return $this->satPerByte;
     }
-    /**
-     * @param string $satPerByte
-     *
-     * @return self
-     */
-    public function setSatPerByte($satPerByte = null)
-    {
-        $this->satPerByte = $satPerByte;
-        return $this;
-    }
-    /**
-     * @return bool
-     */
-    public function getPrivate()
+    
+    public function isPrivate(): bool
     {
         return $this->private;
     }
-    /**
-     * @param bool $private
-     *
-     * @return self
-     */
-    public function setPrivate($private = null)
+    
+    public function __construct(int $targetPeerId, string $nodePubkeyString, string $localFundingAmount, string $pushSat, int $targetConf, string $satPerByte, bool $private)
     {
+        $this->targetPeerId = $targetPeerId;
+        $this->nodePubkeyString = $nodePubkeyString;
+        $this->localFundingAmount = $localFundingAmount;
+        $this->pushSat = $pushSat;
+        $this->targetConf = $targetConf;
+        $this->satPerByte = $satPerByte;
         $this->private = $private;
-        return $this;
     }
+
+    public function jsonSerialize()
+    {
+        return [
+            'target_peer_id' => $this->targetPeerId,
+            'node_pubkey_string' => $this->nodePubkeyString,
+            'local_funding_amount' => $this->localFundingAmount,
+            'push_sat' => $this->pushSat,
+            'target_conf' => $this->targetConf,
+            'sat_per_byte' => $this->satPerByte,
+            'private' => $this->private,
+        ];
+    }
+
+
 }

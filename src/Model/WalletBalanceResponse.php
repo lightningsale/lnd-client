@@ -44,9 +44,9 @@ class WalletBalanceResponse
     public static function fromResponse(array $body): self
     {
         return new self(
-            $body['total_balance'],
-            $body['confirmed_balance'],
-            $body['unconfirmed_balance']
+            $body['total_balance'] ?? 0,
+            $body['confirmed_balance'] ?? 0,
+            $body['unconfirmed_balance'] ?? 0
         );
     }
 }

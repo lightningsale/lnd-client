@@ -22,7 +22,7 @@ class ConnectPeerResponse
 
     public static function fromResponse(array $body): self
     {
-        return new self($body['peer_id']);
+        return new self($body['peer_id'] ?? 0);
     }
 
 }

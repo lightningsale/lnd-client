@@ -2,7 +2,7 @@
 
 namespace LightningSale\LndRest\Model;
 
-class LightningAddress
+class LightningAddress implements \JsonSerializable
 {
     /**
      * @var string
@@ -12,38 +12,30 @@ class LightningAddress
      * @var string
      */
     protected $host;
-    /**
-     * @return string
-     */
-    public function getPubkey()
+
+    public function getPubkey(): string
     {
         return $this->pubkey;
     }
-    /**
-     * @param string $pubkey
-     *
-     * @return self
-     */
-    public function setPubkey($pubkey = null)
-    {
-        $this->pubkey = $pubkey;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getHost()
+
+    public function getHost(): string
     {
         return $this->host;
     }
-    /**
-     * @param string $host
-     *
-     * @return self
-     */
-    public function setHost($host = null)
+    
+    public function __construct(string $pubkey, string $host)
     {
+        $this->pubkey = $pubkey;
         $this->host = $host;
-        return $this;
     }
+
+    public function jsonSerialize()
+    {
+        return [
+            'pubkey' => $this->pubkey,
+            'host' => $this->host
+        ];
+    }
+
+
 }

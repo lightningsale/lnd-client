@@ -108,10 +108,10 @@ class Peer
             $data['address'],
             $data['bytes_sent'],
             $data['bytes_recv'],
-            $data['sat_sent'],
-            $data['sat_recv'],
+            $data['sat_sent'] ?? 0,
+            $data['sat_recv'] ?? 0,
             $data['inbound'],
-            $data['ping_time']
+            $data['ping_time'] ?? -1
         );
     }
 

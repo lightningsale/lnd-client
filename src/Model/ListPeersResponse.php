@@ -29,6 +29,6 @@ class ListPeersResponse
 
     public static function fromResponse($body): self
     {
-        return new self(array_map(function ($f) {return Peer::fromResponse($f);}, $body['peers']));
+        return new self(array_map(function ($f) {return Peer::fromResponse($f);}, $body['peers'] ?? []));
     }
 }

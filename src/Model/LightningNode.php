@@ -74,10 +74,10 @@ class LightningNode
     public static function fromResponse(array $data): self
     {
         return new self(
-            $data['last_update'],
+            $data['last_update'] ?? 0,
             $data['pub_key'],
-            $data['alias'],
-            array_map(function($i) {return NodeAddress::fromResponse($i);}, $data['addresses']),
+            $data['alias'] ?? "",
+            array_map(function($i) {return NodeAddress::fromResponse($i);}, $data['addresses'] ?? []),
             $data['color']
         );
     }

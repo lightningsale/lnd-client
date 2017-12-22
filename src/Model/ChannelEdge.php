@@ -67,17 +67,17 @@ class ChannelEdge
         return $this->capacity;
     }
 
-    public function getNode1Policy(): RoutingPolicy
+    public function getNode1Policy(): ?RoutingPolicy
     {
         return $this->node1Policy;
     }
 
-    public function getNode2Policy(): RoutingPolicy
+    public function getNode2Policy(): ?RoutingPolicy
     {
         return $this->node2Policy;
     }
 
-    public function __construct(string $channelId, string $chanPoint, int $lastUpdate, string $node1Pub, string $node2Pub, string $capacity, RoutingPolicy $node1Policy, RoutingPolicy $node2Policy)
+    public function __construct(string $channelId, string $chanPoint, int $lastUpdate, string $node1Pub, string $node2Pub, string $capacity, RoutingPolicy $node1Policy = null, RoutingPolicy $node2Policy = null)
     {
         $this->channelId = $channelId;
         $this->chanPoint = $chanPoint;
@@ -91,15 +91,17 @@ class ChannelEdge
 
     public static function fromResponse(array $body): self
     {
+        $nPolicy1 = $body['node1_policy'] ?? null;
+        $nPolicy2 = $body['node2_policy'] ?? null;
         return new self(
-            $body['channelId'],
-            $body['chanPoint'],
-            $body['lastUpdate'],
-            $body['node1Pub'],
-            $body['node2Pub'],
+            $body['channel_id'] ?? "",
+            $body['chan_point'],
+            $body['last_update'] ?? 0,
+            $body['node1_pub'],
+            $body['node2_pub'],
             $body['capacity'],
-            RoutingPolicy::fromResponse($body['node1Policy']),
-            RoutingPolicy::fromResponse($body['node2Policy'])
+            $nPolicy1 ? RoutingPolicy::fromResponse($nPolicy1) : null,
+            $nPolicy2 ? RoutingPolicy::fromResponse($nPolicy2) : null
         );
     }
 
