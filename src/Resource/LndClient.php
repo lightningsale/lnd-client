@@ -16,10 +16,10 @@ use LightningSale\LndRest\Model\ListPeersResponse;
 use LightningSale\LndRest\Model\PayReq;
 use LightningSale\LndRest\Model\ListPaymentsResponse;
 use LightningSale\LndRest\Model\NewAddressResponse;
-use LightningSale\LndRest\Model\ListInvoiceResponse;
 use LightningSale\LndRest\Model\AddInvoiceResponse;
 use LightningSale\LndRest\Model\QueryRoutesResponse;
 use LightningSale\LndRest\Model\NodeInfo;
+use LightningSale\LndRest\Model\ActiveChannel;
 use LightningSale\LndRest\Model\NetworkInfo;
 use LightningSale\LndRest\Model\ChannelEdge;
 use LightningSale\LndRest\Model\ChannelGraph;
@@ -29,7 +29,6 @@ use LightningSale\LndRest\Model\CloseStatusUpdate;
 use LightningSale\LndRest\Model\SendResponse;
 use LightningSale\LndRest\Model\PendingChannelResponse;
 use LightningSale\LndRest\Model\ChannelPoint;
-use LightningSale\LndRest\Model\ListChannelsResponse;
 use LightningSale\LndRest\Model\ChannelBalanceResponse;
 use LightningSale\LndRest\Model\WalletBalanceResponse;
 
@@ -38,7 +37,7 @@ use LightningSale\LndRest\Model\WalletBalanceResponse;
  * @package LightningSale\LndRest\Resource
  * Documentation at http://api.lightning.community/
  */
-class LightningResource
+class LndClient
 {
     private $httpClient;
 
@@ -61,11 +60,12 @@ class LightningResource
         return ChannelBalanceResponse::fromResponse($body);
     }
 
-    public function listChannels(): ListChannelsResponse
+    /** @return ActiveChannel[] */
+    public function listChannels(): array
     {
         $response = $this->httpClient->get('/v1/channels');
         $body = \GuzzleHttp\json_decode($response->getBody(), true);
-        return ListChannelsResponse::fromResponse($body);
+        return array_map(function ($f) {return ActiveChannel::fromResponse($f);}, $body['channels'] ?? []);
     }
 
     public function openChannelSync(OpenChannelRequest $body): ChannelPoint
@@ -176,13 +176,14 @@ class LightningResource
         return Invoice::fromResponse($body);
     }
 
-    public function listInvoices(bool $pendingOnly = false)
+    /** @return Invoice[] */
+    public function listInvoices(bool $pendingOnly = false): array
     {
         $url = '/v1/invoices/{pending_only}';
         $url = str_replace('{pending_only}', urlencode($pendingOnly), $url);
         $response = $this->httpClient->get($url);
         $body = \GuzzleHttp\json_decode($response->getBody(), true);
-        return ListInvoiceResponse::fromResponse($body);
+        return array_map(function($f) {return Invoice::fromResponse($f);}, $body['invoices']);
     }
 
     public function lookupInvoice(string $rHashStr): Invoice
