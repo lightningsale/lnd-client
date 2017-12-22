@@ -20,72 +20,41 @@ class RoutingPolicy
      * @var string
      */
     protected $feeRateMilliMsat;
-    /**
-     * @return int
-     */
-    public function getTimeLockDelta()
+
+    public function getTimeLockDelta(): int
     {
         return $this->timeLockDelta;
     }
-    /**
-     * @param int $timeLockDelta
-     *
-     * @return self
-     */
-    public function setTimeLockDelta($timeLockDelta = null)
-    {
-        $this->timeLockDelta = $timeLockDelta;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getMinHtlc()
+
+    public function getMinHtlc(): string
     {
         return $this->minHtlc;
     }
-    /**
-     * @param string $minHtlc
-     *
-     * @return self
-     */
-    public function setMinHtlc($minHtlc = null)
-    {
-        $this->minHtlc = $minHtlc;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getFeeBaseMsat()
+
+    public function getFeeBaseMsat(): string
     {
         return $this->feeBaseMsat;
     }
-    /**
-     * @param string $feeBaseMsat
-     *
-     * @return self
-     */
-    public function setFeeBaseMsat($feeBaseMsat = null)
-    {
-        $this->feeBaseMsat = $feeBaseMsat;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getFeeRateMilliMsat()
+
+    public function getFeeRateMilliMsat(): string
     {
         return $this->feeRateMilliMsat;
     }
-    /**
-     * @param string $feeRateMilliMsat
-     *
-     * @return self
-     */
-    public function setFeeRateMilliMsat($feeRateMilliMsat = null)
+
+    public function __construct(int $timeLockDelta, string $minHtlc, string $feeBaseMsat, string $feeRateMilliMsat)
     {
+        $this->timeLockDelta = $timeLockDelta;
+        $this->minHtlc = $minHtlc;
+        $this->feeBaseMsat = $feeBaseMsat;
         $this->feeRateMilliMsat = $feeRateMilliMsat;
-        return $this;
+    }
+
+    public static function fromResponse(array $data) {
+        return new self(
+            $data['time_lock_delta'],
+            $data['min_htlc'],
+            $data['fee_base_msat'],
+            $data['fee_rate_milli_msat']
+        );
     }
 }

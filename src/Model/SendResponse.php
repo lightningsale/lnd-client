@@ -16,55 +16,35 @@ class SendResponse
      * @var Route
      */
     protected $paymentRoute;
-    /**
-     * @return string
-     */
-    public function getPaymentError()
+
+    public function getPaymentError(): string
     {
         return $this->paymentError;
     }
-    /**
-     * @param string $paymentError
-     *
-     * @return self
-     */
-    public function setPaymentError($paymentError = null)
-    {
-        $this->paymentError = $paymentError;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getPaymentPreimage()
+
+    public function getPaymentPreimage(): string
     {
         return $this->paymentPreimage;
     }
-    /**
-     * @param string $paymentPreimage
-     *
-     * @return self
-     */
-    public function setPaymentPreimage($paymentPreimage = null)
-    {
-        $this->paymentPreimage = $paymentPreimage;
-        return $this;
-    }
-    /**
-     * @return Route
-     */
-    public function getPaymentRoute()
+
+    public function getPaymentRoute(): Route
     {
         return $this->paymentRoute;
     }
-    /**
-     * @param Route $paymentRoute
-     *
-     * @return self
-     */
-    public function setPaymentRoute(Route $paymentRoute = null)
+
+    public function __construct(string $paymentError, string $paymentPreimage, Route $paymentRoute)
     {
+        $this->paymentError = $paymentError;
+        $this->paymentPreimage = $paymentPreimage;
         $this->paymentRoute = $paymentRoute;
-        return $this;
+    }
+
+    public static function fromResponse(array $data): self
+    {
+        return new self(
+            $data['payment_error'],
+            $data['payment_preimage'],
+            Route::fromResponse($data['payment_route'])
+        );
     }
 }

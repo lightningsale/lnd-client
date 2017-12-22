@@ -24,89 +24,51 @@ class PendingChannelResponsePendingChannel
      * @var string
      */
     protected $remoteBalance;
-    /**
-     * @return string
-     */
-    public function getRemoteNodePub()
+
+
+    public function getRemoteNodePub(): string
     {
         return $this->remoteNodePub;
     }
-    /**
-     * @param string $remoteNodePub
-     *
-     * @return self
-     */
-    public function setRemoteNodePub($remoteNodePub = null)
-    {
-        $this->remoteNodePub = $remoteNodePub;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getChannelPoint()
+
+    public function getChannelPoint(): string
     {
         return $this->channelPoint;
     }
-    /**
-     * @param string $channelPoint
-     *
-     * @return self
-     */
-    public function setChannelPoint($channelPoint = null)
-    {
-        $this->channelPoint = $channelPoint;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getCapacity()
+
+    public function getCapacity(): string
     {
         return $this->capacity;
     }
-    /**
-     * @param string $capacity
-     *
-     * @return self
-     */
-    public function setCapacity($capacity = null)
-    {
-        $this->capacity = $capacity;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getLocalBalance()
+
+    public function getLocalBalance(): string
     {
         return $this->localBalance;
     }
-    /**
-     * @param string $localBalance
-     *
-     * @return self
-     */
-    public function setLocalBalance($localBalance = null)
-    {
-        $this->localBalance = $localBalance;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getRemoteBalance()
+
+    public function getRemoteBalance(): string
     {
         return $this->remoteBalance;
     }
-    /**
-     * @param string $remoteBalance
-     *
-     * @return self
-     */
-    public function setRemoteBalance($remoteBalance = null)
+
+    public function __construct(string $remoteNodePub, string $channelPoint, string $capacity, string $localBalance, string $remoteBalance)
     {
+        $this->remoteNodePub = $remoteNodePub;
+        $this->channelPoint = $channelPoint;
+        $this->capacity = $capacity;
+        $this->localBalance = $localBalance;
         $this->remoteBalance = $remoteBalance;
-        return $this;
+    }
+
+
+    public static function fromResponse($data): self
+    {
+        return new self(
+            $data['remote_node_pub'],
+            $data['channel_point'],
+            $data['capacity'],
+            $data['local_balance'],
+            $data['remote_balance']
+        );
     }
 }

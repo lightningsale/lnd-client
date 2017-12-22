@@ -12,38 +12,40 @@ class ChannelGraph
      * @var ChannelEdge[]
      */
     protected $edges;
+
     /**
      * @return LightningNode[]
      */
-    public function getNodes()
+    public function getNodes(): array
     {
         return $this->nodes;
     }
-    /**
-     * @param LightningNode[] $nodes
-     *
-     * @return self
-     */
-    public function setNodes(array $nodes = null)
-    {
-        $this->nodes = $nodes;
-        return $this;
-    }
+
     /**
      * @return ChannelEdge[]
      */
-    public function getEdges()
+    public function getEdges(): array
     {
         return $this->edges;
     }
+
     /**
+     * ChannelGraph constructor.
+     * @param LightningNode[] $nodes
      * @param ChannelEdge[] $edges
-     *
-     * @return self
      */
-    public function setEdges(array $edges = null)
+    public function __construct(array $nodes, array $edges)
     {
+        $this->nodes = $nodes;
         $this->edges = $edges;
-        return $this;
+    }
+
+
+    public static function fromResponse($body)
+    {
+        return new self(
+            array_map(function($i) {return LightningNode::fromResponse($i);}, $body['nodes']),
+            array_map(function($i) {return ChannelEdge::fromResponse($i);}, $body['edges'])
+        );
     }
 }

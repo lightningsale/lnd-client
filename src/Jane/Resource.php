@@ -17,7 +17,7 @@ abstract class Resource
     /**
      * @var HttpClient|HttpAsyncClient
      */
-    protected $httpAsyncClient;
+    protected $client;
 
     /**
      * @var MessageFactory

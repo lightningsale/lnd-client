@@ -16,55 +16,36 @@ class ConfirmationUpdate
      * @var int
      */
     protected $numConfsLeft;
-    /**
-     * @return string
-     */
-    public function getBlockSha()
+
+    public function getBlockSha(): string
     {
         return $this->blockSha;
     }
-    /**
-     * @param string $blockSha
-     *
-     * @return self
-     */
-    public function setBlockSha($blockSha = null)
-    {
-        $this->blockSha = $blockSha;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getBlockHeight()
+
+    public function getBlockHeight(): int
     {
         return $this->blockHeight;
     }
-    /**
-     * @param int $blockHeight
-     *
-     * @return self
-     */
-    public function setBlockHeight($blockHeight = null)
-    {
-        $this->blockHeight = $blockHeight;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getNumConfsLeft()
+
+    public function getNumConfsLeft(): int
     {
         return $this->numConfsLeft;
     }
-    /**
-     * @param int $numConfsLeft
-     *
-     * @return self
-     */
-    public function setNumConfsLeft($numConfsLeft = null)
+
+    public function __construct(string $blockSha, int $blockHeight, int $numConfsLeft)
     {
+        $this->blockSha = $blockSha;
+        $this->blockHeight = $blockHeight;
         $this->numConfsLeft = $numConfsLeft;
-        return $this;
+    }
+
+
+    public static function fromResponse(array $data): self
+    {
+        return new self(
+            $data['block_sha'],
+            $data['block_height'],
+            $data['num_confs_left']
+        );
     }
 }

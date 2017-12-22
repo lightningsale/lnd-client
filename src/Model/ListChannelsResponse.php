@@ -2,27 +2,34 @@
 
 namespace LightningSale\LndRest\Model;
 
+use Grpc\Channel;
+
 class ListChannelsResponse
 {
     /**
      * @var ActiveChannel[]
      */
     protected $channels;
+
     /**
      * @return ActiveChannel[]
      */
-    public function getChannels()
+    public function getChannels(): array
     {
         return $this->channels;
     }
-    /**
-     * @param ActiveChannel[] $channels
-     *
-     * @return self
-     */
-    public function setChannels(array $channels = null)
+
+    public function __construct(array $channels)
     {
         $this->channels = $channels;
-        return $this;
+    }
+
+    public static function fromResponse($body): self
+    {
+        $channels = [];
+        foreach ($body['channels'] ?? [] as $channel)
+            $channels[] = ActiveChannel::fromResponse($channel);
+
+        return new self($channels);
     }
 }

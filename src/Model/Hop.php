@@ -24,89 +24,50 @@ class Hop
      * @var int
      */
     protected $expiry;
-    /**
-     * @return string
-     */
-    public function getChanId()
+
+    public function getChanId(): string
     {
         return $this->chanId;
     }
-    /**
-     * @param string $chanId
-     *
-     * @return self
-     */
-    public function setChanId($chanId = null)
-    {
-        $this->chanId = $chanId;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getChanCapacity()
+
+    public function getChanCapacity(): string
     {
         return $this->chanCapacity;
     }
-    /**
-     * @param string $chanCapacity
-     *
-     * @return self
-     */
-    public function setChanCapacity($chanCapacity = null)
-    {
-        $this->chanCapacity = $chanCapacity;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getAmtToForward()
+
+    public function getAmtToForward(): string
     {
         return $this->amtToForward;
     }
-    /**
-     * @param string $amtToForward
-     *
-     * @return self
-     */
-    public function setAmtToForward($amtToForward = null)
-    {
-        $this->amtToForward = $amtToForward;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getFee()
+
+    public function getFee(): string
     {
         return $this->fee;
     }
-    /**
-     * @param string $fee
-     *
-     * @return self
-     */
-    public function setFee($fee = null)
-    {
-        $this->fee = $fee;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getExpiry()
+
+    public function getExpiry(): int
     {
         return $this->expiry;
     }
-    /**
-     * @param int $expiry
-     *
-     * @return self
-     */
-    public function setExpiry($expiry = null)
+
+    public function __construct(string $chanId, string $chanCapacity, string $amtToForward, string $fee, int $expiry)
     {
+        $this->chanId = $chanId;
+        $this->chanCapacity = $chanCapacity;
+        $this->amtToForward = $amtToForward;
+        $this->fee = $fee;
         $this->expiry = $expiry;
-        return $this;
+    }
+
+
+    public static function fromResponse(array $data): self
+    {
+        return new self(
+            $data['chan_id'],
+            $data['chan_capacity'],
+            $data['amt_to_forward'],
+            $data['fee'],
+            $data['expiry']
+        );
     }
 }

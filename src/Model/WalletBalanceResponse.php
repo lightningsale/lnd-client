@@ -16,55 +16,37 @@ class WalletBalanceResponse
      * @var string
      */
     protected $unconfirmedBalance;
-    /**
-     * @return string
-     */
-    public function getTotalBalance()
+
+    public function getTotalBalance(): string
     {
         return $this->totalBalance;
     }
-    /**
-     * @param string $totalBalance
-     *
-     * @return self
-     */
-    public function setTotalBalance($totalBalance = null)
-    {
-        $this->totalBalance = $totalBalance;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getConfirmedBalance()
+
+    public function getConfirmedBalance(): string
     {
         return $this->confirmedBalance;
     }
-    /**
-     * @param string $confirmedBalance
-     *
-     * @return self
-     */
-    public function setConfirmedBalance($confirmedBalance = null)
-    {
-        $this->confirmedBalance = $confirmedBalance;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getUnconfirmedBalance()
+
+
+    public function getUnconfirmedBalance(): string
     {
         return $this->unconfirmedBalance;
     }
-    /**
-     * @param string $unconfirmedBalance
-     *
-     * @return self
-     */
-    public function setUnconfirmedBalance($unconfirmedBalance = null)
+
+    public function __construct(string $totalBalance, string $confirmedBalance, string $unconfirmedBalance)
     {
+        $this->totalBalance = $totalBalance;
+        $this->confirmedBalance = $confirmedBalance;
         $this->unconfirmedBalance = $unconfirmedBalance;
-        return $this;
+    }
+
+
+    public static function fromResponse(array $body): self
+    {
+        return new self(
+            $body['total_balance'],
+            $body['confirmed_balance'],
+            $body['unconfirmed_balance']
+        );
     }
 }

@@ -8,21 +8,19 @@ class ChannelBalanceResponse
      * @var string
      */
     protected $balance;
-    /**
-     * @return string
-     */
-    public function getBalance()
+
+    public function getBalance(): string
     {
         return $this->balance;
     }
-    /**
-     * @param string $balance
-     *
-     * @return self
-     */
-    public function setBalance($balance = null)
+
+    public function __construct(string $balance)
     {
         $this->balance = $balance;
-        return $this;
+    }
+
+    public static function fromResponse(array $body)
+    {
+        return new self($body['balance']);
     }
 }

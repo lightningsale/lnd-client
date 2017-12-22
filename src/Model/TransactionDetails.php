@@ -8,21 +8,29 @@ class TransactionDetails
      * @var Transaction[]
      */
     protected $transactions;
+
     /**
      * @return Transaction[]
      */
-    public function getTransactions()
+    public function getTransactions(): array
     {
         return $this->transactions;
     }
+
     /**
+     * TransactionDetails constructor.
      * @param Transaction[] $transactions
-     *
-     * @return self
      */
-    public function setTransactions(array $transactions = null)
+    public function __construct(array $transactions)
     {
         $this->transactions = $transactions;
-        return $this;
+    }
+
+
+    public static function fromResponse($body): self
+    {
+        return new self(
+            array_map(function($f) {return Transaction::fromResponse($f);}, $body['transactions'])
+        );
     }
 }

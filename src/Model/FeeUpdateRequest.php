@@ -2,7 +2,7 @@
 
 namespace LightningSale\LndRest\Model;
 
-class FeeUpdateRequest
+class FeeUpdateRequest implements \JsonSerializable
 {
     /**
      * @var bool
@@ -20,72 +20,42 @@ class FeeUpdateRequest
      * @var float
      */
     protected $feeRate;
-    /**
-     * @return bool
-     */
-    public function getGlobal()
+
+    public function isGlobal(): bool
     {
         return $this->global;
     }
-    /**
-     * @param bool $global
-     *
-     * @return self
-     */
-    public function setGlobal($global = null)
-    {
-        $this->global = $global;
-        return $this;
-    }
-    /**
-     * @return ChannelPoint
-     */
-    public function getChanPoint()
+
+    public function getChanPoint(): ChannelPoint
     {
         return $this->chanPoint;
     }
-    /**
-     * @param ChannelPoint $chanPoint
-     *
-     * @return self
-     */
-    public function setChanPoint(ChannelPoint $chanPoint = null)
-    {
-        $this->chanPoint = $chanPoint;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getBaseFeeMsat()
+
+    public function getBaseFeeMsat(): string
     {
         return $this->baseFeeMsat;
     }
-    /**
-     * @param string $baseFeeMsat
-     *
-     * @return self
-     */
-    public function setBaseFeeMsat($baseFeeMsat = null)
-    {
-        $this->baseFeeMsat = $baseFeeMsat;
-        return $this;
-    }
-    /**
-     * @return float
-     */
-    public function getFeeRate()
+
+    public function getFeeRate(): float
     {
         return $this->feeRate;
     }
-    /**
-     * @param float $feeRate
-     *
-     * @return self
-     */
-    public function setFeeRate($feeRate = null)
+
+    public function __construct(bool $global, ChannelPoint $chanPoint, string $baseFeeMsat, float $feeRate)
     {
+        $this->global = $global;
+        $this->chanPoint = $chanPoint;
+        $this->baseFeeMsat = $baseFeeMsat;
         $this->feeRate = $feeRate;
-        return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'global' => $this->global,
+            'chan_point' => $this->chanPoint,
+            'base_fee_msat' => $this->baseFeeMsat,
+            'fee_rate' => $this->feeRate,
+        ];
     }
 }

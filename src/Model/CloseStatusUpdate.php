@@ -16,55 +16,36 @@ class CloseStatusUpdate
      * @var ChannelCloseUpdate
      */
     protected $chanClose;
-    /**
-     * @return PendingUpdate
-     */
-    public function getClosePending()
+
+    public function getClosePending(): PendingUpdate
     {
         return $this->closePending;
     }
-    /**
-     * @param PendingUpdate $closePending
-     *
-     * @return self
-     */
-    public function setClosePending(PendingUpdate $closePending = null)
-    {
-        $this->closePending = $closePending;
-        return $this;
-    }
-    /**
-     * @return ConfirmationUpdate
-     */
-    public function getConfirmation()
+
+    public function getConfirmation(): ConfirmationUpdate
     {
         return $this->confirmation;
     }
-    /**
-     * @param ConfirmationUpdate $confirmation
-     *
-     * @return self
-     */
-    public function setConfirmation(ConfirmationUpdate $confirmation = null)
-    {
-        $this->confirmation = $confirmation;
-        return $this;
-    }
-    /**
-     * @return ChannelCloseUpdate
-     */
-    public function getChanClose()
+
+    public function getChanClose(): ChannelCloseUpdate
     {
         return $this->chanClose;
     }
-    /**
-     * @param ChannelCloseUpdate $chanClose
-     *
-     * @return self
-     */
-    public function setChanClose(ChannelCloseUpdate $chanClose = null)
+
+    public function __construct(PendingUpdate $closePending, ConfirmationUpdate $confirmation, ChannelCloseUpdate $chanClose)
     {
+        $this->closePending = $closePending;
+        $this->confirmation = $confirmation;
         $this->chanClose = $chanClose;
-        return $this;
+    }
+
+
+    public static function fromResponse(array $body): self
+    {
+        return new self(
+            PendingUpdate::fromResponse($body['close_pending']),
+            ConfirmationUpdate::fromResponse($body['confirmation']),
+            ChannelCloseUpdate::fromResponse($body['chan_close'])
+        );
     }
 }

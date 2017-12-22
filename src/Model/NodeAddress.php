@@ -12,38 +12,28 @@ class NodeAddress
      * @var string
      */
     protected $addr;
-    /**
-     * @return string
-     */
-    public function getNetwork()
+
+    public function getNetwork(): string
     {
         return $this->network;
     }
-    /**
-     * @param string $network
-     *
-     * @return self
-     */
-    public function setNetwork($network = null)
-    {
-        $this->network = $network;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getAddr()
+
+    public function getAddr(): string
     {
         return $this->addr;
     }
-    /**
-     * @param string $addr
-     *
-     * @return self
-     */
-    public function setAddr($addr = null)
+
+    public function __construct(string $network, string $addr)
     {
+        $this->network = $network;
         $this->addr = $addr;
-        return $this;
+    }
+
+    public static function fromResponse(array $data): self
+    {
+        return new self(
+            $data['network'],
+            $data['addr']
+        );
     }
 }

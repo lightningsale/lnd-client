@@ -12,38 +12,28 @@ class PendingUpdate
      * @var int
      */
     protected $outputIndex;
-    /**
-     * @return string
-     */
-    public function getTxid()
+
+    public function getTxid(): string
     {
         return $this->txid;
     }
-    /**
-     * @param string $txid
-     *
-     * @return self
-     */
-    public function setTxid($txid = null)
-    {
-        $this->txid = $txid;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getOutputIndex()
+
+    public function getOutputIndex(): int
     {
         return $this->outputIndex;
     }
-    /**
-     * @param int $outputIndex
-     *
-     * @return self
-     */
-    public function setOutputIndex($outputIndex = null)
+
+    public function __construct(string $txid, int $outputIndex)
     {
+        $this->txid = $txid;
         $this->outputIndex = $outputIndex;
-        return $this;
+    }
+
+    public static function fromResponse($data): self
+    {
+        return new self(
+            $data['txid'],
+            $data['outputIndex']
+        );
     }
 }

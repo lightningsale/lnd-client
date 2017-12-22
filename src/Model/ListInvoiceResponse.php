@@ -8,21 +8,29 @@ class ListInvoiceResponse
      * @var Invoice[]
      */
     protected $invoices;
+
     /**
      * @return Invoice[]
      */
-    public function getInvoices()
+    public function getInvoices(): array
     {
         return $this->invoices;
     }
+
     /**
+     * ListInvoiceResponse constructor.
      * @param Invoice[] $invoices
-     *
-     * @return self
      */
-    public function setInvoices(array $invoices = null)
+    public function __construct(array $invoices)
     {
         $this->invoices = $invoices;
-        return $this;
+    }
+
+
+    public static function fromResponse($body): self
+    {
+        return new self(
+            array_map(function($f) {return Invoice::fromResponse($f);}, $body['invoices'])
+        );
     }
 }

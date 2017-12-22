@@ -40,157 +40,79 @@ class NetworkInfo
      * @var string
      */
     protected $maxChannelSize;
-    /**
-     * @return int
-     */
-    public function getGraphDiameter()
+
+
+    public function getGraphDiameter(): int
     {
         return $this->graphDiameter;
     }
-    /**
-     * @param int $graphDiameter
-     *
-     * @return self
-     */
-    public function setGraphDiameter($graphDiameter = null)
-    {
-        $this->graphDiameter = $graphDiameter;
-        return $this;
-    }
-    /**
-     * @return float
-     */
-    public function getAvgOutDegree()
+
+    public function getAvgOutDegree(): float
     {
         return $this->avgOutDegree;
     }
-    /**
-     * @param float $avgOutDegree
-     *
-     * @return self
-     */
-    public function setAvgOutDegree($avgOutDegree = null)
-    {
-        $this->avgOutDegree = $avgOutDegree;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getMaxOutDegree()
+
+    public function getMaxOutDegree(): int
     {
         return $this->maxOutDegree;
     }
-    /**
-     * @param int $maxOutDegree
-     *
-     * @return self
-     */
-    public function setMaxOutDegree($maxOutDegree = null)
-    {
-        $this->maxOutDegree = $maxOutDegree;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getNumNodes()
+
+    public function getNumNodes(): int
     {
         return $this->numNodes;
     }
-    /**
-     * @param int $numNodes
-     *
-     * @return self
-     */
-    public function setNumNodes($numNodes = null)
-    {
-        $this->numNodes = $numNodes;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getNumChannels()
+
+    public function getNumChannels(): int
     {
         return $this->numChannels;
     }
-    /**
-     * @param int $numChannels
-     *
-     * @return self
-     */
-    public function setNumChannels($numChannels = null)
-    {
-        $this->numChannels = $numChannels;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getTotalNetworkCapacity()
+
+    public function getTotalNetworkCapacity(): string
     {
         return $this->totalNetworkCapacity;
     }
-    /**
-     * @param string $totalNetworkCapacity
-     *
-     * @return self
-     */
-    public function setTotalNetworkCapacity($totalNetworkCapacity = null)
-    {
-        $this->totalNetworkCapacity = $totalNetworkCapacity;
-        return $this;
-    }
-    /**
-     * @return float
-     */
-    public function getAvgChannelSize()
+
+    public function getAvgChannelSize(): float
     {
         return $this->avgChannelSize;
     }
-    /**
-     * @param float $avgChannelSize
-     *
-     * @return self
-     */
-    public function setAvgChannelSize($avgChannelSize = null)
-    {
-        $this->avgChannelSize = $avgChannelSize;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getMinChannelSize()
+
+    public function getMinChannelSize(): string
     {
         return $this->minChannelSize;
     }
-    /**
-     * @param string $minChannelSize
-     *
-     * @return self
-     */
-    public function setMinChannelSize($minChannelSize = null)
-    {
-        $this->minChannelSize = $minChannelSize;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getMaxChannelSize()
+
+    public function getMaxChannelSize(): string
     {
         return $this->maxChannelSize;
     }
-    /**
-     * @param string $maxChannelSize
-     *
-     * @return self
-     */
-    public function setMaxChannelSize($maxChannelSize = null)
+
+    public function __construct(int $graphDiameter, float $avgOutDegree, int $maxOutDegree, int $numNodes, int $numChannels, string $totalNetworkCapacity, float $avgChannelSize, string $minChannelSize, string $maxChannelSize)
     {
+        $this->graphDiameter = $graphDiameter;
+        $this->avgOutDegree = $avgOutDegree;
+        $this->maxOutDegree = $maxOutDegree;
+        $this->numNodes = $numNodes;
+        $this->numChannels = $numChannels;
+        $this->totalNetworkCapacity = $totalNetworkCapacity;
+        $this->avgChannelSize = $avgChannelSize;
+        $this->minChannelSize = $minChannelSize;
         $this->maxChannelSize = $maxChannelSize;
-        return $this;
+    }
+
+
+    public static function fromResponse(array $body): self
+    {
+        return new self(
+            $body['graph_diameter'],
+            $body['avg_out_degree'],
+            $body['max_out_degree'],
+            $body['num_nodes'],
+            $body['num_channels'],
+            $body['total_network_capacity'],
+            $body['avg_channel_size'],
+            $body['min_channel_size'],
+            $body['max_channel_size']
+        );
     }
 }

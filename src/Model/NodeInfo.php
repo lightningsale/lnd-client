@@ -16,55 +16,35 @@ class NodeInfo
      * @var string
      */
     protected $totalCapacity;
-    /**
-     * @return LightningNode
-     */
-    public function getNode()
+
+    public function getNode(): LightningNode
     {
         return $this->node;
     }
-    /**
-     * @param LightningNode $node
-     *
-     * @return self
-     */
-    public function setNode(LightningNode $node = null)
-    {
-        $this->node = $node;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getNumChannels()
+
+    public function getNumChannels(): int
     {
         return $this->numChannels;
     }
-    /**
-     * @param int $numChannels
-     *
-     * @return self
-     */
-    public function setNumChannels($numChannels = null)
-    {
-        $this->numChannels = $numChannels;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getTotalCapacity()
+
+    public function getTotalCapacity(): string
     {
         return $this->totalCapacity;
     }
-    /**
-     * @param string $totalCapacity
-     *
-     * @return self
-     */
-    public function setTotalCapacity($totalCapacity = null)
+
+    public function __construct(LightningNode $node, int $numChannels, string $totalCapacity)
     {
+        $this->node = $node;
+        $this->numChannels = $numChannels;
         $this->totalCapacity = $totalCapacity;
-        return $this;
+    }
+
+    public static function fromResponse(array $body): self
+    {
+        return new self(
+            LightningNode::fromResponse($body['node']),
+            $body['num_channels'],
+            $body['total_capacity']
+        );
     }
 }

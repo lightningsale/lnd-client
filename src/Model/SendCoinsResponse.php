@@ -8,21 +8,19 @@ class SendCoinsResponse
      * @var string
      */
     protected $txid;
-    /**
-     * @return string
-     */
-    public function getTxid()
+
+    public function getTxid(): string
     {
         return $this->txid;
     }
-    /**
-     * @param string $txid
-     *
-     * @return self
-     */
-    public function setTxid($txid = null)
+
+    public function __construct(string $txid)
     {
         $this->txid = $txid;
-        return $this;
+    }
+
+    public static function fromResponse($body): self
+    {
+        return new self($body['txid']);
     }
 }

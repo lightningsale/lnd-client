@@ -8,6 +8,7 @@ class ListPaymentsResponse
      * @var Payment[]
      */
     protected $payments;
+
     /**
      * @return Payment[]
      */
@@ -15,14 +16,21 @@ class ListPaymentsResponse
     {
         return $this->payments;
     }
+    
     /**
+     * ListPaymentsResponse constructor.
      * @param Payment[] $payments
-     *
-     * @return self
      */
-    public function setPayments(array $payments = null)
+    public function __construct(array $payments)
     {
         $this->payments = $payments;
-        return $this;
     }
+    
+    public static function fromResponse(array $body): self
+    {
+        return new self(
+            array_map(function($f) {return Payment::fromResponse($f);}, $body['payments'])
+        );
+    }
+
 }

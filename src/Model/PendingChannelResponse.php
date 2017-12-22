@@ -20,72 +20,58 @@ class PendingChannelResponse
      * @var PendingChannelResponseForceClosedChannel[]
      */
     protected $pendingForceClosingChannels;
-    /**
-     * @return string
-     */
-    public function getTotalLimboBalance()
+
+    public function getTotalLimboBalance(): string
     {
         return $this->totalLimboBalance;
     }
-    /**
-     * @param string $totalLimboBalance
-     *
-     * @return self
-     */
-    public function setTotalLimboBalance($totalLimboBalance = null)
-    {
-        $this->totalLimboBalance = $totalLimboBalance;
-        return $this;
-    }
+
     /**
      * @return PendingChannelResponsePendingOpenChannel[]
      */
-    public function getPendingOpenChannels()
+    public function getPendingOpenChannels(): array
     {
         return $this->pendingOpenChannels;
     }
-    /**
-     * @param PendingChannelResponsePendingOpenChannel[] $pendingOpenChannels
-     *
-     * @return self
-     */
-    public function setPendingOpenChannels(array $pendingOpenChannels = null)
-    {
-        $this->pendingOpenChannels = $pendingOpenChannels;
-        return $this;
-    }
+
     /**
      * @return PendingChannelResponseClosedChannel[]
      */
-    public function getPendingClosingChannels()
+    public function getPendingClosingChannels(): array
     {
         return $this->pendingClosingChannels;
     }
-    /**
-     * @param PendingChannelResponseClosedChannel[] $pendingClosingChannels
-     *
-     * @return self
-     */
-    public function setPendingClosingChannels(array $pendingClosingChannels = null)
-    {
-        $this->pendingClosingChannels = $pendingClosingChannels;
-        return $this;
-    }
+
     /**
      * @return PendingChannelResponseForceClosedChannel[]
      */
-    public function getPendingForceClosingChannels()
+    public function getPendingForceClosingChannels(): array
     {
         return $this->pendingForceClosingChannels;
     }
+
     /**
+     * PendingChannelResponse constructor.
+     * @param string $totalLimboBalance
+     * @param PendingChannelResponsePendingOpenChannel[] $pendingOpenChannels
+     * @param PendingChannelResponseClosedChannel[] $pendingClosingChannels
      * @param PendingChannelResponseForceClosedChannel[] $pendingForceClosingChannels
-     *
-     * @return self
      */
-    public function setPendingForceClosingChannels(array $pendingForceClosingChannels = null)
+    public function __construct(string $totalLimboBalance, array $pendingOpenChannels, array $pendingClosingChannels, array $pendingForceClosingChannels)
     {
+        $this->totalLimboBalance = $totalLimboBalance;
+        $this->pendingOpenChannels = $pendingOpenChannels;
+        $this->pendingClosingChannels = $pendingClosingChannels;
         $this->pendingForceClosingChannels = $pendingForceClosingChannels;
-        return $this;
+    }
+
+    public static function fromResponse(array $body): self
+    {
+        return new self(
+            $body['total_limbo_balance'],
+            array_map(function($i) {return PendingChannelResponsePendingOpenChannel::fromResponse($i);}, $body['pending_open_channels']),
+            array_map(function($i) {return PendingChannelResponseClosedChannel::fromResponse($i);}, $body['pending_closing_channels']),
+            array_map(function($i) {return PendingChannelResponseForceClosedChannel::fromResponse($i);}, $body['pending_force_closing_channels'])
+        );
     }
 }

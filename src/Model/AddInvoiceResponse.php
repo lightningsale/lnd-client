@@ -12,38 +12,28 @@ class AddInvoiceResponse
      * @var string
      */
     protected $paymentRequest;
-    /**
-     * @return string
-     */
-    public function getRHash()
+
+    public function getRHash(): string
     {
         return $this->rHash;
     }
-    /**
-     * @param string $rHash
-     *
-     * @return self
-     */
-    public function setRHash($rHash = null)
-    {
-        $this->rHash = $rHash;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getPaymentRequest()
+
+    public function getPaymentRequest(): string
     {
         return $this->paymentRequest;
     }
-    /**
-     * @param string $paymentRequest
-     *
-     * @return self
-     */
-    public function setPaymentRequest($paymentRequest = null)
+
+    public function __construct(string $rHash, string $paymentRequest)
     {
+        $this->rHash = $rHash;
         $this->paymentRequest = $paymentRequest;
-        return $this;
+    }
+
+    public static function fromResponse(array $body): self
+    {
+        return new self(
+            $body['rHash'],
+            $body['paymentRequest']
+        );
     }
 }

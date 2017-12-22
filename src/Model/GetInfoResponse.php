@@ -2,6 +2,8 @@
 
 namespace LightningSale\LndRest\Model;
 
+use Psr\Http\Message\ResponseInterface;
+
 class GetInfoResponse
 {
     /**
@@ -44,174 +46,83 @@ class GetInfoResponse
      * @var string[]
      */
     protected $chains;
-    /**
-     * @return string
-     */
-    public function getIdentityPubkey()
+
+    public function getIdentityPubkey(): string
     {
         return $this->identityPubkey;
     }
-    /**
-     * @param string $identityPubkey
-     *
-     * @return self
-     */
-    public function setIdentityPubkey($identityPubkey = null)
-    {
-        $this->identityPubkey = $identityPubkey;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getAlias()
+
+    public function getAlias(): string
     {
         return $this->alias;
     }
-    /**
-     * @param string $alias
-     *
-     * @return self
-     */
-    public function setAlias($alias = null)
-    {
-        $this->alias = $alias;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getNumPendingChannels()
+
+    public function getNumPendingChannels(): int
     {
         return $this->numPendingChannels;
     }
-    /**
-     * @param int $numPendingChannels
-     *
-     * @return self
-     */
-    public function setNumPendingChannels($numPendingChannels = null)
-    {
-        $this->numPendingChannels = $numPendingChannels;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getNumActiveChannels()
+
+    public function getNumActiveChannels(): int
     {
         return $this->numActiveChannels;
     }
-    /**
-     * @param int $numActiveChannels
-     *
-     * @return self
-     */
-    public function setNumActiveChannels($numActiveChannels = null)
-    {
-        $this->numActiveChannels = $numActiveChannels;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getNumPeers()
+
+    public function getNumPeers(): int
     {
         return $this->numPeers;
     }
-    /**
-     * @param int $numPeers
-     *
-     * @return self
-     */
-    public function setNumPeers($numPeers = null)
-    {
-        $this->numPeers = $numPeers;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getBlockHeight()
+
+    public function getBlockHeight(): int
     {
         return $this->blockHeight;
     }
-    /**
-     * @param int $blockHeight
-     *
-     * @return self
-     */
-    public function setBlockHeight($blockHeight = null)
-    {
-        $this->blockHeight = $blockHeight;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getBlockHash()
+
+    public function getBlockHash(): string
     {
         return $this->blockHash;
     }
-    /**
-     * @param string $blockHash
-     *
-     * @return self
-     */
-    public function setBlockHash($blockHash = null)
-    {
-        $this->blockHash = $blockHash;
-        return $this;
-    }
-    /**
-     * @return bool
-     */
-    public function getSyncedToChain()
+
+    public function isSyncedToChain(): bool
     {
         return $this->syncedToChain;
     }
-    /**
-     * @param bool $syncedToChain
-     *
-     * @return self
-     */
-    public function setSyncedToChain($syncedToChain = null)
-    {
-        $this->syncedToChain = $syncedToChain;
-        return $this;
-    }
-    /**
-     * @return bool
-     */
-    public function getTestnet()
+
+    public function isTestnet(): bool
     {
         return $this->testnet;
     }
-    /**
-     * @param bool $testnet
-     *
-     * @return self
-     */
-    public function setTestnet($testnet = null)
-    {
-        $this->testnet = $testnet;
-        return $this;
-    }
-    /**
-     * @return string[]
-     */
-    public function getChains()
+
+    public function getChains(): array
     {
         return $this->chains;
     }
-    /**
-     * @param string[] $chains
-     *
-     * @return self
-     */
-    public function setChains(array $chains = null)
+
+    public function __construct(string $identityPubkey, string $alias, int $numPendingChannels, int $numActiveChannels, int $numPeers, int $blockHeight, string $blockHash, bool $syncedToChain, bool $testnet, array $chains)
     {
+        $this->identityPubkey = $identityPubkey;
+        $this->alias = $alias;
+        $this->numPendingChannels = $numPendingChannels;
+        $this->numActiveChannels = $numActiveChannels;
+        $this->numPeers = $numPeers;
+        $this->blockHeight = $blockHeight;
+        $this->blockHash = $blockHash;
+        $this->syncedToChain = $syncedToChain;
+        $this->testnet = $testnet;
         $this->chains = $chains;
-        return $this;
+    }
+
+    public static function fromResponse(array $data) {
+        return new self(
+            $data['identity_pubkey'],
+            $data['alias'] ?? "",
+            $data['num_pending_channels'] ?? 0,
+            $data['num_active_channels'] ?? 0,
+            $data['num_peers'] ?? 0,
+            $data['block_height'] ?? 0,
+            $data['block_hash'] ?? "",
+            $data['synced_to_chain'] ?? false,
+            $data['testnet'] ?? false,
+            $data['chains'] ?? []
+        );
     }
 }

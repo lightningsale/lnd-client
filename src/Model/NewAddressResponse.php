@@ -8,21 +8,20 @@ class NewAddressResponse
      * @var string
      */
     protected $address;
-    /**
-     * @return string
-     */
-    public function getAddress()
+
+    public function getAddress(): string
     {
         return $this->address;
     }
-    /**
-     * @param string $address
-     *
-     * @return self
-     */
-    public function setAddress($address = null)
+
+    public function __construct(string $address)
     {
         $this->address = $address;
-        return $this;
+    }
+
+
+    public static function fromResponse(array $body): self
+    {
+        return new self($body['address']);
     }
 }

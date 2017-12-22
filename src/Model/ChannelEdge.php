@@ -36,140 +36,71 @@ class ChannelEdge
      * @var RoutingPolicy
      */
     protected $node2Policy;
-    /**
-     * @return string
-     */
-    public function getChannelId()
+
+    public function getChannelId(): string
     {
         return $this->channelId;
     }
-    /**
-     * @param string $channelId
-     *
-     * @return self
-     */
-    public function setChannelId($channelId = null)
-    {
-        $this->channelId = $channelId;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getChanPoint()
+
+    public function getChanPoint(): string
     {
         return $this->chanPoint;
     }
-    /**
-     * @param string $chanPoint
-     *
-     * @return self
-     */
-    public function setChanPoint($chanPoint = null)
-    {
-        $this->chanPoint = $chanPoint;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getLastUpdate()
+
+    public function getLastUpdate(): int
     {
         return $this->lastUpdate;
     }
-    /**
-     * @param int $lastUpdate
-     *
-     * @return self
-     */
-    public function setLastUpdate($lastUpdate = null)
-    {
-        $this->lastUpdate = $lastUpdate;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getNode1Pub()
+
+    public function getNode1Pub(): string
     {
         return $this->node1Pub;
     }
-    /**
-     * @param string $node1Pub
-     *
-     * @return self
-     */
-    public function setNode1Pub($node1Pub = null)
-    {
-        $this->node1Pub = $node1Pub;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getNode2Pub()
+
+    public function getNode2Pub(): string
     {
         return $this->node2Pub;
     }
-    /**
-     * @param string $node2Pub
-     *
-     * @return self
-     */
-    public function setNode2Pub($node2Pub = null)
-    {
-        $this->node2Pub = $node2Pub;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getCapacity()
+
+    public function getCapacity(): string
     {
         return $this->capacity;
     }
-    /**
-     * @param string $capacity
-     *
-     * @return self
-     */
-    public function setCapacity($capacity = null)
-    {
-        $this->capacity = $capacity;
-        return $this;
-    }
-    /**
-     * @return RoutingPolicy
-     */
-    public function getNode1Policy()
+
+    public function getNode1Policy(): RoutingPolicy
     {
         return $this->node1Policy;
     }
-    /**
-     * @param RoutingPolicy $node1Policy
-     *
-     * @return self
-     */
-    public function setNode1Policy(RoutingPolicy $node1Policy = null)
-    {
-        $this->node1Policy = $node1Policy;
-        return $this;
-    }
-    /**
-     * @return RoutingPolicy
-     */
-    public function getNode2Policy()
+
+    public function getNode2Policy(): RoutingPolicy
     {
         return $this->node2Policy;
     }
-    /**
-     * @param RoutingPolicy $node2Policy
-     *
-     * @return self
-     */
-    public function setNode2Policy(RoutingPolicy $node2Policy = null)
+
+    public function __construct(string $channelId, string $chanPoint, int $lastUpdate, string $node1Pub, string $node2Pub, string $capacity, RoutingPolicy $node1Policy, RoutingPolicy $node2Policy)
     {
+        $this->channelId = $channelId;
+        $this->chanPoint = $chanPoint;
+        $this->lastUpdate = $lastUpdate;
+        $this->node1Pub = $node1Pub;
+        $this->node2Pub = $node2Pub;
+        $this->capacity = $capacity;
+        $this->node1Policy = $node1Policy;
         $this->node2Policy = $node2Policy;
-        return $this;
     }
+
+    public static function fromResponse(array $body): self
+    {
+        return new self(
+            $body['channelId'],
+            $body['chanPoint'],
+            $body['lastUpdate'],
+            $body['node1Pub'],
+            $body['node2Pub'],
+            $body['capacity'],
+            RoutingPolicy::fromResponse($body['node1Policy']),
+            RoutingPolicy::fromResponse($body['node2Policy'])
+        );
+    }
+
 }

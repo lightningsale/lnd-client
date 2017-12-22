@@ -68,276 +68,131 @@ class ActiveChannel
      * @var int
      */
     protected $csvDelay;
-    /**
-     * @return bool
-     */
-    public function getActive()
+
+    public function isActive(): bool
     {
         return $this->active;
     }
-    /**
-     * @param bool $active
-     *
-     * @return self
-     */
-    public function setActive($active = null)
-    {
-        $this->active = $active;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getRemotePubkey()
+
+    public function getRemotePubkey(): string
     {
         return $this->remotePubkey;
     }
-    /**
-     * @param string $remotePubkey
-     *
-     * @return self
-     */
-    public function setRemotePubkey($remotePubkey = null)
-    {
-        $this->remotePubkey = $remotePubkey;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getChannelPoint()
+
+    public function getChannelPoint(): string
     {
         return $this->channelPoint;
     }
-    /**
-     * @param string $channelPoint
-     *
-     * @return self
-     */
-    public function setChannelPoint($channelPoint = null)
-    {
-        $this->channelPoint = $channelPoint;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getChanId()
+
+    public function getChanId(): string
     {
         return $this->chanId;
     }
-    /**
-     * @param string $chanId
-     *
-     * @return self
-     */
-    public function setChanId($chanId = null)
-    {
-        $this->chanId = $chanId;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getCapacity()
+
+    public function getCapacity(): string
     {
         return $this->capacity;
     }
-    /**
-     * @param string $capacity
-     *
-     * @return self
-     */
-    public function setCapacity($capacity = null)
-    {
-        $this->capacity = $capacity;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getLocalBalance()
+
+    public function getLocalBalance(): string
     {
         return $this->localBalance;
     }
-    /**
-     * @param string $localBalance
-     *
-     * @return self
-     */
-    public function setLocalBalance($localBalance = null)
-    {
-        $this->localBalance = $localBalance;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getRemoteBalance()
+
+    public function getRemoteBalance(): string
     {
         return $this->remoteBalance;
     }
-    /**
-     * @param string $remoteBalance
-     *
-     * @return self
-     */
-    public function setRemoteBalance($remoteBalance = null)
-    {
-        $this->remoteBalance = $remoteBalance;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getCommitFee()
+
+    public function getCommitFee(): string
     {
         return $this->commitFee;
     }
-    /**
-     * @param string $commitFee
-     *
-     * @return self
-     */
-    public function setCommitFee($commitFee = null)
-    {
-        $this->commitFee = $commitFee;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getCommitWeight()
+
+    public function getCommitWeight(): string
     {
         return $this->commitWeight;
     }
-    /**
-     * @param string $commitWeight
-     *
-     * @return self
-     */
-    public function setCommitWeight($commitWeight = null)
-    {
-        $this->commitWeight = $commitWeight;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getFeePerKw()
+
+    public function getFeePerKw(): string
     {
         return $this->feePerKw;
     }
-    /**
-     * @param string $feePerKw
-     *
-     * @return self
-     */
-    public function setFeePerKw($feePerKw = null)
-    {
-        $this->feePerKw = $feePerKw;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getUnsettledBalance()
+
+    public function getUnsettledBalance(): string
     {
         return $this->unsettledBalance;
     }
-    /**
-     * @param string $unsettledBalance
-     *
-     * @return self
-     */
-    public function setUnsettledBalance($unsettledBalance = null)
-    {
-        $this->unsettledBalance = $unsettledBalance;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getTotalSatoshisSent()
+
+    public function getTotalSatoshisSent(): string
     {
         return $this->totalSatoshisSent;
     }
-    /**
-     * @param string $totalSatoshisSent
-     *
-     * @return self
-     */
-    public function setTotalSatoshisSent($totalSatoshisSent = null)
-    {
-        $this->totalSatoshisSent = $totalSatoshisSent;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getTotalSatoshisReceived()
+
+    public function getTotalSatoshisReceived(): string
     {
         return $this->totalSatoshisReceived;
     }
-    /**
-     * @param string $totalSatoshisReceived
-     *
-     * @return self
-     */
-    public function setTotalSatoshisReceived($totalSatoshisReceived = null)
-    {
-        $this->totalSatoshisReceived = $totalSatoshisReceived;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getNumUpdates()
+
+    public function getNumUpdates(): string
     {
         return $this->numUpdates;
     }
-    /**
-     * @param string $numUpdates
-     *
-     * @return self
-     */
-    public function setNumUpdates($numUpdates = null)
-    {
-        $this->numUpdates = $numUpdates;
-        return $this;
-    }
+
     /**
      * @return HTLC[]
      */
-    public function getPendingHtlcs()
+    public function getPendingHtlcs(): array
     {
         return $this->pendingHtlcs;
     }
-    /**
-     * @param HTLC[] $pendingHtlcs
-     *
-     * @return self
-     */
-    public function setPendingHtlcs(array $pendingHtlcs = null)
-    {
-        $this->pendingHtlcs = $pendingHtlcs;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getCsvDelay()
+
+    public function getCsvDelay(): int
     {
         return $this->csvDelay;
     }
-    /**
-     * @param int $csvDelay
-     *
-     * @return self
-     */
-    public function setCsvDelay($csvDelay = null)
+
+    public function __construct(bool $active, string $remotePubkey, string $channelPoint, string $chanId, string $capacity, string $localBalance, string $remoteBalance, string $commitFee, string $commitWeight, string $feePerKw, string $unsettledBalance, string $totalSatoshisSent, string $totalSatoshisReceived, string $numUpdates, array $pendingHtlcs, int $csvDelay)
     {
+        $this->active = $active;
+        $this->remotePubkey = $remotePubkey;
+        $this->channelPoint = $channelPoint;
+        $this->chanId = $chanId;
+        $this->capacity = $capacity;
+        $this->localBalance = $localBalance;
+        $this->remoteBalance = $remoteBalance;
+        $this->commitFee = $commitFee;
+        $this->commitWeight = $commitWeight;
+        $this->feePerKw = $feePerKw;
+        $this->unsettledBalance = $unsettledBalance;
+        $this->totalSatoshisSent = $totalSatoshisSent;
+        $this->totalSatoshisReceived = $totalSatoshisReceived;
+        $this->numUpdates = $numUpdates;
+        $this->pendingHtlcs = $pendingHtlcs;
         $this->csvDelay = $csvDelay;
-        return $this;
     }
+
+
+    public static function fromResponse($data): self
+    {
+        return new self(
+            $data['active'],
+            $data['remote_pubkey'],
+            $data['channel_point'],
+            $data['chan_id'],
+            $data['capacity'],
+            $data['local_balance'],
+            $data['remote_balance'],
+            $data['commit_fee'],
+            $data['commit_weight'],
+            $data['fee_per_kw'],
+            $data['unsettled_balance'],
+            $data['total_satoshis_sent'],
+            $data['total_satoshis_received'],
+            $data['num_updates'],
+            $data['pending_htlcs'],
+            $data['csv_delay']
+        );
+    }
+
 }

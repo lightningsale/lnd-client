@@ -2,7 +2,7 @@
 
 namespace LightningSale\LndRest\Model;
 
-class Invoice
+class Invoice implements \JsonSerializable
 {
     /**
      * @var string
@@ -56,225 +56,125 @@ class Invoice
      * @var string
      */
     protected $cltvExpiry;
-    /**
-     * @return string
-     */
-    public function getMemo()
+
+    public function getMemo(): string
     {
         return $this->memo;
     }
-    /**
-     * @param string $memo
-     *
-     * @return self
-     */
-    public function setMemo($memo = null)
-    {
-        $this->memo = $memo;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getReceipt()
+
+    public function getReceipt(): string
     {
         return $this->receipt;
     }
-    /**
-     * @param string $receipt
-     *
-     * @return self
-     */
-    public function setReceipt($receipt = null)
-    {
-        $this->receipt = $receipt;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getRPreimage()
+
+    public function getRPreimage(): string
     {
         return $this->rPreimage;
     }
-    /**
-     * @param string $rPreimage
-     *
-     * @return self
-     */
-    public function setRPreimage($rPreimage = null)
-    {
-        $this->rPreimage = $rPreimage;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getRHash()
+
+    public function getRHash(): string
     {
         return $this->rHash;
     }
-    /**
-     * @param string $rHash
-     *
-     * @return self
-     */
-    public function setRHash($rHash = null)
-    {
-        $this->rHash = $rHash;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getValue()
+
+    public function getValue(): string
     {
         return $this->value;
     }
-    /**
-     * @param string $value
-     *
-     * @return self
-     */
-    public function setValue($value = null)
-    {
-        $this->value = $value;
-        return $this;
-    }
-    /**
-     * @return bool
-     */
-    public function getSettled()
+
+    public function isSettled(): bool
     {
         return $this->settled;
     }
-    /**
-     * @param bool $settled
-     *
-     * @return self
-     */
-    public function setSettled($settled = null)
-    {
-        $this->settled = $settled;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getCreationDate()
+
+    public function getCreationDate(): string
     {
         return $this->creationDate;
     }
-    /**
-     * @param string $creationDate
-     *
-     * @return self
-     */
-    public function setCreationDate($creationDate = null)
-    {
-        $this->creationDate = $creationDate;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getSettleDate()
+
+    public function getSettleDate(): string
     {
         return $this->settleDate;
     }
-    /**
-     * @param string $settleDate
-     *
-     * @return self
-     */
-    public function setSettleDate($settleDate = null)
-    {
-        $this->settleDate = $settleDate;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getPaymentRequest()
+
+    public function getPaymentRequest(): string
     {
         return $this->paymentRequest;
     }
-    /**
-     * @param string $paymentRequest
-     *
-     * @return self
-     */
-    public function setPaymentRequest($paymentRequest = null)
-    {
-        $this->paymentRequest = $paymentRequest;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getDescriptionHash()
+
+    public function getDescriptionHash(): string
     {
         return $this->descriptionHash;
     }
-    /**
-     * @param string $descriptionHash
-     *
-     * @return self
-     */
-    public function setDescriptionHash($descriptionHash = null)
-    {
-        $this->descriptionHash = $descriptionHash;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getExpiry()
+
+    public function getExpiry(): string
     {
         return $this->expiry;
     }
-    /**
-     * @param string $expiry
-     *
-     * @return self
-     */
-    public function setExpiry($expiry = null)
-    {
-        $this->expiry = $expiry;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getFallbackAddr()
+
+    public function getFallbackAddr(): string
     {
         return $this->fallbackAddr;
     }
-    /**
-     * @param string $fallbackAddr
-     *
-     * @return self
-     */
-    public function setFallbackAddr($fallbackAddr = null)
-    {
-        $this->fallbackAddr = $fallbackAddr;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getCltvExpiry()
+
+    public function getCltvExpiry(): string
     {
         return $this->cltvExpiry;
     }
-    /**
-     * @param string $cltvExpiry
-     *
-     * @return self
-     */
-    public function setCltvExpiry($cltvExpiry = null)
+
+    public function __construct(string $memo, string $receipt, string $rPreimage, string $rHash, string $value, bool $settled, string $creationDate, string $settleDate, string $paymentRequest, string $descriptionHash, string $expiry, string $fallbackAddr, string $cltvExpiry)
     {
+        $this->memo = $memo;
+        $this->receipt = $receipt;
+        $this->rPreimage = $rPreimage;
+        $this->rHash = $rHash;
+        $this->value = $value;
+        $this->settled = $settled;
+        $this->creationDate = $creationDate;
+        $this->settleDate = $settleDate;
+        $this->paymentRequest = $paymentRequest;
+        $this->descriptionHash = $descriptionHash;
+        $this->expiry = $expiry;
+        $this->fallbackAddr = $fallbackAddr;
         $this->cltvExpiry = $cltvExpiry;
-        return $this;
+    }
+
+
+    public static function fromResponse(array $body): self
+    {
+        return new self(
+            $body['memo'],
+            $body['receipt'],
+            $body['r_preimage'],
+            $body['r_hash'],
+            $body['value'],
+            $body['settled'],
+            $body['creation_date'],
+            $body['settle_date'],
+            $body['payment_request'],
+            $body['description_hash'],
+            $body['expiry'],
+            $body['fallback_addr'],
+            $body['cltv_expiry']
+        );
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'memo' => $this->memo,
+            'receipt' => $this->receipt,
+            'r_preimage' => $this->rPreimage,
+            'r_hash' => $this->rHash,
+            'value' => $this->value,
+            'settled' => $this->settled,
+            'creation_date' => $this->creationDate,
+            'settle_date' => $this->settleDate,
+            'payment_request' => $this->paymentRequest,
+            'description_hash' => $this->descriptionHash,
+            'expiry' => $this->expiry,
+            'fallback_addr' => $this->fallbackAddr,
+            'cltv_expiry' => $this->cltvExpiry,
+        ];
     }
 }

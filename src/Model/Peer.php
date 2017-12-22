@@ -40,157 +40,79 @@ class Peer
      * @var string
      */
     protected $pingTime;
-    /**
-     * @return string
-     */
-    public function getPubKey()
+
+    public function getPubKey(): string
     {
         return $this->pubKey;
     }
-    /**
-     * @param string $pubKey
-     *
-     * @return self
-     */
-    public function setPubKey($pubKey = null)
-    {
-        $this->pubKey = $pubKey;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getPeerId()
+
+    public function getPeerId(): int
     {
         return $this->peerId;
     }
-    /**
-     * @param int $peerId
-     *
-     * @return self
-     */
-    public function setPeerId($peerId = null)
-    {
-        $this->peerId = $peerId;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getAddress()
+
+    public function getAddress(): string
     {
         return $this->address;
     }
-    /**
-     * @param string $address
-     *
-     * @return self
-     */
-    public function setAddress($address = null)
-    {
-        $this->address = $address;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getBytesSent()
+
+    public function getBytesSent(): string
     {
         return $this->bytesSent;
     }
-    /**
-     * @param string $bytesSent
-     *
-     * @return self
-     */
-    public function setBytesSent($bytesSent = null)
-    {
-        $this->bytesSent = $bytesSent;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getBytesRecv()
+
+    public function getBytesRecv(): string
     {
         return $this->bytesRecv;
     }
-    /**
-     * @param string $bytesRecv
-     *
-     * @return self
-     */
-    public function setBytesRecv($bytesRecv = null)
-    {
-        $this->bytesRecv = $bytesRecv;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getSatSent()
+
+    public function getSatSent(): string
     {
         return $this->satSent;
     }
-    /**
-     * @param string $satSent
-     *
-     * @return self
-     */
-    public function setSatSent($satSent = null)
-    {
-        $this->satSent = $satSent;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getSatRecv()
+
+    public function getSatRecv(): string
     {
         return $this->satRecv;
     }
-    /**
-     * @param string $satRecv
-     *
-     * @return self
-     */
-    public function setSatRecv($satRecv = null)
-    {
-        $this->satRecv = $satRecv;
-        return $this;
-    }
-    /**
-     * @return bool
-     */
-    public function getInbound()
+
+    public function isInbound(): bool
     {
         return $this->inbound;
     }
-    /**
-     * @param bool $inbound
-     *
-     * @return self
-     */
-    public function setInbound($inbound = null)
-    {
-        $this->inbound = $inbound;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getPingTime()
+
+    public function getPingTime(): string
     {
         return $this->pingTime;
     }
-    /**
-     * @param string $pingTime
-     *
-     * @return self
-     */
-    public function setPingTime($pingTime = null)
+
+    public function __construct(string $pubKey, int $peerId, string $address, string $bytesSent, string $bytesRecv, string $satSent, string $satRecv, bool $inbound, string $pingTime)
     {
+        $this->pubKey = $pubKey;
+        $this->peerId = $peerId;
+        $this->address = $address;
+        $this->bytesSent = $bytesSent;
+        $this->bytesRecv = $bytesRecv;
+        $this->satSent = $satSent;
+        $this->satRecv = $satRecv;
+        $this->inbound = $inbound;
         $this->pingTime = $pingTime;
-        return $this;
     }
+
+
+    public static function fromResponse($data): self
+    {
+        return new self(
+            $data['pub_key'],
+            $data['peer_id'],
+            $data['address'],
+            $data['bytes_sent'],
+            $data['bytes_recv'],
+            $data['sat_sent'],
+            $data['sat_recv'],
+            $data['inbound'],
+            $data['ping_time']
+        );
+    }
+
 }

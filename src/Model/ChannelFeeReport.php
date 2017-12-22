@@ -20,72 +20,43 @@ class ChannelFeeReport
      * @var float
      */
     protected $feeRate;
-    /**
-     * @return string
-     */
-    public function getChanPoint()
+
+    public function getChanPoint(): string
     {
         return $this->chanPoint;
     }
-    /**
-     * @param string $chanPoint
-     *
-     * @return self
-     */
-    public function setChanPoint($chanPoint = null)
-    {
-        $this->chanPoint = $chanPoint;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getBaseFeeMsat()
+
+    public function getBaseFeeMsat(): string
     {
         return $this->baseFeeMsat;
     }
-    /**
-     * @param string $baseFeeMsat
-     *
-     * @return self
-     */
-    public function setBaseFeeMsat($baseFeeMsat = null)
-    {
-        $this->baseFeeMsat = $baseFeeMsat;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getFeePerMil()
+
+    public function getFeePerMil(): string
     {
         return $this->feePerMil;
     }
-    /**
-     * @param string $feePerMil
-     *
-     * @return self
-     */
-    public function setFeePerMil($feePerMil = null)
-    {
-        $this->feePerMil = $feePerMil;
-        return $this;
-    }
-    /**
-     * @return float
-     */
-    public function getFeeRate()
+
+    public function getFeeRate(): float
     {
         return $this->feeRate;
     }
-    /**
-     * @param float $feeRate
-     *
-     * @return self
-     */
-    public function setFeeRate($feeRate = null)
+
+    public function __construct(string $chanPoint, string $baseFeeMsat, string $feePerMil, float $feeRate)
     {
+        $this->chanPoint = $chanPoint;
+        $this->baseFeeMsat = $baseFeeMsat;
+        $this->feePerMil = $feePerMil;
         $this->feeRate = $feeRate;
-        return $this;
+    }
+
+
+    public static function fromResponse($data): self
+    {
+        return new self(
+            $data['chan_point'],
+            $data['base_fee _msat'],
+            $data['fee_per_mil'],
+            $data['fee_rate']
+        );
     }
 }

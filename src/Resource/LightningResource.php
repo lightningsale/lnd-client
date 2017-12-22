@@ -2,8 +2,7 @@
 
 namespace LightningSale\LndRest\Resource;
 
-use LightningSale\LndRest\Jane\QueryParam;
-use LightningSale\LndRest\Jane\Resource;
+use GuzzleHttp\Client;
 use LightningSale\LndRest\Model\ConnectPeerRequest;
 use LightningSale\LndRest\Model\FeeUpdateRequest;
 use LightningSale\LndRest\Model\Invoice;
@@ -34,821 +33,224 @@ use LightningSale\LndRest\Model\ListChannelsResponse;
 use LightningSale\LndRest\Model\ChannelBalanceResponse;
 use LightningSale\LndRest\Model\WalletBalanceResponse;
 
-class LightningResource extends Resource
+class LightningResource
 {
-    /**
-     *
-     *
-     * @param array $parameters {
-     * @param string $fetch Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\WalletBalanceResponse
-     * @throws \Exception
-     */
-    public function walletBalance($parameters = array(), $fetch = self::FETCH_OBJECT)
+    private $httpClient;
+
+    public function __construct(Client $client)
     {
-        $queryParam = new QueryParam();
-        $queryParam->setDefault('witness_only', NULL);
-        $url = '/v1/balance/blockchain';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('GET', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), WalletBalanceResponse::class, 'json');
-            }
-        }
-        return $response;
-    }
-    /**
-     * 
-     *
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\ChannelBalanceResponse
-     */
-    public function channelBalance($parameters = array(), $fetch = self::FETCH_OBJECT)
-    {
-        $queryParam = new QueryParam();
-        $url = '/v1/balance/channels';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('GET', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), ChannelBalanceResponse::class, 'json');
-            }
-        }
-        return $response;
-    }
-    /**
-     * 
-     *
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\ListChannelsResponse
-     */
-    public function listChannels($parameters = array(), $fetch = self::FETCH_OBJECT)
-    {
-        $queryParam = new QueryParam();
-        $url = '/v1/channels';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('GET', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), ListChannelsResponse::class, 'json');
-            }
-        }
-        return $response;
-    }
-    /**
-     * 
-     *
-     * @param OpenChannelRequest $body
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\ChannelPoint
-     */
-    public function openChannelSync(OpenChannelRequest $body, $parameters = array(), $fetch = self::FETCH_OBJECT)
-    {
-        $queryParam = new QueryParam();
-        $url = '/v1/channels';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $this->serializer->serialize($body, 'json');
-        $request = $this->messageFactory->createRequest('POST', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), ChannelPoint::class, 'json');
-            }
-        }
-        return $response;
-    }
-    /**
-     * 
-     *
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\PendingChannelResponse
-     */
-    public function pendingChannels($parameters = array(), $fetch = self::FETCH_OBJECT)
-    {
-        $queryParam = new QueryParam();
-        $url = '/v1/channels/pending';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('GET', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), PendingChannelResponse::class, 'json');
-            }
-        }
-        return $response;
-    }
-    /**
-     * 
-     *
-     * @param SendRequest $body
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\SendResponse
-     */
-    public function sendPaymentSync(SendRequest $body, $parameters = array(), $fetch = self::FETCH_OBJECT)
-    {
-        $queryParam = new QueryParam();
-        $url = '/v1/channels/transactions';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $this->serializer->serialize($body, 'json');
-        $request = $this->messageFactory->createRequest('POST', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), SendResponse::class, 'json');
-            }
-        }
-        return $response;
+        $this->httpClient = $client;
     }
 
-    /**
-     *
-     *
-     * @param $fundingTxid
-     * @param $outputIndex
-     * @param array $parameters List of parameters
-     * @param string $fetch Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\CloseStatusUpdate
-     * @throws \Exception
-     */
-    public function closeChannel($fundingTxid, $outputIndex, $parameters = array(), $fetch = self::FETCH_OBJECT)
+    public function walletBalance(): WalletBalanceResponse
     {
-        $queryParam = new QueryParam();
+        $response = $this->httpClient->get('/v1/balance/blockchain');
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return WalletBalanceResponse::fromResponse($body);
+    }
+
+    public function channelBalance(): ChannelBalanceResponse
+    {
+        $response = $this->httpClient->get('/v1/balance/channels');
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return ChannelBalanceResponse::fromResponse($body);
+    }
+
+    public function listChannels(): ListChannelsResponse
+    {
+        $response = $this->httpClient->get('/v1/channels');
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return ListChannelsResponse::fromResponse($body);
+    }
+
+    public function openChannelSync(OpenChannelRequest $body): ChannelPoint
+    {
+        $response = $this->httpClient->post('/v1/channels', ['json' => $body]);
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return ChannelPoint::fromResponse($body);
+    }
+
+    public function pendingChannels(): PendingChannelResponse
+    {
+        $response = $this->httpClient->get('/v1/channels/pending');
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return PendingChannelResponse::fromResponse($body);
+    }
+
+    public function sendPaymentSync(SendRequest $body): SendResponse
+    {
+        $response = $this->httpClient->post('/v1/channels/transactions', ['json' => $body]);
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return SendResponse::fromResponse($body);
+    }
+
+    public function closeChannel(string $fundingTxid, string $outputIndex): CloseStatusUpdate
+    {
         $url = '/v1/channels/{funding_txid}/{output_index}';
         $url = str_replace('{funding_txid}', urlencode($fundingTxid), $url);
         $url = str_replace('{output_index}', urlencode($outputIndex), $url);
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('DELETE', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), CloseStatusUpdate::class, 'json');
-            }
-        }
-        return $response;
+
+        $response = $this->httpClient->delete($url);
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return CloseStatusUpdate::fromResponse($body);
     }
-    /**
-     * 
-     *
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\FeeReportResponse
-     */
-    public function feeReport($parameters = array(), $fetch = self::FETCH_OBJECT)
+
+    public function feeReport(): FeeReportResponse
     {
-        $queryParam = new QueryParam();
-        $url = '/v1/fees';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('GET', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), FeeReportResponse::class, 'json');
-            }
-        }
-        return $response;
+        $response = $this->httpClient->get('/v1/fees');
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return FeeReportResponse::fromResponse($body);
     }
-    /**
-     * 
-     *
-     * @param FeeUpdateRequest $body
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|null
-     */
-    public function updateFees(FeeUpdateRequest $body, $parameters = array(), $fetch = self::FETCH_OBJECT)
+
+    public function updateFees(FeeUpdateRequest $body): void
     {
-        $queryParam = new QueryParam();
-        $url = '/v1/fees';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $this->serializer->serialize($body, 'json');
-        $request = $this->messageFactory->createRequest('POST', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return null;
-            }
-        }
-        return $response;
+        $this->httpClient->post('/v1/fees', ['json' => $body]);
     }
-    /**
-     * 
-     *
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\GetInfoResponse
-     */
-    public function getInfo($parameters = array(), $fetch = self::FETCH_OBJECT)
+
+    public function getInfo(): GetInfoResponse
     {
-        $queryParam = new QueryParam();
-        $url = '/v1/getinfo';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('GET', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), GetInfoResponse::class, 'json');
-            }
-        }
-        return $response;
+        $response = $this->httpClient->get('/v1/getinfo');
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return GetInfoResponse::fromResponse($body);
     }
-    /**
-     * 
-     *
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\ChannelGraph
-     */
-    public function describeGraph($parameters = array(), $fetch = self::FETCH_OBJECT)
+
+    public function describeGraph(): ChannelGraph
     {
-        $queryParam = new QueryParam();
-        $url = '/v1/graph';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('GET', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), ChannelGraph::class, 'json');
-            }
-        }
-        return $response;
+        $response = $this->httpClient->get('/v1/graph');
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return ChannelGraph::fromResponse($body);
     }
-    /**
-     * 
-     *
-     * @param string $chanId 
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\ChannelEdge
-     */
-    public function getChanInfo($chanId, $parameters = array(), $fetch = self::FETCH_OBJECT)
+
+    public function getChanInfo(string $channelId): ChannelEdge
     {
-        $queryParam = new QueryParam();
         $url = '/v1/graph/edge/{chan_id}';
-        $url = str_replace('{chan_id}', urlencode($chanId), $url);
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('GET', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), ChannelEdge::class, 'json');
-            }
-        }
-        return $response;
+        $url = str_replace('{chan_id}', urlencode($channelId), $url);
+
+        $response = $this->httpClient->get($url);
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return ChannelEdge::fromResponse($body);
     }
-    /**
-     * 
-     *
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\NetworkInfo
-     */
-    public function getNetworkInfo($parameters = array(), $fetch = self::FETCH_OBJECT)
+
+    public function getNetworkInfo(): NetworkInfo
     {
-        $queryParam = new QueryParam();
-        $url = '/v1/graph/info';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('GET', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), NetworkInfo::class, 'json');
-            }
-        }
-        return $response;
+        $response = $this->httpClient->get('/v1/graph/info');
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return NetworkInfo::fromResponse($body);
     }
-    /**
-     * 
-     *
-     * @param string $pubKey 
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\NodeInfo
-     */
-    public function getNodeInfo($pubKey, $parameters = array(), $fetch = self::FETCH_OBJECT)
+
+    public function getNodeInfo(string $pubKey): NodeInfo
     {
-        $queryParam = new QueryParam();
         $url = '/v1/graph/node/{pub_key}';
         $url = str_replace('{pub_key}', urlencode($pubKey), $url);
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('GET', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), NodeInfo::class, 'json');
-            }
-        }
-        return $response;
+        $response = $this->httpClient->get($url);
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return NodeInfo::fromResponse($body);
     }
-    /**
-     * 
-     *
-     * @param string $pubKey 
-     * @param string $amt 
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\QueryRoutesResponse
-     */
-    public function queryRoutes($pubKey, $amt, $parameters = array(), $fetch = self::FETCH_OBJECT)
+
+    public function queryRoutes(string $pubKey, string $amt)
     {
-        $queryParam = new QueryParam();
         $url = '/v1/graph/routes/{pub_key}/{amt}';
         $url = str_replace('{pub_key}', urlencode($pubKey), $url);
         $url = str_replace('{amt}', urlencode($amt), $url);
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('GET', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), QueryRoutesResponse::class, 'json');
-            }
-        }
-        return $response;
-    }
-    /**
-     * 
-     *
-     * @param Invoice $body
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\AddInvoiceResponse
-     */
-    public function addInvoice(Invoice $body, $parameters = array(), $fetch = self::FETCH_OBJECT)
-    {
-        $queryParam = new QueryParam();
-        $url = '/v1/invoices';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $this->serializer->serialize($body, 'json');
-        $request = $this->messageFactory->createRequest('POST', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), AddInvoiceResponse::class, 'json');
-            }
-        }
-        return $response;
-    }
-    /**
-     * 
-     *
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|Invoice
-     */
-    public function subscribeInvoices($parameters = array(), $fetch = self::FETCH_OBJECT)
-    {
-        $queryParam = new QueryParam();
-        $url = '/v1/invoices/subscribe';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('GET', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), Invoice::class, 'json');
-            }
-        }
-        return $response;
-    }
-    /**
-     * 
-     *
-     * @param bool $pendingOnly 
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\ListInvoiceResponse
-     */
-    public function listInvoices($pendingOnly, $parameters = array(), $fetch = self::FETCH_OBJECT)
-    {
-        $queryParam = new QueryParam();
-        $url = '/v1/invoices/{pending_only}';
-        $url = str_replace('{pending_only}', urlencode($pendingOnly), $url);
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('GET', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), ListInvoiceResponse::class, 'json');
-            }
-        }
-        return $response;
+        $response = $this->httpClient->get($url);
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return QueryRoutesResponse::fromResponse($body);
     }
 
-    /**
-     * @param string $rHashStr
-     * @param array $parameters {
-     * @param string $fetch Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|Invoice
-     * @throws \Exception
-     */
-    public function lookupInvoice($rHashStr, $parameters = array(), $fetch = self::FETCH_OBJECT)
+    public function addInvoice(Invoice $body): AddInvoiceResponse
     {
-        $queryParam = new QueryParam();
-        $queryParam->setDefault('r_hash', NULL);
+        $response = $this->httpClient->post('/v1/invoices', ['json' => $body]);
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return AddInvoiceResponse::fromResponse($body);
+    }
+
+    public function subscribeInvoices(): Invoice
+    {
+        $response = $this->httpClient->get('/v1/invoices/subscribe');
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return Invoice::fromResponse($body);
+    }
+
+    public function listInvoices(bool $pendingOnly = false)
+    {
+        $url = '/v1/invoices/{pending_only}';
+        $url = str_replace('{pending_only}', urlencode($pendingOnly), $url);
+        $response = $this->httpClient->get($url);
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return ListInvoiceResponse::fromResponse($body);
+    }
+
+    public function lookupInvoice(string $rHashStr): Invoice
+    {
         $url = '/v1/invoices/{r_hash_str}';
         $url = str_replace('{r_hash_str}', urlencode($rHashStr), $url);
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('GET', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), Invoice::class, 'json');
-            }
-        }
-        return $response;
+        $response = $this->httpClient->get($url);
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return Invoice::fromResponse($body);
     }
-    /**
-     * 
-     *
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\NewAddressResponse
-     */
-    public function newWitnessAddress($parameters = array(), $fetch = self::FETCH_OBJECT)
+
+    public function newWitnessAddress(): NewAddressResponse
     {
-        $queryParam = new QueryParam();
-        $url = '/v1/newaddress';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('GET', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), NewAddressResponse::class, 'json');
-            }
-        }
-        return $response;
+        $response = $this->httpClient->get('/v1/newaddress');
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return NewAddressResponse::fromResponse($body);
     }
-    /**
-     * 
-     *
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|null
-     */
-    public function deleteAllPayments($parameters = array(), $fetch = self::FETCH_OBJECT)
+
+    public function deleteAllPayments(): void
     {
-        $queryParam = new QueryParam();
-        $url = '/v1/payments';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('DELETE', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return null;
-            }
-        }
-        return $response;
+        $this->httpClient->delete('/v1/payments');
     }
-    /**
-     * 
-     *
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\ListPaymentsResponse
-     */
-    public function listPayments($parameters = array(), $fetch = self::FETCH_OBJECT)
+
+    public function listPayments(): ListPaymentsResponse
     {
-        $queryParam = new QueryParam();
-        $url = '/v1/payments';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('GET', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), ListPaymentsResponse::class, 'json');
-            }
-        }
-        return $response;
+        $response = $this->httpClient->get('/v1/payments');
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return ListPaymentsResponse::fromResponse($body);
     }
-    /**
-     * 
-     *
-     * @param string $payReq 
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\PayReq
-     */
-    public function decodePayReq($payReq, $parameters = array(), $fetch = self::FETCH_OBJECT)
+
+    public function decodePayReq(string $payReq): PayReq
     {
-        $queryParam = new QueryParam();
         $url = '/v1/payreq/{pay_req}';
         $url = str_replace('{pay_req}', urlencode($payReq), $url);
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('GET', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), PayReq::class, 'json');
-            }
-        }
-        return $response;
+
+        $response = $this->httpClient->get($url);
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return PayReq::fromResponse($body);
     }
-    /**
-     * 
-     *
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\ListPeersResponse
-     */
-    public function listPeers($parameters = array(), $fetch = self::FETCH_OBJECT)
+
+    public function listPeers(): ListPeersResponse
     {
-        $queryParam = new QueryParam();
-        $url = '/v1/peers';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('GET', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), ListPeersResponse::class, 'json');
-            }
-        }
-        return $response;
+        $response = $this->httpClient->get('/v1/peers');
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return ListPeersResponse::fromResponse($body);
     }
-    /**
-     * 
-     *
-     * @param ConnectPeerRequest $body
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\ConnectPeerResponse
-     */
-    public function connectPeer(ConnectPeerRequest $body, $parameters = array(), $fetch = self::FETCH_OBJECT)
+
+    public function connectPeer(ConnectPeerRequest $body): ConnectPeerResponse
     {
-        $queryParam = new QueryParam();
-        $url = '/v1/peers';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $this->serializer->serialize($body, 'json');
-        $request = $this->messageFactory->createRequest('POST', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), ConnectPeerResponse::class, 'json');
-            }
-        }
-        return $response;
+        $response = $this->httpClient->post('/v1/peers', ['json' => $body]);
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return ConnectPeerResponse::fromResponse($body);
     }
-    /**
-     * 
-     *
-     * @param string $pubKey 
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|null
-     */
-    public function disconnectPeer($pubKey, $parameters = array(), $fetch = self::FETCH_OBJECT)
+
+    public function disconnectPeer(string $pubKey)
     {
-        $queryParam = new QueryParam();
         $url = '/v1/peers/{pub_key}';
         $url = str_replace('{pub_key}', urlencode($pubKey), $url);
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('DELETE', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return null;
-            }
-        }
-        return $response;
+
+        $this->httpClient->delete($url);
     }
-    /**
-     * 
-     *
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\TransactionDetails
-     */
-    public function getTransactions($parameters = array(), $fetch = self::FETCH_OBJECT)
+
+    public function getTransactions(): TransactionDetails
     {
-        $queryParam = new QueryParam();
-        $url = '/v1/transactions';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $queryParam->buildFormDataString($parameters);
-        $request = $this->messageFactory->createRequest('GET', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), TransactionDetails::class, 'json');
-            }
-        }
-        return $response;
+        $response = $this->httpClient->get('/v1/transactions');
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return TransactionDetails::fromResponse($body);
     }
-    /**
-     * 
-     *
-     * @param SendCoinsRequest $body
-     * @param array  $parameters List of parameters
-     * @param string $fetch      Fetch mode (object or response)
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\LightningSale\LndRest\Model\SendCoinsResponse
-     */
-    public function sendCoins(SendCoinsRequest $body, $parameters = array(), $fetch = self::FETCH_OBJECT)
+
+    public function sendCoins(SendCoinsRequest $body): SendCoinsResponse
     {
-        $queryParam = new QueryParam();
-        $url = '/v1/transactions';
-        $url .= ('?' . $queryParam->buildQueryString($parameters));
-        $headers = array_merge(array('Host' => 'localhost'), $queryParam->buildHeaders($parameters));
-        $body = $this->serializer->serialize($body, 'json');
-        $request = $this->messageFactory->createRequest('POST', $url, $headers, $body);
-        $promise = $this->httpClient->sendAsyncRequest($request);
-        if (self::FETCH_PROMISE === $fetch) {
-            return $promise;
-        }
-        $response = $promise->wait();
-        if (self::FETCH_OBJECT == $fetch) {
-            if ('200' == $response->getStatusCode()) {
-                return $this->serializer->deserialize((string) $response->getBody(), SendCoinsResponse::class, 'json');
-            }
-        }
-        return $response;
+        $response = $this->httpClient->post('/v1/transactions', ['json' => $body]);
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return SendCoinsResponse::fromResponse($body);
     }
 }

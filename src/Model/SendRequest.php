@@ -2,7 +2,7 @@
 
 namespace LightningSale\LndRest\Model;
 
-class SendRequest
+class SendRequest implements \JsonSerializable
 {
     /**
      * @var string
@@ -28,106 +28,55 @@ class SendRequest
      * @var string
      */
     protected $paymentRequest;
-    /**
-     * @return string
-     */
-    public function getDest()
+
+    public function getDest(): string
     {
         return $this->dest;
     }
-    /**
-     * @param string $dest
-     *
-     * @return self
-     */
-    public function setDest($dest = null)
-    {
-        $this->dest = $dest;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getDestString()
+
+    public function getDestString(): string
     {
         return $this->destString;
     }
-    /**
-     * @param string $destString
-     *
-     * @return self
-     */
-    public function setDestString($destString = null)
-    {
-        $this->destString = $destString;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getAmt()
+    public function getAmt(): string
     {
         return $this->amt;
     }
-    /**
-     * @param string $amt
-     *
-     * @return self
-     */
-    public function setAmt($amt = null)
-    {
-        $this->amt = $amt;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getPaymentHash()
+
+    public function getPaymentHash(): string
     {
         return $this->paymentHash;
     }
-    /**
-     * @param string $paymentHash
-     *
-     * @return self
-     */
-    public function setPaymentHash($paymentHash = null)
-    {
-        $this->paymentHash = $paymentHash;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getPaymentHashString()
+
+    public function getPaymentHashString(): string
     {
         return $this->paymentHashString;
     }
-    /**
-     * @param string $paymentHashString
-     *
-     * @return self
-     */
-    public function setPaymentHashString($paymentHashString = null)
-    {
-        $this->paymentHashString = $paymentHashString;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getPaymentRequest()
+
+    public function getPaymentRequest(): string
     {
         return $this->paymentRequest;
     }
-    /**
-     * @param string $paymentRequest
-     *
-     * @return self
-     */
-    public function setPaymentRequest($paymentRequest = null)
+
+    public function __construct(string $dest, string $destString, string $amt, string $paymentHash, string $paymentHashString, string $paymentRequest)
     {
+        $this->dest = $dest;
+        $this->destString = $destString;
+        $this->amt = $amt;
+        $this->paymentHash = $paymentHash;
+        $this->paymentHashString = $paymentHashString;
         $this->paymentRequest = $paymentRequest;
-        return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'dest' => $this->dest,
+            'dest_string' => $this->destString,
+            'amt' => $this->amt,
+            'payment_hash' => $this->paymentHash,
+            'payment_hash_string' => $this->paymentHashString,
+            'payment_request' => $this->paymentRequest,
+        ];
     }
 }

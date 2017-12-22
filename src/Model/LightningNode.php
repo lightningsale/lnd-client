@@ -24,89 +24,61 @@ class LightningNode
      * @var string
      */
     protected $color;
-    /**
-     * @return int
-     */
-    public function getLastUpdate()
+
+    public function getLastUpdate(): int
     {
         return $this->lastUpdate;
     }
-    /**
-     * @param int $lastUpdate
-     *
-     * @return self
-     */
-    public function setLastUpdate($lastUpdate = null)
-    {
-        $this->lastUpdate = $lastUpdate;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getPubKey()
+
+    public function getPubKey(): string
     {
         return $this->pubKey;
     }
-    /**
-     * @param string $pubKey
-     *
-     * @return self
-     */
-    public function setPubKey($pubKey = null)
-    {
-        $this->pubKey = $pubKey;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getAlias()
+
+    public function getAlias(): string
     {
         return $this->alias;
     }
-    /**
-     * @param string $alias
-     *
-     * @return self
-     */
-    public function setAlias($alias = null)
-    {
-        $this->alias = $alias;
-        return $this;
-    }
+
     /**
      * @return NodeAddress[]
      */
-    public function getAddresses()
+    public function getAddresses(): array
     {
         return $this->addresses;
     }
-    /**
-     * @param NodeAddress[] $addresses
-     *
-     * @return self
-     */
-    public function setAddresses(array $addresses = null)
-    {
-        $this->addresses = $addresses;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getColor()
+
+    public function getColor(): string
     {
         return $this->color;
     }
+
     /**
+     * LightningNode constructor.
+     * @param int $lastUpdate
+     * @param string $pubKey
+     * @param string $alias
+     * @param NodeAddress[] $addresses
      * @param string $color
-     *
-     * @return self
      */
-    public function setColor($color = null)
+    public function __construct(int $lastUpdate, string $pubKey, string $alias, array $addresses, string $color)
     {
+        $this->lastUpdate = $lastUpdate;
+        $this->pubKey = $pubKey;
+        $this->alias = $alias;
+        $this->addresses = $addresses;
         $this->color = $color;
-        return $this;
+    }
+
+
+    public static function fromResponse(array $data): self
+    {
+        return new self(
+            $data['last_update'],
+            $data['pub_key'],
+            $data['alias'],
+            array_map(function($i) {return NodeAddress::fromResponse($i);}, $data['addresses']),
+            $data['color']
+        );
     }
 }

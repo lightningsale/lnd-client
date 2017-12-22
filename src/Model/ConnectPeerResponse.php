@@ -8,21 +8,21 @@ class ConnectPeerResponse
      * @var int
      */
     protected $peerId;
-    /**
-     * @return int
-     */
-    public function getPeerId()
+
+    public function getPeerId(): int
     {
         return $this->peerId;
     }
-    /**
-     * @param int $peerId
-     *
-     * @return self
-     */
-    public function setPeerId($peerId = null)
+
+    public function __construct(int $peerId)
     {
         $this->peerId = $peerId;
-        return $this;
     }
+
+
+    public static function fromResponse(array $body): self
+    {
+        return new self($body['peer_id']);
+    }
+
 }

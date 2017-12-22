@@ -12,38 +12,30 @@ class ChannelCloseUpdate
      * @var bool
      */
     protected $success;
-    /**
-     * @return string
-     */
-    public function getClosingTxid()
+
+    public function getClosingTxid(): string
     {
         return $this->closingTxid;
     }
-    /**
-     * @param string $closingTxid
-     *
-     * @return self
-     */
-    public function setClosingTxid($closingTxid = null)
-    {
-        $this->closingTxid = $closingTxid;
-        return $this;
-    }
-    /**
-     * @return bool
-     */
-    public function getSuccess()
+
+    public function isSuccess(): bool
     {
         return $this->success;
     }
-    /**
-     * @param bool $success
-     *
-     * @return self
-     */
-    public function setSuccess($success = null)
+
+    public function __construct(string $closingTxid, bool $success)
     {
+        $this->closingTxid = $closingTxid;
         $this->success = $success;
-        return $this;
     }
+
+
+    public static function fromResponse($data): self
+    {
+        return new self(
+            $data['closing_txid'],
+            $data['success']
+        );
+    }
+
 }

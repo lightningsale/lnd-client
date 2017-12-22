@@ -3,6 +3,7 @@
 namespace LightningSale\LndRest\Normalizer;
 
 use LightningSale\LndRest\Jane\Reference;
+use LightningSale\LndRest\Model\GetInfoResponse;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
@@ -16,17 +17,11 @@ class GetInfoResponseNormalizer implements DenormalizerInterface, NormalizerInte
     use NormalizerAwareTrait;
     public function supportsDenormalization($data, $type, $format = null)
     {
-        if ($type !== 'LightningSale\\LndRest\\Model\\GetInfoResponse') {
-            return false;
-        }
-        return true;
+        return !($type !== GetInfoResponse::class);
     }
     public function supportsNormalization($data, $format = null)
     {
-        if ($data instanceof \LightningSale\LndRest\Model\GetInfoResponse) {
-            return true;
-        }
-        return false;
+        return $data instanceof GetInfoResponse;
     }
     public function denormalize($data, $class, $format = null, array $context = array())
     {
@@ -36,7 +31,7 @@ class GetInfoResponseNormalizer implements DenormalizerInterface, NormalizerInte
         if (isset($data->{'$ref'})) {
             return new Reference($data->{'$ref'}, $context['document-origin']);
         }
-        $object = new \LightningSale\LndRest\Model\GetInfoResponse();
+        $object = new GetInfoResponse();
         if (property_exists($data, 'identity_pubkey')) {
             $object->setIdentityPubkey($data->{'identity_pubkey'});
         }

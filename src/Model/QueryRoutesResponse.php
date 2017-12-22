@@ -8,21 +8,28 @@ class QueryRoutesResponse
      * @var Route[]
      */
     protected $routes;
+
     /**
      * @return Route[]
      */
-    public function getRoutes()
+    public function getRoutes(): array
     {
         return $this->routes;
     }
+
     /**
+     * QueryRoutesResponse constructor.
      * @param Route[] $routes
-     *
-     * @return self
      */
-    public function setRoutes(array $routes = null)
+    public function __construct(array $routes)
     {
         $this->routes = $routes;
-        return $this;
+    }
+
+    public static function fromResponse(array $body):self
+    {
+        return new self(
+            array_map(function($i) {return Route::fromResponse($i);}, $body['routes'])
+        );
     }
 }

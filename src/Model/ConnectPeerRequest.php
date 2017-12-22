@@ -2,7 +2,7 @@
 
 namespace LightningSale\LndRest\Model;
 
-class ConnectPeerRequest
+class ConnectPeerRequest implements \JsonSerializable
 {
     /**
      * @var LightningAddress
@@ -12,38 +12,28 @@ class ConnectPeerRequest
      * @var bool
      */
     protected $perm;
-    /**
-     * @return LightningAddress
-     */
-    public function getAddr()
+
+    public function getAddr(): LightningAddress
     {
         return $this->addr;
     }
-    /**
-     * @param LightningAddress $addr
-     *
-     * @return self
-     */
-    public function setAddr(LightningAddress $addr = null)
-    {
-        $this->addr = $addr;
-        return $this;
-    }
-    /**
-     * @return bool
-     */
-    public function getPerm()
+
+    public function isPerm(): bool
     {
         return $this->perm;
     }
-    /**
-     * @param bool $perm
-     *
-     * @return self
-     */
-    public function setPerm($perm = null)
+
+    public function __construct(LightningAddress $addr, bool $perm)
     {
+        $this->addr = $addr;
         $this->perm = $perm;
-        return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'addr' => $this->addr,
+            'perm' => $this->perm,
+        ];
     }
 }

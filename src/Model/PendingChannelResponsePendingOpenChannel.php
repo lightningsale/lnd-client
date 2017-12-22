@@ -28,106 +28,60 @@ class PendingChannelResponsePendingOpenChannel
      * @var string
      */
     protected $feePerKw;
+
     /**
      * @return PendingChannelResponsePendingChannel
      */
-    public function getChannel()
+    public function getChannel(): PendingChannelResponsePendingChannel
     {
         return $this->channel;
     }
-    /**
-     * @param PendingChannelResponsePendingChannel $channel
-     *
-     * @return self
-     */
-    public function setChannel(PendingChannelResponsePendingChannel $channel = null)
-    {
-        $this->channel = $channel;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getConfirmationHeight()
+
+    public function getConfirmationHeight(): int
     {
         return $this->confirmationHeight;
     }
-    /**
-     * @param int $confirmationHeight
-     *
-     * @return self
-     */
-    public function setConfirmationHeight($confirmationHeight = null)
-    {
-        $this->confirmationHeight = $confirmationHeight;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getBlocksTillOpen()
+
+    public function getBlocksTillOpen(): int
     {
         return $this->blocksTillOpen;
     }
-    /**
-     * @param int $blocksTillOpen
-     *
-     * @return self
-     */
-    public function setBlocksTillOpen($blocksTillOpen = null)
-    {
-        $this->blocksTillOpen = $blocksTillOpen;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getCommitFee()
+
+    public function getCommitFee(): string
     {
         return $this->commitFee;
     }
-    /**
-     * @param string $commitFee
-     *
-     * @return self
-     */
-    public function setCommitFee($commitFee = null)
-    {
-        $this->commitFee = $commitFee;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getCommitWeight()
+
+    public function getCommitWeight(): string
     {
         return $this->commitWeight;
     }
-    /**
-     * @param string $commitWeight
-     *
-     * @return self
-     */
-    public function setCommitWeight($commitWeight = null)
-    {
-        $this->commitWeight = $commitWeight;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getFeePerKw()
+
+    public function getFeePerKw(): string
     {
         return $this->feePerKw;
     }
-    /**
-     * @param string $feePerKw
-     *
-     * @return self
-     */
-    public function setFeePerKw($feePerKw = null)
+
+    public function __construct(PendingChannelResponsePendingChannel $channel, int $confirmationHeight, int $blocksTillOpen, string $commitFee, string $commitWeight, string $feePerKw)
     {
+        $this->channel = $channel;
+        $this->confirmationHeight = $confirmationHeight;
+        $this->blocksTillOpen = $blocksTillOpen;
+        $this->commitFee = $commitFee;
+        $this->commitWeight = $commitWeight;
         $this->feePerKw = $feePerKw;
-        return $this;
+    }
+
+
+    public static function fromResponse(array $data): self
+    {
+        return new self(
+            PendingChannelResponsePendingChannel::fromResponse($data['channel']),
+            $data['confirmation_height'],
+            $data['blocks_till_open'],
+            $data['commit_fee'],
+            $data['commit_weight'],
+            $data['fee_per_kw']
+        );
     }
 }

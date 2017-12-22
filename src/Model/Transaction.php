@@ -36,140 +36,74 @@ class Transaction
      * @var string[]
      */
     protected $destAddresses;
-    /**
-     * @return string
-     */
-    public function getTxHash()
+
+    public function getTxHash(): string
     {
         return $this->txHash;
     }
-    /**
-     * @param string $txHash
-     *
-     * @return self
-     */
-    public function setTxHash($txHash = null)
-    {
-        $this->txHash = $txHash;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getAmount()
+
+    public function getAmount(): string
     {
         return $this->amount;
     }
-    /**
-     * @param string $amount
-     *
-     * @return self
-     */
-    public function setAmount($amount = null)
-    {
-        $this->amount = $amount;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getNumConfirmations()
+
+    public function getNumConfirmations(): int
     {
         return $this->numConfirmations;
     }
-    /**
-     * @param int $numConfirmations
-     *
-     * @return self
-     */
-    public function setNumConfirmations($numConfirmations = null)
-    {
-        $this->numConfirmations = $numConfirmations;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getBlockHash()
+
+    public function getBlockHash(): string
     {
         return $this->blockHash;
     }
-    /**
-     * @param string $blockHash
-     *
-     * @return self
-     */
-    public function setBlockHash($blockHash = null)
-    {
-        $this->blockHash = $blockHash;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getBlockHeight()
+
+    public function getBlockHeight(): int
     {
         return $this->blockHeight;
     }
-    /**
-     * @param int $blockHeight
-     *
-     * @return self
-     */
-    public function setBlockHeight($blockHeight = null)
-    {
-        $this->blockHeight = $blockHeight;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getTimeStamp()
+
+    public function getTimeStamp(): string
     {
         return $this->timeStamp;
     }
-    /**
-     * @param string $timeStamp
-     *
-     * @return self
-     */
-    public function setTimeStamp($timeStamp = null)
-    {
-        $this->timeStamp = $timeStamp;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getTotalFees()
+
+    public function getTotalFees(): string
     {
         return $this->totalFees;
     }
-    /**
-     * @param string $totalFees
-     *
-     * @return self
-     */
-    public function setTotalFees($totalFees = null)
-    {
-        $this->totalFees = $totalFees;
-        return $this;
-    }
+
     /**
      * @return string[]
      */
-    public function getDestAddresses()
+    public function getDestAddresses(): array
     {
         return $this->destAddresses;
     }
-    /**
-     * @param string[] $destAddresses
-     *
-     * @return self
-     */
-    public function setDestAddresses(array $destAddresses = null)
+
+    public function __construct(string $txHash, string $amount, int $numConfirmations, string $blockHash, int $blockHeight, string $timeStamp, string $totalFees, array $destAddresses)
     {
+        $this->txHash = $txHash;
+        $this->amount = $amount;
+        $this->numConfirmations = $numConfirmations;
+        $this->blockHash = $blockHash;
+        $this->blockHeight = $blockHeight;
+        $this->timeStamp = $timeStamp;
+        $this->totalFees = $totalFees;
         $this->destAddresses = $destAddresses;
-        return $this;
+    }
+
+
+    public static function fromResponse(array $data): self
+    {
+        return new self(
+            $data['tx_hash'],
+            $data['amount'],
+            $data['num_confirmations'],
+            $data['block_hash'],
+            $data['block_height'],
+            $data['time_stamp'],
+            $data['total_fees'],
+            $data['dest_addresses']
+        );
     }
 }

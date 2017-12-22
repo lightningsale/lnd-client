@@ -24,89 +24,59 @@ class Payment
      * @var string
      */
     protected $fee;
-    /**
-     * @return string
-     */
-    public function getPaymentHash()
+
+    public function getPaymentHash(): string
     {
         return $this->paymentHash;
     }
-    /**
-     * @param string $paymentHash
-     *
-     * @return self
-     */
-    public function setPaymentHash($paymentHash = null)
-    {
-        $this->paymentHash = $paymentHash;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getValue()
+    
+    public function getValue(): string
     {
         return $this->value;
     }
-    /**
-     * @param string $value
-     *
-     * @return self
-     */
-    public function setValue($value = null)
-    {
-        $this->value = $value;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getCreationDate()
+    
+    public function getCreationDate(): string
     {
         return $this->creationDate;
     }
-    /**
-     * @param string $creationDate
-     *
-     * @return self
-     */
-    public function setCreationDate($creationDate = null)
-    {
-        $this->creationDate = $creationDate;
-        return $this;
-    }
+
     /**
      * @return string[]
      */
-    public function getPath()
+    public function getPath(): array
     {
         return $this->path;
     }
-    /**
-     * @param string[] $path
-     *
-     * @return self
-     */
-    public function setPath(array $path = null)
-    {
-        $this->path = $path;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getFee()
+    public function getFee(): string
     {
         return $this->fee;
     }
+    
     /**
+     * Payment constructor.
+     * @param string $paymentHash
+     * @param string $value
+     * @param string $creationDate
+     * @param string[] $path
      * @param string $fee
-     *
-     * @return self
      */
-    public function setFee($fee = null)
+    public function __construct(string $paymentHash, string $value, string $creationDate, array $path, string $fee)
     {
+        $this->paymentHash = $paymentHash;
+        $this->value = $value;
+        $this->creationDate = $creationDate;
+        $this->path = $path;
         $this->fee = $fee;
-        return $this;
+    }
+    
+    public static function fromResponse(array $data): self
+    {
+        return new self(
+            $data['paymentHash'],
+            $data['value'],
+            $data['creation_date'],
+            $data['path'],
+            $data['fee']
+        );
     }
 }

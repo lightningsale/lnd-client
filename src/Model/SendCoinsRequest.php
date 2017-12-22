@@ -2,7 +2,7 @@
 
 namespace LightningSale\LndRest\Model;
 
-class SendCoinsRequest
+class SendCoinsRequest implements \JsonSerializable
 {
     /**
      * @var string
@@ -20,72 +20,42 @@ class SendCoinsRequest
      * @var string
      */
     protected $satPerByte;
-    /**
-     * @return string
-     */
-    public function getAddr()
+
+    public function getAddr(): string
     {
         return $this->addr;
     }
-    /**
-     * @param string $addr
-     *
-     * @return self
-     */
-    public function setAddr($addr = null)
-    {
-        $this->addr = $addr;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getAmount()
+
+    public function getAmount(): string
     {
         return $this->amount;
     }
-    /**
-     * @param string $amount
-     *
-     * @return self
-     */
-    public function setAmount($amount = null)
-    {
-        $this->amount = $amount;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getTargetConf()
+
+    public function getTargetConf(): int
     {
         return $this->targetConf;
     }
-    /**
-     * @param int $targetConf
-     *
-     * @return self
-     */
-    public function setTargetConf($targetConf = null)
-    {
-        $this->targetConf = $targetConf;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getSatPerByte()
+
+    public function getSatPerByte(): string
     {
         return $this->satPerByte;
     }
-    /**
-     * @param string $satPerByte
-     *
-     * @return self
-     */
-    public function setSatPerByte($satPerByte = null)
+
+    public function __construct(string $addr, string $amount, int $targetConf, string $satPerByte)
     {
+        $this->addr = $addr;
+        $this->amount = $amount;
+        $this->targetConf = $targetConf;
         $this->satPerByte = $satPerByte;
-        return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'addr' => $this->addr,
+            'amount' => $this->amount,
+            'target_conf' => $this->targetConf,
+            'sat_per_byte' => $this->satPerByte,
+        ];
     }
 }

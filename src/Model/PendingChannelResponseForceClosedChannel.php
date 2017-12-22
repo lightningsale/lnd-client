@@ -32,123 +32,77 @@ class PendingChannelResponseForceClosedChannel
      * @var PendingHTLC[]
      */
     protected $pendingHtlcs;
-    /**
-     * @return PendingChannelResponsePendingChannel
-     */
-    public function getChannel()
+
+    public function getChannel(): PendingChannelResponsePendingChannel
     {
         return $this->channel;
     }
-    /**
-     * @param PendingChannelResponsePendingChannel $channel
-     *
-     * @return self
-     */
-    public function setChannel(PendingChannelResponsePendingChannel $channel = null)
-    {
-        $this->channel = $channel;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getClosingTxid()
+
+    public function getClosingTxid(): string
     {
         return $this->closingTxid;
     }
-    /**
-     * @param string $closingTxid
-     *
-     * @return self
-     */
-    public function setClosingTxid($closingTxid = null)
-    {
-        $this->closingTxid = $closingTxid;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getLimboBalance()
+
+    public function getLimboBalance(): string
     {
         return $this->limboBalance;
     }
-    /**
-     * @param string $limboBalance
-     *
-     * @return self
-     */
-    public function setLimboBalance($limboBalance = null)
-    {
-        $this->limboBalance = $limboBalance;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getMaturityHeight()
+
+    public function getMaturityHeight(): int
     {
         return $this->maturityHeight;
     }
-    /**
-     * @param int $maturityHeight
-     *
-     * @return self
-     */
-    public function setMaturityHeight($maturityHeight = null)
-    {
-        $this->maturityHeight = $maturityHeight;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getBlocksTilMaturity()
+
+    public function getBlocksTilMaturity(): int
     {
         return $this->blocksTilMaturity;
     }
-    /**
-     * @param int $blocksTilMaturity
-     *
-     * @return self
-     */
-    public function setBlocksTilMaturity($blocksTilMaturity = null)
-    {
-        $this->blocksTilMaturity = $blocksTilMaturity;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getRecoveredBalance()
+
+    public function getRecoveredBalance(): string
     {
         return $this->recoveredBalance;
     }
-    /**
-     * @param string $recoveredBalance
-     *
-     * @return self
-     */
-    public function setRecoveredBalance($recoveredBalance = null)
-    {
-        $this->recoveredBalance = $recoveredBalance;
-        return $this;
-    }
+
     /**
      * @return PendingHTLC[]
      */
-    public function getPendingHtlcs()
+    public function getPendingHtlcs(): array
     {
         return $this->pendingHtlcs;
     }
+
     /**
+     * PendingChannelResponseForceClosedChannel constructor.
+     * @param PendingChannelResponsePendingChannel $channel
+     * @param string $closingTxid
+     * @param string $limboBalance
+     * @param int $maturityHeight
+     * @param int $blocksTilMaturity
+     * @param string $recoveredBalance
      * @param PendingHTLC[] $pendingHtlcs
-     *
-     * @return self
      */
-    public function setPendingHtlcs(array $pendingHtlcs = null)
+    public function __construct(PendingChannelResponsePendingChannel $channel, string $closingTxid, string $limboBalance, int $maturityHeight, int $blocksTilMaturity, string $recoveredBalance, array $pendingHtlcs)
     {
+        $this->channel = $channel;
+        $this->closingTxid = $closingTxid;
+        $this->limboBalance = $limboBalance;
+        $this->maturityHeight = $maturityHeight;
+        $this->blocksTilMaturity = $blocksTilMaturity;
+        $this->recoveredBalance = $recoveredBalance;
         $this->pendingHtlcs = $pendingHtlcs;
-        return $this;
+    }
+
+
+    public static function fromResponse($data): self
+    {
+        return new self(
+            PendingChannelResponsePendingChannel::fromResponse($data['channel']),
+            $data['closing_txid'],
+            $data['limbo_balance'],
+            $data['maturity_height'],
+            $data['blocks_til_maturity'],
+            $data['recovered_balance'],
+            $data['pending_htlcs']
+        );
     }
 }

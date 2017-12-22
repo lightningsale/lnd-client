@@ -2,7 +2,7 @@
 
 namespace LightningSale\LndRest\Model;
 
-class ChannelPoint
+class ChannelPoint implements \JsonSerializable
 {
     /**
      * @var string
@@ -16,55 +16,44 @@ class ChannelPoint
      * @var int
      */
     protected $outputIndex;
-    /**
-     * @return string
-     */
-    public function getFundingTxid()
+
+    public function getFundingTxid(): string
     {
         return $this->fundingTxid;
     }
-    /**
-     * @param string $fundingTxid
-     *
-     * @return self
-     */
-    public function setFundingTxid($fundingTxid = null)
-    {
-        $this->fundingTxid = $fundingTxid;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getFundingTxidStr()
+    
+    public function getFundingTxidStr(): string
     {
         return $this->fundingTxidStr;
     }
-    /**
-     * @param string $fundingTxidStr
-     *
-     * @return self
-     */
-    public function setFundingTxidStr($fundingTxidStr = null)
-    {
-        $this->fundingTxidStr = $fundingTxidStr;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getOutputIndex()
+    
+    public function getOutputIndex(): int
     {
         return $this->outputIndex;
     }
-    /**
-     * @param int $outputIndex
-     *
-     * @return self
-     */
-    public function setOutputIndex($outputIndex = null)
+    
+    public function __construct(string $fundingTxid, string $fundingTxidStr, int $outputIndex)
     {
+        $this->fundingTxid = $fundingTxid;
+        $this->fundingTxidStr = $fundingTxidStr;
         $this->outputIndex = $outputIndex;
-        return $this;
+    }
+
+    public static function fromResponse($body): self
+    {
+        return new self(
+            $body['funding_txid'],
+            $body['funding_txid_str'],
+            $body['output_index']
+        );
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'funding_txid' => $this->fundingTxid,
+            'funding_txid_str' => $this->fundingTxidStr,
+            'output_index' => $this->outputIndex,
+        ];
     }
 }

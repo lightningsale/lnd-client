@@ -8,21 +8,27 @@ class ListPeersResponse
      * @var Peer[]
      */
     protected $peers;
+
     /**
      * @return Peer[]
      */
-    public function getPeers()
+    public function getPeers(): array
     {
         return $this->peers;
     }
+
     /**
+     * ListPeersResponse constructor.
      * @param Peer[] $peers
-     *
-     * @return self
      */
-    public function setPeers(array $peers = null)
+    public function __construct(array $peers)
     {
         $this->peers = $peers;
-        return $this;
+    }
+
+
+    public static function fromResponse($body): self
+    {
+        return new self(array_map(function ($f) {return Peer::fromResponse($f);}, $body['peers']));
     }
 }

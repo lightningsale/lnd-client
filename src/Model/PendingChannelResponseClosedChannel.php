@@ -12,38 +12,30 @@ class PendingChannelResponseClosedChannel
      * @var string
      */
     protected $closingTxid;
-    /**
-     * @return PendingChannelResponsePendingChannel
-     */
-    public function getChannel()
+
+    public function getChannel(): PendingChannelResponsePendingChannel
     {
         return $this->channel;
     }
-    /**
-     * @param PendingChannelResponsePendingChannel $channel
-     *
-     * @return self
-     */
-    public function setChannel(PendingChannelResponsePendingChannel $channel = null)
-    {
-        $this->channel = $channel;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getClosingTxid()
+
+    public function getClosingTxid(): string
     {
         return $this->closingTxid;
     }
-    /**
-     * @param string $closingTxid
-     *
-     * @return self
-     */
-    public function setClosingTxid($closingTxid = null)
+
+    public function __construct(PendingChannelResponsePendingChannel $channel, string $closingTxid)
     {
+        $this->channel = $channel;
         $this->closingTxid = $closingTxid;
-        return $this;
     }
+
+
+    public static function fromResponse(array $data): self
+    {
+        return new self(
+            PendingChannelResponsePendingChannel::fromResponse($data['channel']),
+            $data['closing_txid']
+        );
+    }
+
 }

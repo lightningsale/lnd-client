@@ -20,72 +20,53 @@ class Route
      * @var Hop[]
      */
     protected $hops;
-    /**
-     * @return int
-     */
-    public function getTotalTimeLock()
+
+    public function getTotalTimeLock(): int
     {
         return $this->totalTimeLock;
     }
-    /**
-     * @param int $totalTimeLock
-     *
-     * @return self
-     */
-    public function setTotalTimeLock($totalTimeLock = null)
-    {
-        $this->totalTimeLock = $totalTimeLock;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getTotalFees()
+
+    public function getTotalFees(): string
     {
         return $this->totalFees;
     }
-    /**
-     * @param string $totalFees
-     *
-     * @return self
-     */
-    public function setTotalFees($totalFees = null)
-    {
-        $this->totalFees = $totalFees;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getTotalAmt()
+
+    public function getTotalAmt(): string
     {
         return $this->totalAmt;
     }
-    /**
-     * @param string $totalAmt
-     *
-     * @return self
-     */
-    public function setTotalAmt($totalAmt = null)
-    {
-        $this->totalAmt = $totalAmt;
-        return $this;
-    }
+
     /**
      * @return Hop[]
      */
-    public function getHops()
+    public function getHops(): array
     {
         return $this->hops;
     }
+
     /**
+     * Route constructor.
+     * @param int $totalTimeLock
+     * @param string $totalFees
+     * @param string $totalAmt
      * @param Hop[] $hops
-     *
-     * @return self
      */
-    public function setHops(array $hops = null)
+    public function __construct(int $totalTimeLock, string $totalFees, string $totalAmt, array $hops)
     {
+        $this->totalTimeLock = $totalTimeLock;
+        $this->totalFees = $totalFees;
+        $this->totalAmt = $totalAmt;
         $this->hops = $hops;
-        return $this;
+    }
+
+
+    public static function fromResponse($data): self
+    {
+        return new self(
+            $data['total_time_lock'],
+            $data['total_fees'],
+            $data['total_amt'],
+            array_map(function($i) {return Hop::fromResponse($i);}, $data['hops'])
+        );
     }
 }

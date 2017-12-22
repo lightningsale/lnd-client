@@ -40,157 +40,78 @@ class PayReq
      * @var string
      */
     protected $cltvExpiry;
-    /**
-     * @return string
-     */
-    public function getDestination()
+
+    public function getDestination(): string
     {
         return $this->destination;
     }
-    /**
-     * @param string $destination
-     *
-     * @return self
-     */
-    public function setDestination($destination = null)
-    {
-        $this->destination = $destination;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getPaymentHash()
+
+    public function getPaymentHash(): string
     {
         return $this->paymentHash;
     }
-    /**
-     * @param string $paymentHash
-     *
-     * @return self
-     */
-    public function setPaymentHash($paymentHash = null)
-    {
-        $this->paymentHash = $paymentHash;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getNumSatoshis()
+
+    public function getNumSatoshis(): string
     {
         return $this->numSatoshis;
     }
-    /**
-     * @param string $numSatoshis
-     *
-     * @return self
-     */
-    public function setNumSatoshis($numSatoshis = null)
-    {
-        $this->numSatoshis = $numSatoshis;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getTimestamp()
+
+    public function getTimestamp(): string
     {
         return $this->timestamp;
     }
-    /**
-     * @param string $timestamp
-     *
-     * @return self
-     */
-    public function setTimestamp($timestamp = null)
-    {
-        $this->timestamp = $timestamp;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getExpiry()
+
+    public function getExpiry(): string
     {
         return $this->expiry;
     }
-    /**
-     * @param string $expiry
-     *
-     * @return self
-     */
-    public function setExpiry($expiry = null)
-    {
-        $this->expiry = $expiry;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getDescription()
+
+    public function getDescription(): string
     {
         return $this->description;
     }
-    /**
-     * @param string $description
-     *
-     * @return self
-     */
-    public function setDescription($description = null)
-    {
-        $this->description = $description;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getDescriptionHash()
+
+    public function getDescriptionHash(): string
     {
         return $this->descriptionHash;
     }
-    /**
-     * @param string $descriptionHash
-     *
-     * @return self
-     */
-    public function setDescriptionHash($descriptionHash = null)
-    {
-        $this->descriptionHash = $descriptionHash;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getFallbackAddr()
+
+    public function getFallbackAddr(): string
     {
         return $this->fallbackAddr;
     }
-    /**
-     * @param string $fallbackAddr
-     *
-     * @return self
-     */
-    public function setFallbackAddr($fallbackAddr = null)
-    {
-        $this->fallbackAddr = $fallbackAddr;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getCltvExpiry()
+
+    public function getCltvExpiry(): string
     {
         return $this->cltvExpiry;
     }
-    /**
-     * @param string $cltvExpiry
-     *
-     * @return self
-     */
-    public function setCltvExpiry($cltvExpiry = null)
+
+    public function __construct(string $destination, string $paymentHash, string $numSatoshis, string $timestamp, string $expiry, string $description, string $descriptionHash, string $fallbackAddr, string $cltvExpiry)
     {
+        $this->destination = $destination;
+        $this->paymentHash = $paymentHash;
+        $this->numSatoshis = $numSatoshis;
+        $this->timestamp = $timestamp;
+        $this->expiry = $expiry;
+        $this->description = $description;
+        $this->descriptionHash = $descriptionHash;
+        $this->fallbackAddr = $fallbackAddr;
         $this->cltvExpiry = $cltvExpiry;
-        return $this;
+    }
+
+
+    public static function fromResponse(array $body): self
+    {
+        return new self(
+            $body['destination'],
+            $body['payment_hash'],
+            $body['num_satoshis'],
+            $body['timestamp'],
+            $body['expiry'],
+            $body['description'],
+            $body['description_hash'],
+            $body['fallback_addr'],
+            $body['cltv_expiry']
+        );
     }
 }
