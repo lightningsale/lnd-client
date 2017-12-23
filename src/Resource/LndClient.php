@@ -3,6 +3,7 @@
 namespace LightningSale\LndRest\Resource;
 
 use GuzzleHttp\Client;
+use LightningSale\LndRest\Model\ChannelFeeReport;
 use LightningSale\LndRest\Model\ConnectPeerRequest;
 use LightningSale\LndRest\Model\FeeUpdateRequest;
 use LightningSale\LndRest\Model\Invoice;
@@ -31,6 +32,7 @@ use LightningSale\LndRest\Model\PendingChannelResponse;
 use LightningSale\LndRest\Model\ChannelPoint;
 use LightningSale\LndRest\Model\ChannelBalanceResponse;
 use LightningSale\LndRest\Model\WalletBalanceResponse;
+use Lnrpc\Payment;
 
 /**
  * Class LightningResource
@@ -53,11 +55,11 @@ class LndClient
         return WalletBalanceResponse::fromResponse($body);
     }
 
-    public function channelBalance(): ChannelBalanceResponse
+    public function channelBalance(): string
     {
         $response = $this->httpClient->get('/v1/balance/channels');
         $body = \GuzzleHttp\json_decode($response->getBody(), true);
-        return ChannelBalanceResponse::fromResponse($body);
+        return $body['balance'] ?? "0";
     }
 
     /** @return ActiveChannel[] */
@@ -100,11 +102,14 @@ class LndClient
         return CloseStatusUpdate::fromResponse($body);
     }
 
-    public function feeReport(): FeeReportResponse
+    /**
+     * @return ChannelFeeReport[]
+     */
+    public function feeReport(): array
     {
         $response = $this->httpClient->get('/v1/fees');
         $body = \GuzzleHttp\json_decode($response->getBody(), true);
-        return FeeReportResponse::fromResponse($body);
+        return array_map(function($i) {return ChannelFeeReport::fromResponse($i);}, $body['channel_fees'] ?? []);
     }
 
     public function updateFees(FeeUpdateRequest $body): void
@@ -152,14 +157,15 @@ class LndClient
         return NodeInfo::fromResponse($body);
     }
 
-    public function queryRoutes(string $pubKey, string $amt)
+    /** @return Route[] */
+    public function queryRoutes(string $pubKey, string $amt):array
     {
         $url = '/v1/graph/routes/{pub_key}/{amt}';
         $url = str_replace('{pub_key}', urlencode($pubKey), $url);
         $url = str_replace('{amt}', urlencode($amt), $url);
         $response = $this->httpClient->get($url);
         $body = \GuzzleHttp\json_decode($response->getBody(), true);
-        return QueryRoutesResponse::fromResponse($body);
+        return array_map(function($i) {return Route::fromResponse($i);}, $body['routes']);
     }
 
     public function addInvoice(Invoice $body): AddInvoiceResponse
@@ -195,11 +201,11 @@ class LndClient
         return Invoice::fromResponse($body);
     }
 
-    public function newWitnessAddress(): NewAddressResponse
+    public function newWitnessAddress(): string
     {
         $response = $this->httpClient->get('/v1/newaddress');
         $body = \GuzzleHttp\json_decode($response->getBody(), true);
-        return NewAddressResponse::fromResponse($body);
+        return $body['address'];
     }
 
     public function deleteAllPayments(): void
@@ -207,11 +213,14 @@ class LndClient
         $this->httpClient->delete('/v1/payments');
     }
 
-    public function listPayments(): ListPaymentsResponse
+    /**
+     * @return Payment[]
+     */
+    public function listPayments(): array
     {
         $response = $this->httpClient->get('/v1/payments');
         $body = \GuzzleHttp\json_decode($response->getBody(), true);
-        return ListPaymentsResponse::fromResponse($body);
+        return array_map(function($f) {return Payment::fromResponse($f);}, $body['payments']);
     }
 
     public function decodePayReq(string $payReq): PayReq
@@ -224,21 +233,24 @@ class LndClient
         return PayReq::fromResponse($body);
     }
 
-    public function listPeers(): ListPeersResponse
+    /**
+     * @return Peer[]
+     */
+    public function listPeers(): array
     {
         $response = $this->httpClient->get('/v1/peers');
         $body = \GuzzleHttp\json_decode($response->getBody(), true);
-        return ListPeersResponse::fromResponse($body);
+        return array_map(function ($f) {return Peer::fromResponse($f);}, $body['peers'] ?? []);
     }
 
-    public function connectPeer(ConnectPeerRequest $body): ConnectPeerResponse
+    public function connectPeer(ConnectPeerRequest $body): int
     {
         $response = $this->httpClient->post('/v1/peers', ['json' => $body]);
         $body = \GuzzleHttp\json_decode($response->getBody(), true);
-        return ConnectPeerResponse::fromResponse($body);
+        return $body['peer_id'] ?? 0;
     }
 
-    public function disconnectPeer(string $pubKey)
+    public function disconnectPeer(string $pubKey): void
     {
         $url = '/v1/peers/{pub_key}';
         $url = str_replace('{pub_key}', urlencode($pubKey), $url);
@@ -246,17 +258,20 @@ class LndClient
         $this->httpClient->delete($url);
     }
 
-    public function getTransactions(): TransactionDetails
+    /**
+     * @return Transaction[]
+     */
+    public function getTransactions(): array
     {
         $response = $this->httpClient->get('/v1/transactions');
         $body = \GuzzleHttp\json_decode($response->getBody(), true);
-        return TransactionDetails::fromResponse($body);
+        return array_map(function($f) {return Transaction::fromResponse($f);}, $body['transactions'] ?? []);
     }
 
-    public function sendCoins(SendCoinsRequest $body): SendCoinsResponse
+    public function sendCoins(SendCoinsRequest $body): string
     {
         $response = $this->httpClient->post('/v1/transactions', ['json' => $body]);
         $body = \GuzzleHttp\json_decode($response->getBody(), true);
-        return SendCoinsResponse::fromResponse($body);
+        return $body['txid'];
     }
 }
