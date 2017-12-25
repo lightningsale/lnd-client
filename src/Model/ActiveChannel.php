@@ -176,21 +176,21 @@ class ActiveChannel
     public static function fromResponse($data): self
     {
         return new self(
-            $data['active'],
+            $data['active'] ?? false,
             $data['remote_pubkey'],
             $data['channel_point'],
             $data['chan_id'],
             $data['capacity'],
-            $data['local_balance'],
-            $data['remote_balance'],
+            $data['local_balance'] ?? 0,
+            $data['remote_balance'] ?? 0,
             $data['commit_fee'],
             $data['commit_weight'],
             $data['fee_per_kw'],
-            $data['unsettled_balance'],
-            $data['total_satoshis_sent'],
-            $data['total_satoshis_received'],
-            $data['num_updates'],
-            $data['pending_htlcs'],
+            $data['unsettled_balance'] ?? 0,
+            $data['total_satoshis_sent'] ?? 0,
+            $data['total_satoshis_received'] ?? 0,
+            $data['num_updates'] ?? 0,
+            array_map(function($f) {return HTLC::fromResponse($f);},$data['pending_htlcs'] ?? []),
             $data['csv_delay']
         );
     }

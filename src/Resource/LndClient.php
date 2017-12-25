@@ -15,6 +15,7 @@ use LightningSale\LndRest\Model\TransactionDetails;
 use LightningSale\LndRest\Model\ConnectPeerResponse;
 use LightningSale\LndRest\Model\ListPeersResponse;
 use LightningSale\LndRest\Model\PayReq;
+use LightningSale\LndRest\Model\Peer;
 use LightningSale\LndRest\Model\ListPaymentsResponse;
 use LightningSale\LndRest\Model\NewAddressResponse;
 use LightningSale\LndRest\Model\AddInvoiceResponse;

@@ -20,72 +20,43 @@ class HTLC
      * @var int
      */
     protected $expirationHeight;
-    /**
-     * @return bool
-     */
-    public function getIncoming()
+
+    public function isIncoming(): bool
     {
         return $this->incoming;
     }
-    /**
-     * @param bool $incoming
-     *
-     * @return self
-     */
-    public function setIncoming($incoming = null)
-    {
-        $this->incoming = $incoming;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getAmount()
+
+    public function getAmount(): string
     {
         return $this->amount;
     }
-    /**
-     * @param string $amount
-     *
-     * @return self
-     */
-    public function setAmount($amount = null)
-    {
-        $this->amount = $amount;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getHashLock()
+
+    public function getHashLock(): string
     {
         return $this->hashLock;
     }
-    /**
-     * @param string $hashLock
-     *
-     * @return self
-     */
-    public function setHashLock($hashLock = null)
-    {
-        $this->hashLock = $hashLock;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getExpirationHeight()
+
+    public function getExpirationHeight(): int
     {
         return $this->expirationHeight;
     }
-    /**
-     * @param int $expirationHeight
-     *
-     * @return self
-     */
-    public function setExpirationHeight($expirationHeight = null)
+
+    public function __construct(bool $incoming, string $amount, string $hashLock, int $expirationHeight)
     {
+        $this->incoming = $incoming;
+        $this->amount = $amount;
+        $this->hashLock = $hashLock;
         $this->expirationHeight = $expirationHeight;
-        return $this;
+    }
+
+
+    public static function fromResponse(array $body): self
+    {
+        return new self(
+            $body['incoming'],
+            $body['amount'],
+            $body['hash_lock'],
+            $body['expiration_height']
+        );
     }
 }
