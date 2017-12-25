@@ -1,14 +1,6 @@
-# lnd-rest-php
-A LND REST Client for PHP
-
-How to use:
-
-`composer require lightningsale\lnd-rest`
-
-```php
 <?php
 
-require './vendor/autoload.php';
+require 'vendor/autoload.php';
 
 use GuzzleHttp\Client;
 use LightningSale\LndRest\Resource\LndClient;
@@ -26,4 +18,3 @@ $client = new Client([
 
 $lndClient = new LndClient($client);
 var_dump($lndClient->getInfo());
-```
