@@ -8,31 +8,26 @@ use LightningSale\LndRest\Model\ConnectPeerRequest;
 use LightningSale\LndRest\Model\FeeUpdateRequest;
 use LightningSale\LndRest\Model\Invoice;
 use LightningSale\LndRest\Model\OpenChannelRequest;
+use LightningSale\LndRest\Model\Payment;
+use LightningSale\LndRest\Model\Peer;
+use LightningSale\LndRest\Model\Route;
 use LightningSale\LndRest\Model\SendCoinsRequest;
 use LightningSale\LndRest\Model\SendRequest;
-use LightningSale\LndRest\Model\SendCoinsResponse;
-use LightningSale\LndRest\Model\TransactionDetails;
-use LightningSale\LndRest\Model\ConnectPeerResponse;
-use LightningSale\LndRest\Model\ListPeersResponse;
 use LightningSale\LndRest\Model\PayReq;
-use LightningSale\LndRest\Model\ListPaymentsResponse;
-use LightningSale\LndRest\Model\NewAddressResponse;
 use LightningSale\LndRest\Model\AddInvoiceResponse;
-use LightningSale\LndRest\Model\QueryRoutesResponse;
 use LightningSale\LndRest\Model\NodeInfo;
 use LightningSale\LndRest\Model\ActiveChannel;
 use LightningSale\LndRest\Model\NetworkInfo;
 use LightningSale\LndRest\Model\ChannelEdge;
 use LightningSale\LndRest\Model\ChannelGraph;
 use LightningSale\LndRest\Model\GetInfoResponse;
-use LightningSale\LndRest\Model\FeeReportResponse;
 use LightningSale\LndRest\Model\CloseStatusUpdate;
 use LightningSale\LndRest\Model\SendResponse;
 use LightningSale\LndRest\Model\PendingChannelResponse;
 use LightningSale\LndRest\Model\ChannelPoint;
-use LightningSale\LndRest\Model\ChannelBalanceResponse;
+use LightningSale\LndRest\Model\Transaction;
 use LightningSale\LndRest\Model\WalletBalanceResponse;
-use Lnrpc\Payment;
+
 
 /**
  * Class LightningResource
