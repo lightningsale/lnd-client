@@ -183,10 +183,10 @@ class LndClient
     public function listInvoices(bool $pendingOnly = false): array
     {
         $url = '/v1/invoices/{pending_only}';
-        $url = str_replace('{pending_only}', urlencode($pendingOnly), $url);
+        $url = str_replace('{pending_only}', $pendingOnly ? "true" : "false", $url);
         $response = $this->httpClient->get($url);
         $body = \GuzzleHttp\json_decode($response->getBody(), true);
-        return array_map(function($f) {return Invoice::fromResponse($f);}, $body['invoices']);
+        return array_map(function($f) {return Invoice::fromResponse($f);}, $body['invoices'] ?? []);
     }
 
     public function lookupInvoice(string $rHashStr): Invoice
