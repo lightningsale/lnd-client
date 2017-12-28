@@ -165,18 +165,15 @@ class LndClient
         return array_map(function($i) {return Route::fromResponse($i);}, $body['routes']);
     }
 
-    public function addInvoice(Invoice $body): AddInvoiceResponse
+    public function addInvoice(string $memo, string $value, $expiry = 3600): AddInvoiceResponse
     {
-        $response = $this->httpClient->post('/v1/invoices', ['json' => $body]);
+        $response = $this->httpClient->post('/v1/invoices', ['json' => [
+            'memo' => $memo,
+            'value' => $value,
+            'expiry' => $expiry,
+        ]]);
         $body = \GuzzleHttp\json_decode($response->getBody(), true);
         return AddInvoiceResponse::fromResponse($body);
-    }
-
-    public function subscribeInvoices(): Invoice
-    {
-        $response = $this->httpClient->get('/v1/invoices/subscribe');
-        $body = \GuzzleHttp\json_decode($response->getBody(), true);
-        return Invoice::fromResponse($body);
     }
 
     /** @return Invoice[] */

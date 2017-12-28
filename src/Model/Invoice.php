@@ -2,7 +2,7 @@
 
 namespace LightningSale\LndRest\Model;
 
-class Invoice implements \JsonSerializable
+class Invoice
 {
     /**
      * @var string
@@ -29,7 +29,7 @@ class Invoice implements \JsonSerializable
      */
     protected $settled;
     /**
-     * @var string
+     * @var \DateTime
      */
     protected $creationDate;
     /**
@@ -87,7 +87,7 @@ class Invoice implements \JsonSerializable
         return $this->settled;
     }
 
-    public function getCreationDate(): string
+    public function getCreationDate(): \DateTime
     {
         return $this->creationDate;
     }
@@ -122,7 +122,7 @@ class Invoice implements \JsonSerializable
         return $this->cltvExpiry;
     }
 
-    public function __construct(string $memo, string $receipt, string $rPreimage, string $rHash, string $value, bool $settled, string $creationDate, string $settleDate, string $paymentRequest, string $descriptionHash, string $expiry, string $fallbackAddr, string $cltvExpiry)
+    public function __construct(string $memo, string $receipt, string $rPreimage, string $rHash, string $value, bool $settled, \DateTime $creationDate, string $settleDate, string $paymentRequest, string $descriptionHash, string $expiry, string $fallbackAddr, string $cltvExpiry)
     {
         $this->memo = $memo;
         $this->receipt = $receipt;
@@ -139,42 +139,27 @@ class Invoice implements \JsonSerializable
         $this->cltvExpiry = $cltvExpiry;
     }
 
+    public static function create(string $memo, string $value, $expiry = 3600): Invoice
+    {
+        return new self($memo,"","","",$value,false, new \DateTime(), "","","",$expiry,"", "");
+    }
 
     public static function fromResponse(array $body): self
     {
         return new self(
             $body['memo'],
-            $body['receipt'],
+            $body['receipt'] ?? "",
             $body['r_preimage'],
             $body['r_hash'],
             $body['value'],
-            $body['settled'],
-            $body['creation_date'],
-            $body['settle_date'],
+            $body['settled'] ?? false,
+            new \DateTime($body['creation_date']),
+            $body['settle_date'] ?? "",
             $body['payment_request'],
-            $body['description_hash'],
+            $body['description_hash'] ?? "",
             $body['expiry'],
-            $body['fallback_addr'],
+            $body['fallback_addr'] ?? "",
             $body['cltv_expiry']
         );
-    }
-
-    public function jsonSerialize()
-    {
-        return [
-            'memo' => $this->memo,
-            'receipt' => $this->receipt,
-            'r_preimage' => $this->rPreimage,
-            'r_hash' => $this->rHash,
-            'value' => $this->value,
-            'settled' => $this->settled,
-            'creation_date' => $this->creationDate,
-            'settle_date' => $this->settleDate,
-            'payment_request' => $this->paymentRequest,
-            'description_hash' => $this->descriptionHash,
-            'expiry' => $this->expiry,
-            'fallback_addr' => $this->fallbackAddr,
-            'cltv_expiry' => $this->cltvExpiry,
-        ];
     }
 }

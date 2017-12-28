@@ -32,8 +32,8 @@ class AddInvoiceResponse
     public static function fromResponse(array $body): self
     {
         return new self(
-            $body['rHash'],
-            $body['paymentRequest']
+            $body['rHash'] ?? "",
+            $body['paymentRequest'] ?? ""
         );
     }
 }
