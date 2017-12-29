@@ -110,7 +110,7 @@ class Peer
             $data['bytes_recv'],
             $data['sat_sent'] ?? 0,
             $data['sat_recv'] ?? 0,
-            $data['inbound'],
+            $data['inbound'] ?? false,
             $data['ping_time'] ?? -1
         );
     }
