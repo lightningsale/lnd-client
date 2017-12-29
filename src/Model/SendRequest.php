@@ -7,45 +7,23 @@ class SendRequest implements \JsonSerializable
     /**
      * @var string
      */
-    protected $dest;
-    /**
-     * @var string
-     */
     protected $destString;
     /**
      * @var string
      */
-    protected $amt;
-    /**
-     * @var string
-     */
-    protected $paymentHash;
+    protected $amount;
     /**
      * @var string
      */
     protected $paymentHashString;
-    /**
-     * @var string
-     */
-    protected $paymentRequest;
-
-    public function getDest(): string
-    {
-        return $this->dest;
-    }
 
     public function getDestString(): string
     {
         return $this->destString;
     }
-    public function getAmt(): string
+    public function getAmount(): string
     {
-        return $this->amt;
-    }
-
-    public function getPaymentHash(): string
-    {
-        return $this->paymentHash;
+        return $this->amount;
     }
 
     public function getPaymentHashString(): string
@@ -53,30 +31,19 @@ class SendRequest implements \JsonSerializable
         return $this->paymentHashString;
     }
 
-    public function getPaymentRequest(): string
+    public function __construct(string $destString, string $amount, string $paymentHashString)
     {
-        return $this->paymentRequest;
-    }
-
-    public function __construct(string $dest, string $destString, string $amt, string $paymentHash, string $paymentHashString, string $paymentRequest)
-    {
-        $this->dest = $dest;
         $this->destString = $destString;
-        $this->amt = $amt;
-        $this->paymentHash = $paymentHash;
+        $this->amount = $amount;
         $this->paymentHashString = $paymentHashString;
-        $this->paymentRequest = $paymentRequest;
     }
 
     public function jsonSerialize()
     {
         return [
-            'dest' => $this->dest,
             'dest_string' => $this->destString,
-            'amt' => $this->amt,
-            'payment_hash' => $this->paymentHash,
-            'payment_hash_string' => $this->paymentHashString,
-            'payment_request' => $this->paymentRequest,
+            'amt' => $this->amount,
+            'payment_hash_string' => $this->paymentHashString
         ];
     }
 }

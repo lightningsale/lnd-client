@@ -64,7 +64,7 @@ class Route
     {
         return new self(
             $data['total_time_lock'],
-            $data['total_fees'],
+            $data['total_fees'] ?? 0,
             $data['total_amt'],
             array_map(function($i) {return Hop::fromResponse($i);}, $data['hops'])
         );

@@ -66,7 +66,7 @@ class Hop
             $data['chan_id'],
             $data['chan_capacity'],
             $data['amt_to_forward'],
-            $data['fee'],
+            $data['fee'] ?? "0",
             $data['expiry']
         );
     }

@@ -88,6 +88,13 @@ class LndClient
         return SendResponse::fromResponse($body);
     }
 
+    public function sendPaymentRequest(string $paymentRequest): SendResponse
+    {
+        $response = $this->httpClient->post('/v1/channels/transactions', ['json' => ['payment_request' => $paymentRequest]]);
+        $body = \GuzzleHttp\json_decode($response->getBody(), true);
+        return SendResponse::fromResponse($body);
+    }
+
     public function closeChannel(string $fundingTxid, string $outputIndex): CloseStatusUpdate
     {
         $url = '/v1/channels/{funding_txid}/{output_index}';

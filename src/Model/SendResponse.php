@@ -27,12 +27,12 @@ class SendResponse
         return $this->paymentPreimage;
     }
 
-    public function getPaymentRoute(): Route
+    public function getPaymentRoute(): ?Route
     {
         return $this->paymentRoute;
     }
 
-    public function __construct(string $paymentError, string $paymentPreimage, Route $paymentRoute)
+    public function __construct(string $paymentError, string $paymentPreimage, Route $paymentRoute = null)
     {
         $this->paymentError = $paymentError;
         $this->paymentPreimage = $paymentPreimage;
@@ -41,10 +41,11 @@ class SendResponse
 
     public static function fromResponse(array $data): self
     {
+        $paymentRoute = $data['payment_route'] ?? null;
         return new self(
-            $data['payment_error'],
-            $data['payment_preimage'],
-            Route::fromResponse($data['payment_route'])
+            $data['payment_error'] ?? "",
+            $data['payment_preimage'] ?? "",
+             $paymentRoute ? Route::fromResponse($paymentRoute) : null
         );
     }
 }
