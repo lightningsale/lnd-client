@@ -172,6 +172,7 @@ class LndClient
             'value' => $value,
             'expiry' => $expiry,
         ]]);
+
         $body = \GuzzleHttp\json_decode($response->getBody(), true);
         return AddInvoiceResponse::fromResponse($body);
     }
