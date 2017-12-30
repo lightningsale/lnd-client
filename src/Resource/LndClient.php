@@ -245,9 +245,15 @@ class LndClient
         return array_map(function ($f) {return Peer::fromResponse($f);}, $body['peers'] ?? []);
     }
 
-    public function connectPeer(ConnectPeerRequest $body): int
+    public function connectPeer(string $pubKey, string $host, bool $perm = false): int
     {
-        $response = $this->httpClient->post('/v1/peers', ['json' => $body]);
+        $response = $this->httpClient->post('/v1/peers', ['json' => [
+            'perm' => $perm,
+            'addr' => [
+                'host' => $host,
+                'pubkey' => $pubKey
+            ]
+        ]]);
         $body = \GuzzleHttp\json_decode($response->getBody(), true);
         return $body['peer_id'] ?? 0;
     }
