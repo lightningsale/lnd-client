@@ -179,7 +179,7 @@ class ActiveChannel
             $data['active'] ?? false,
             $data['remote_pubkey'],
             $data['channel_point'],
-            $data['chan_id'],
+            $data['chan_id'] ?? "",
             $data['capacity'],
             $data['local_balance'] ?? 0,
             $data['remote_balance'] ?? 0,
