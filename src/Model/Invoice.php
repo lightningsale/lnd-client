@@ -147,7 +147,7 @@ class Invoice
     public static function fromResponse(array $body): self
     {
         return new self(
-            $body['memo'],
+            $body['memo'] ?? "",
             $body['receipt'] ?? "",
             $body['r_preimage'],
             bin2hex(base64_decode($body['r_hash'])),
