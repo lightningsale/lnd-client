@@ -2,8 +2,6 @@
 
 namespace LightningSale\LndRest\Model;
 
-use Psr\Http\Message\ResponseInterface;
-
 class GetInfoResponse
 {
     /**

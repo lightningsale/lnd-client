@@ -4,7 +4,6 @@ namespace LightningSale\LndRest\Resource;
 
 use GuzzleHttp\Client;
 use LightningSale\LndRest\Model\ChannelFeeReport;
-use LightningSale\LndRest\Model\ConnectPeerRequest;
 use LightningSale\LndRest\Model\FeeUpdateRequest;
 use LightningSale\LndRest\Model\Invoice;
 use LightningSale\LndRest\Model\OpenChannelRequest;
@@ -14,8 +13,6 @@ use LightningSale\LndRest\Model\Route;
 use LightningSale\LndRest\Model\SendCoinsRequest;
 use LightningSale\LndRest\Model\SendRequest;
 use LightningSale\LndRest\Model\PayReq;
-use LightningSale\LndRest\Model\ListPaymentsResponse;
-use LightningSale\LndRest\Model\NewAddressResponse;
 use LightningSale\LndRest\Model\AddInvoiceResponse;
 use LightningSale\LndRest\Model\NodeInfo;
 use LightningSale\LndRest\Model\ActiveChannel;
@@ -162,7 +159,7 @@ class LndClient
     }
 
     /** @return Route[] */
-    public function queryRoutes(string $pubKey, string $amt):array
+    public function queryRoutes(string $pubKey, string $amt): array
     {
         $url = '/v1/graph/routes/{pub_key}/{amt}';
         $url = str_replace('{pub_key}', urlencode($pubKey), $url);
