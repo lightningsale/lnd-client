@@ -25,6 +25,10 @@ class PendingChannelResponsePendingChannel
      */
     protected $remoteBalance;
 
+    public function getRemotePubkey(): string
+    {
+        return $this->getRemoteNodePub();
+    }
 
     public function getRemoteNodePub(): string
     {
