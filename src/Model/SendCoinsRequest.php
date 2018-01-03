@@ -31,7 +31,7 @@ class SendCoinsRequest implements \JsonSerializable
         return $this->amount;
     }
 
-    public function getTargetConf(): int
+    public function getTargetConf(): ?int
     {
         return $this->targetConf;
     }
@@ -41,7 +41,7 @@ class SendCoinsRequest implements \JsonSerializable
         return $this->satPerByte;
     }
 
-    public function __construct(string $addr, string $amount, int $targetConf, string $satPerByte)
+    public function __construct(string $addr, string $amount, string $satPerByte, int $targetConf = null)
     {
         $this->addr = $addr;
         $this->amount = $amount;

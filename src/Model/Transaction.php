@@ -102,7 +102,7 @@ class Transaction
             $data['block_hash'],
             $data['block_height'],
             $data['time_stamp'],
-            $data['total_fees'],
+            $data['total_fees'] ?? 0,
             $data['dest_addresses']
         );
     }
