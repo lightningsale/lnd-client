@@ -64,9 +64,17 @@ class LndClient
         return array_map(function ($f) {return ActiveChannel::fromResponse($f);}, $body['channels'] ?? []);
     }
 
-    public function openChannelSync(OpenChannelRequest $body): ChannelPoint
+    public function openChannelSync(string $nodePubkey, string $amount, string $pushSat = "0", int $targetConf = 0, int $satoshiPrByte = 0, bool $private = false): ChannelPoint
     {
-        $response = $this->httpClient->post('/v1/channels', ['json' => $body]);
+        $response = $this->httpClient->post('/v1/channels', ['json' => [
+            'target_peer_id' => 0, // Not used
+            'node_pubkey_string' => $nodePubkey,
+            'local_funding_amount' => $amount,
+            'push_sat' => $pushSat,
+            'target_conf' => $targetConf,
+            'sat_per_byte' => $satoshiPrByte,
+            'private' => $private,
+        ]]);
         $body = \GuzzleHttp\json_decode($response->getBody(), true);
         return ChannelPoint::fromResponse($body);
     }
@@ -92,11 +100,13 @@ class LndClient
         return SendResponse::fromResponse($body);
     }
 
-    public function closeChannel(string $fundingTxid, string $outputIndex): CloseStatusUpdate
+    public function closeChannel(string $fundingTxid, string $outputIndex, bool $force = false): CloseStatusUpdate
     {
         $url = '/v1/channels/{funding_txid}/{output_index}';
         $url = str_replace('{funding_txid}', urlencode($fundingTxid), $url);
         $url = str_replace('{output_index}', urlencode($outputIndex), $url);
+        if ($force)
+            $url .= "?force=true";
 
         $response = $this->httpClient->delete($url);
         $body = \GuzzleHttp\json_decode($response->getBody(), true);
@@ -242,7 +252,7 @@ class LndClient
         return array_map(function ($f) {return Peer::fromResponse($f);}, $body['peers'] ?? []);
     }
 
-    public function connectPeer(string $pubKey, string $host, bool $perm = false): int
+    public function connectPeer(string $pubKey, string $host, bool $perm = false): void
     {
         $response = $this->httpClient->post('/v1/peers', ['json' => [
             'perm' => $perm,
@@ -252,7 +262,6 @@ class LndClient
             ]
         ]]);
         $body = \GuzzleHttp\json_decode($response->getBody(), true);
-        return $body['peer_id'] ?? 0;
     }
 
     public function disconnectPeer(string $pubKey): void

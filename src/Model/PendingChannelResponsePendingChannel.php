@@ -40,6 +40,11 @@ class PendingChannelResponsePendingChannel
         return $this->channelPoint;
     }
 
+    public function getFundingTxId(): string
+    {
+        return substr($this->channelPoint, 0, strpos($this->channelPoint, ":"));
+    }
+
     public function getCapacity(): string
     {
         return $this->capacity;
@@ -71,8 +76,8 @@ class PendingChannelResponsePendingChannel
             $data['remote_node_pub'],
             $data['channel_point'],
             $data['capacity'],
-            $data['local_balance'],
-            $data['remote_balance']
+            $data['local_balance'] ?? "0",
+            $data['remote_balance'] ?? "0"
         );
     }
 }

@@ -28,106 +28,56 @@ class PendingHTLC
      * @var int
      */
     protected $stage;
-    /**
-     * @return bool
-     */
-    public function getIncoming()
+
+    public function isIncoming(): bool
     {
         return $this->incoming;
     }
-    /**
-     * @param bool $incoming
-     *
-     * @return self
-     */
-    public function setIncoming($incoming = null)
-    {
-        $this->incoming = $incoming;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getAmount()
+
+    public function getAmount(): string
     {
         return $this->amount;
     }
-    /**
-     * @param string $amount
-     *
-     * @return self
-     */
-    public function setAmount($amount = null)
-    {
-        $this->amount = $amount;
-        return $this;
-    }
-    /**
-     * @return string
-     */
-    public function getOutpoint()
+
+    public function getOutpoint(): string
     {
         return $this->outpoint;
     }
-    /**
-     * @param string $outpoint
-     *
-     * @return self
-     */
-    public function setOutpoint($outpoint = null)
-    {
-        $this->outpoint = $outpoint;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getMaturityHeight()
+
+    public function getMaturityHeight(): int
     {
         return $this->maturityHeight;
     }
-    /**
-     * @param int $maturityHeight
-     *
-     * @return self
-     */
-    public function setMaturityHeight($maturityHeight = null)
-    {
-        $this->maturityHeight = $maturityHeight;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getBlocksTilMaturity()
+
+    public function getBlocksTilMaturity(): int
     {
         return $this->blocksTilMaturity;
     }
-    /**
-     * @param int $blocksTilMaturity
-     *
-     * @return self
-     */
-    public function setBlocksTilMaturity($blocksTilMaturity = null)
-    {
-        $this->blocksTilMaturity = $blocksTilMaturity;
-        return $this;
-    }
-    /**
-     * @return int
-     */
-    public function getStage()
+
+    public function getStage(): int
     {
         return $this->stage;
     }
-    /**
-     * @param int $stage
-     *
-     * @return self
-     */
-    public function setStage($stage = null)
+
+    public function __construct(bool $incoming, string $amount, string $outpoint, int $maturityHeight, int $blocksTilMaturity, int $stage)
     {
+        $this->incoming = $incoming;
+        $this->amount = $amount;
+        $this->outpoint = $outpoint;
+        $this->maturityHeight = $maturityHeight;
+        $this->blocksTilMaturity = $blocksTilMaturity;
         $this->stage = $stage;
-        return $this;
+    }
+
+    public static function fromResponse(array $data): self
+    {
+        return new self(
+            $data['incoming'],
+            $data['amount'],
+            $data['outpoint'],
+            $data['maturity_height'],
+            $data['blocks_til_maturity'],
+            $data['stage']
+        );
     }
 }

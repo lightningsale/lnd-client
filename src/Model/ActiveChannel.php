@@ -84,6 +84,16 @@ class ActiveChannel
         return $this->channelPoint;
     }
 
+    public function getFundingTxId(): string
+    {
+        return substr($this->channelPoint, 0, strpos($this->channelPoint, ":"));
+    }
+
+    public function getOutputIndex(): int
+    {
+        return (int) substr($this->channelPoint, strpos($this->channelPoint, ":") +1);
+    }
+
     public function getChanId(): string
     {
         return $this->chanId;

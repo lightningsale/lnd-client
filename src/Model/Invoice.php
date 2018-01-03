@@ -107,7 +107,7 @@ class Invoice
         return $this->descriptionHash;
     }
 
-    public function getExpiry(): string
+    public function getExpiry(): \DateTime
     {
         return $this->expiry;
     }
@@ -122,7 +122,7 @@ class Invoice
         return $this->cltvExpiry;
     }
 
-    public function __construct(string $memo, string $receipt, string $rPreimage, string $rHash, string $value, bool $settled, \DateTime $creationDate, string $settleDate, string $paymentRequest, string $descriptionHash, string $expiry, string $fallbackAddr, string $cltvExpiry)
+    public function __construct(string $memo, string $receipt, string $rPreimage, string $rHash, string $value, bool $settled, \DateTime $creationDate, string $settleDate, string $paymentRequest, string $descriptionHash, \DateTime $expiry, string $fallbackAddr, string $cltvExpiry)
     {
         $this->memo = $memo;
         $this->receipt = $receipt;
@@ -139,11 +139,6 @@ class Invoice
         $this->cltvExpiry = $cltvExpiry;
     }
 
-    public static function create(string $memo, string $value, $expiry = 3600): Invoice
-    {
-        return new self($memo,"","","",$value,false, new \DateTime(), "","","",$expiry,"", "");
-    }
-
     public static function fromResponse(array $body): self
     {
         return new self(
@@ -157,7 +152,7 @@ class Invoice
             $body['settle_date'] ?? "",
             $body['payment_request'],
             $body['description_hash'] ?? "",
-            $body['expiry'],
+            \DateTime::createFromFormat("U", $body['creation_date'] + $body['expiry']),
             $body['fallback_addr'] ?? "",
             $body['cltv_expiry']
         );

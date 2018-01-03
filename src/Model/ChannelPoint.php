@@ -32,10 +32,10 @@ class ChannelPoint implements \JsonSerializable
         return $this->outputIndex;
     }
     
-    public function __construct(string $fundingTxid, string $fundingTxidStr, int $outputIndex)
+    public function __construct(string $fundingTxid, int $outputIndex)
     {
         $this->fundingTxid = $fundingTxid;
-        $this->fundingTxidStr = $fundingTxidStr;
+        $this->fundingTxidStr = bin2hex($fundingTxid);
         $this->outputIndex = $outputIndex;
     }
 
@@ -43,7 +43,6 @@ class ChannelPoint implements \JsonSerializable
     {
         return new self(
             $body['funding_txid'],
-            $body['funding_txid_str'],
             $body['output_index']
         );
     }

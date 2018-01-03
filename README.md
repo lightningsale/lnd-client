@@ -1,6 +1,11 @@
 # lnd-rest-php
 A LND REST Client for PHP
 
+## Known issues:
+- `closeChannel` doesnt work
+  - No support for force closing a channel at this time
+- `lookupInvoice` doesnt work 
+
 How to use:
 
 `composer require lightningsale\lnd-rest`

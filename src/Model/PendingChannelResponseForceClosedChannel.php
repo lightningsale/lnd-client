@@ -92,17 +92,16 @@ class PendingChannelResponseForceClosedChannel
         $this->pendingHtlcs = $pendingHtlcs;
     }
 
-
     public static function fromResponse($data): self
     {
         return new self(
             PendingChannelResponsePendingChannel::fromResponse($data['channel']),
             $data['closing_txid'],
             $data['limbo_balance'],
-            $data['maturity_height'],
-            $data['blocks_til_maturity'],
-            $data['recovered_balance'],
-            $data['pending_htlcs']
+            $data['maturity_height'] ?? 0,
+            $data['blocks_til_maturity'] ?? 0,
+            $data['recovered_balance'] ?? 0,
+            array_map(function(array $d) {return PendingHTLC::fromResponse($d);}, $data['pending_htlcs'] ?? [])
         );
     }
 }
