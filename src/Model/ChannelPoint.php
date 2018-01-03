@@ -43,7 +43,7 @@ class ChannelPoint implements \JsonSerializable
     {
         return new self(
             $body['funding_txid'],
-            $body['output_index']
+            $body['output_index'] ?? 0
         );
     }
 
