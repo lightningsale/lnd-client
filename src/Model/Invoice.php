@@ -112,6 +112,11 @@ class Invoice
         return $this->expiry;
     }
 
+    public function isExpired(): bool
+    {
+        return !$this->expiry && $this->expiry < new \DateTime();
+    }
+
     public function getFallbackAddr(): string
     {
         return $this->fallbackAddr;
