@@ -37,6 +37,17 @@ class LndClient
 {
     private $httpClient;
 
+
+    public function createWallet(string $password): void
+    {
+        $this->httpClient->post("/v1/createwallet", ['json' => ['password' => $password]]);
+    }
+
+    public function unlockWallet(string $password): void
+    {
+        $this->httpClient->post('/v1/unlockwallet', ['json' => ['password' => $password]]);
+    }
+
     public function __construct(Client $client)
     {
         $this->httpClient = $client;
