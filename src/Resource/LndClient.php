@@ -199,6 +199,10 @@ class LndClient
         ]]);
 
         $body = \GuzzleHttp\json_decode($response->getBody(), true);
+
+        // handle error:
+        // {"error":"payment of 0.33858134 BTC is too large, max payment allowed is 0.04294967 BTC","code":2}
+
         return AddInvoiceResponse::fromResponse($body);
     }
 
