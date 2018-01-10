@@ -7,8 +7,6 @@
 - `closeChannel` doesn't work
   - No support for force closing a channel at this time
 - `lookupInvoice` doesn't work 
-- `unlockWallet` doesn't work
-- `createWallet` doesn't work
 
 ### How to use:
 

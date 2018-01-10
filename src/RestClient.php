@@ -76,12 +76,12 @@ class RestClient implements Client
 
     public function createWallet(string $password): void
     {
-        $this->post("/v1/createwallet", ['password' => $password]);
+        $this->post("/v1/createwallet", ['password' => base64_encode($password)]);
     }
 
     public function unlockWallet(string $password): void
     {
-        $this->post("/v1/unlockwallet", ['password' => $password]);
+        $this->post("/v1/unlockwallet", ['password' => base64_encode($password)]);
     }
 
     public function walletBalance(): WalletBalanceResponse
