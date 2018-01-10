@@ -41,7 +41,7 @@ class RestClient implements Client
         $this->httpClient = $client;
     }
 
-    private function post(string $uri, array $json): array
+    private function post(string $uri, $json): array
     {
         try {
             $response = $this->httpClient->post($uri, ['json' => $json]);
@@ -210,7 +210,7 @@ class RestClient implements Client
 
     public function addInvoice(string $memo, string $value, $expiry = 3600): AddInvoiceResponse
     {
-        $this->post('/v1/invoices', [
+        $body =  $this->post('/v1/invoices', [
             'memo' => $memo,
             'value' => $value,
             'expiry' => $expiry,
