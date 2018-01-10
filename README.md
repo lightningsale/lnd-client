@@ -34,8 +34,7 @@ var_dump($client);
 ## Example Symfony configuration:
 ```yaml
 # services.yml
-LightningSale\LndClient\Client:
-    alias: LightningSale\LndClient\RestClient
+LightningSale\LndClient\Client: '@LightningSale\LndClient\RestClient'
 LightningSale\LndClient\RestClient:
     class: LightningSale\LndClient\RestClient
     factory: ['LightningSale\LndClient\ClientFactory','createRestClient']
