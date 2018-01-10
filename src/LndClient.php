@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace LightningSale\LndRest\Resource;
+namespace LightningSale\LndRest;
 
 use GuzzleHttp\Client;
 use LightningSale\LndRest\Model\ChannelFeeReport;
