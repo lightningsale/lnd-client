@@ -1,10 +1,12 @@
 # lnd-rest-php
 A LND Client for PHP
 
-## Known issues:
-- `closeChannel` doesnt work
+## Known issues for the Rest Client:
+- `closeChannel` doesn't work
   - No support for force closing a channel at this time
-- `lookupInvoice` doesnt work 
+- `lookupInvoice` doesn't work 
+- `unlockWallet` doesn't work
+- `createWallet` doesn't work
 
 How to use:
 
