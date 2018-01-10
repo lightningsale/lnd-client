@@ -1,5 +1,5 @@
 # lnd-rest-php
-A LND REST Client for PHP
+A LND Client for PHP
 
 ## Known issues:
 - `closeChannel` doesnt work
@@ -8,7 +8,7 @@ A LND REST Client for PHP
 
 How to use:
 
-`composer require lightningsale\lnd-rest`
+`composer require lightningsale\lnd-client`
 
 ```php
 <?php
@@ -16,7 +16,7 @@ How to use:
 require './vendor/autoload.php';
 
 use GuzzleHttp\Client;
-use LightningSale\LndRest\Resource\LndClient;
+use LightningSale\LndClient\RestClient;
 
 $rpcUsername = 'rpcusername';
 $rpcPassword = 'rpcpassword';
@@ -29,6 +29,6 @@ $client = new Client([
     'verify' => $tlsCert,
 ]);
 
-$lndClient = new LndClient($client);
+$lndClient = new RestClient($client);
 var_dump($lndClient->getInfo());
 ```
