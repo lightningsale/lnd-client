@@ -3,7 +3,7 @@
 require 'vendor/autoload.php';
 
 use GuzzleHttp\Client;
-use LightningSale\LndRest\Resource\LndClient;
+use LightningSale\LndClient\Resource\LndClient;
 
 $rpcUsername = 'rpcusername';
 $rpcPassword = 'rpcpassword';
