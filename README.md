@@ -31,7 +31,7 @@ $tlsCert = '/root/.lnd/tls.cert';
 
 
 $client = ClientFactory::createRestClient($rpcHost, $rpcPort, $rpcUsername, $rpcPassword, $tlsCert);
-var_dump($client);
+var_dump($client->getInfo());
 ```
 
 ## Example Symfony configuration:
