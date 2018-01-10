@@ -3,7 +3,7 @@
 namespace LightningSale\LndClient\Model;
 
 use LightningSale\LndClient\Model\PendingChannels\ClosingChannel;
-use LightningSale\LndClient\Model\PendingChannels\ForceClosing;
+use LightningSale\LndClient\Model\PendingChannels\ForceClosingChannel;
 use LightningSale\LndClient\Model\PendingChannels\OpeningChannel;
 
 class PendingChannelResponse
@@ -21,7 +21,7 @@ class PendingChannelResponse
      */
     protected $pendingClosingChannels;
     /**
-     * @var ForceClosing[]
+     * @var ForceClosingChannel[]
      */
     protected $pendingForceClosingChannels;
 
@@ -47,7 +47,7 @@ class PendingChannelResponse
     }
 
     /**
-     * @return ForceClosing[]
+     * @return ForceClosingChannel[]
      */
     public function getPendingForceClosingChannels(): array
     {
@@ -59,7 +59,7 @@ class PendingChannelResponse
      * @param string $totalLimboBalance
      * @param OpeningChannel[] $pendingOpenChannels
      * @param ClosingChannel[] $pendingClosingChannels
-     * @param ForceClosing[] $pendingForceClosingChannels
+     * @param ForceClosingChannel[] $pendingForceClosingChannels
      */
     public function __construct(string $totalLimboBalance, array $pendingOpenChannels, array $pendingClosingChannels, array $pendingForceClosingChannels)
     {
@@ -75,7 +75,7 @@ class PendingChannelResponse
             $body['total_limbo_balance'] ?? 0,
             array_map(function($i) {return OpeningChannel::fromResponse($i);}, $body['pending_open_channels'] ?? []),
             array_map(function($i) {return ClosingChannel::fromResponse($i);}, $body['pending_closing_channels'] ?? []),
-            array_map(function($i) {return ForceClosing::fromResponse($i);}, $body['pending_force_closing_channels'] ?? [])
+            array_map(function($i) {return ForceClosingChannel::fromResponse($i);}, $body['pending_force_closing_channels'] ?? [])
         );
     }
 }

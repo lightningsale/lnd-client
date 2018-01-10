@@ -2,7 +2,7 @@
 
 namespace LightningSale\LndClient\Model\PendingChannels;
 
-class ForceClosing
+class ForceClosingChannel
 {
     /**
      * @var PendingChannel
