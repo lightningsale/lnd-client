@@ -33,12 +33,13 @@ var_dump($client);
 
 ## Example Symfony configuration:
 ```yaml
-    LightningSale\LndClient\Client:
-        alias: LightningSale\LndClient\RestClient
-    LightningSale\LndClient\RestClient:
-        class: LightningSale\LndClient\RestClient
-        factory: ['LightningSale\LndClient\ClientFactory','createRestClient']
-        arguments: ["%env(LND_HOST)%", "%env(LND_PORT)%", "%env(RPCUSER)%", "%env(RPCPASS)%", "%lnd_cert%"]
+# services.yml
+LightningSale\LndClient\Client:
+    alias: LightningSale\LndClient\RestClient
+LightningSale\LndClient\RestClient:
+    class: LightningSale\LndClient\RestClient
+    factory: ['LightningSale\LndClient\ClientFactory','createRestClient']
+    arguments: ['127.0.0.1', '8080', 'rpcusername', 'rpcpassword', '/root/.lnd/tls.cert']
 ```
 
 
