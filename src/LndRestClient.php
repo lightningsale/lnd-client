@@ -34,7 +34,7 @@ use LightningSale\LndRest\Model\WalletBalanceResponse;
  * @package LightningSale\LndRest\Resource
  * Documentation at http://api.lightning.community/
  */
-class LndClient
+class LndRestClient
 {
     private $httpClient;
 

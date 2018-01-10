@@ -18,7 +18,7 @@ class LndException extends \Exception
         parent::__construct($message, $code, $previous);
     }
 
-    public static function fromGuzzle(ServerException $exception): LndException {
+    public static function fromGuzzle(BadResponseException $exception): LndException {
         $response = $exception->getResponse();
         if (!$response)
             return new self(  $exception->getMessage(), (int) $exception->getCode(), $exception);
