@@ -11,7 +11,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "LightningSale\\LndRest\\": "src/"
+      "LightningSale\\LndClient\\": "src/"
     }
   },
   "require": {
