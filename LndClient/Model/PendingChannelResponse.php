@@ -2,6 +2,10 @@
 
 namespace LightningSale\LndClient\Model;
 
+use LightningSale\LndClient\Model\PendingChannels\ClosingChannel;
+use LightningSale\LndClient\Model\PendingChannels\ForceClosing;
+use LightningSale\LndClient\Model\PendingChannels\OpeningChannel;
+
 class PendingChannelResponse
 {
     /**
@@ -9,15 +13,15 @@ class PendingChannelResponse
      */
     protected $totalLimboBalance;
     /**
-     * @var PendingChannelResponsePendingOpenChannel[]
+     * @var OpeningChannel[]
      */
     protected $pendingOpenChannels;
     /**
-     * @var PendingChannelResponseClosedChannel[]
+     * @var ClosingChannel[]
      */
     protected $pendingClosingChannels;
     /**
-     * @var PendingChannelResponseForceClosedChannel[]
+     * @var ForceClosing[]
      */
     protected $pendingForceClosingChannels;
 
@@ -27,7 +31,7 @@ class PendingChannelResponse
     }
 
     /**
-     * @return PendingChannelResponsePendingOpenChannel[]
+     * @return OpeningChannel[]
      */
     public function getPendingOpenChannels(): array
     {
@@ -35,7 +39,7 @@ class PendingChannelResponse
     }
 
     /**
-     * @return PendingChannelResponseClosedChannel[]
+     * @return ClosingChannel[]
      */
     public function getPendingClosingChannels(): array
     {
@@ -43,7 +47,7 @@ class PendingChannelResponse
     }
 
     /**
-     * @return PendingChannelResponseForceClosedChannel[]
+     * @return ForceClosing[]
      */
     public function getPendingForceClosingChannels(): array
     {
@@ -53,9 +57,9 @@ class PendingChannelResponse
     /**
      * PendingChannelResponse constructor.
      * @param string $totalLimboBalance
-     * @param PendingChannelResponsePendingOpenChannel[] $pendingOpenChannels
-     * @param PendingChannelResponseClosedChannel[] $pendingClosingChannels
-     * @param PendingChannelResponseForceClosedChannel[] $pendingForceClosingChannels
+     * @param OpeningChannel[] $pendingOpenChannels
+     * @param ClosingChannel[] $pendingClosingChannels
+     * @param ForceClosing[] $pendingForceClosingChannels
      */
     public function __construct(string $totalLimboBalance, array $pendingOpenChannels, array $pendingClosingChannels, array $pendingForceClosingChannels)
     {
@@ -69,9 +73,9 @@ class PendingChannelResponse
     {
         return new self(
             $body['total_limbo_balance'] ?? 0,
-            array_map(function($i) {return PendingChannelResponsePendingOpenChannel::fromResponse($i);}, $body['pending_open_channels'] ?? []),
-            array_map(function($i) {return PendingChannelResponseClosedChannel::fromResponse($i);}, $body['pending_closing_channels'] ?? []),
-            array_map(function($i) {return PendingChannelResponseForceClosedChannel::fromResponse($i);}, $body['pending_force_closing_channels'] ?? [])
+            array_map(function($i) {return OpeningChannel::fromResponse($i);}, $body['pending_open_channels'] ?? []),
+            array_map(function($i) {return ClosingChannel::fromResponse($i);}, $body['pending_closing_channels'] ?? []),
+            array_map(function($i) {return ForceClosing::fromResponse($i);}, $body['pending_force_closing_channels'] ?? [])
         );
     }
 }

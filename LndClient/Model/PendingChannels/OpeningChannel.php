@@ -1,11 +1,11 @@
 <?php
 
-namespace LightningSale\LndClient\Model;
+namespace LightningSale\LndClient\Model\PendingChannels;
 
-class PendingChannelResponsePendingOpenChannel
+class OpeningChannel
 {
     /**
-     * @var PendingChannelResponsePendingChannel
+     * @var PendingChannel
      */
     protected $channel;
     /**
@@ -30,9 +30,9 @@ class PendingChannelResponsePendingOpenChannel
     protected $feePerKw;
 
     /**
-     * @return PendingChannelResponsePendingChannel
+     * @return PendingChannel
      */
-    public function getChannel(): PendingChannelResponsePendingChannel
+    public function getChannel(): PendingChannel
     {
         return $this->channel;
     }
@@ -62,7 +62,7 @@ class PendingChannelResponsePendingOpenChannel
         return $this->feePerKw;
     }
 
-    public function __construct(PendingChannelResponsePendingChannel $channel, int $confirmationHeight, int $blocksTillOpen, string $commitFee, string $commitWeight, string $feePerKw)
+    public function __construct(PendingChannel $channel, int $confirmationHeight, int $blocksTillOpen, string $commitFee, string $commitWeight, string $feePerKw)
     {
         $this->channel = $channel;
         $this->confirmationHeight = $confirmationHeight;
@@ -76,7 +76,7 @@ class PendingChannelResponsePendingOpenChannel
     public static function fromResponse(array $data): self
     {
         return new self(
-            PendingChannelResponsePendingChannel::fromResponse($data['channel']),
+            PendingChannel::fromResponse($data['channel']),
             $data['confirmation_height'] ?? 0,
             $data['blocks_till_open'],
             $data['commit_fee'],

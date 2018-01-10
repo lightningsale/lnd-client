@@ -49,7 +49,8 @@ class RoutingPolicy
         $this->feeRateMilliMsat = $feeRateMilliMsat;
     }
 
-    public static function fromResponse(array $data) {
+    public static function fromResponse(array $data): RoutingPolicy
+    {
         return new self(
             $data['time_lock_delta'],
             $data['min_htlc'] ?? "",

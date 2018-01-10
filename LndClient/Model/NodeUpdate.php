@@ -23,7 +23,7 @@ class NodeUpdate
     /**
      * @return string[]
      */
-    public function getAddresses()
+    public function getAddresses(): array
     {
         return $this->addresses;
     }
@@ -32,7 +32,7 @@ class NodeUpdate
      *
      * @return self
      */
-    public function setAddresses(array $addresses = null)
+    public function setAddresses(array $addresses = null): self
     {
         $this->addresses = $addresses;
         return $this;
@@ -40,7 +40,7 @@ class NodeUpdate
     /**
      * @return string
      */
-    public function getIdentityKey()
+    public function getIdentityKey(): string
     {
         return $this->identityKey;
     }
@@ -49,7 +49,7 @@ class NodeUpdate
      *
      * @return self
      */
-    public function setIdentityKey($identityKey = null)
+    public function setIdentityKey($identityKey = null): self
     {
         $this->identityKey = $identityKey;
         return $this;
@@ -57,7 +57,7 @@ class NodeUpdate
     /**
      * @return string
      */
-    public function getGlobalFeatures()
+    public function getGlobalFeatures(): string
     {
         return $this->globalFeatures;
     }
@@ -66,7 +66,7 @@ class NodeUpdate
      *
      * @return self
      */
-    public function setGlobalFeatures($globalFeatures = null)
+    public function setGlobalFeatures($globalFeatures = null): self
     {
         $this->globalFeatures = $globalFeatures;
         return $this;
@@ -74,7 +74,7 @@ class NodeUpdate
     /**
      * @return string
      */
-    public function getAlias()
+    public function getAlias(): string
     {
         return $this->alias;
     }
@@ -83,7 +83,7 @@ class NodeUpdate
      *
      * @return self
      */
-    public function setAlias($alias = null)
+    public function setAlias($alias = null): self
     {
         $this->alias = $alias;
         return $this;

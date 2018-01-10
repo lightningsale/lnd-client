@@ -9,7 +9,7 @@
 namespace LightningSale\LndClient;
 
 
-use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Exception\BadResponseException;
 
 class LndException extends \Exception
 {
@@ -25,7 +25,7 @@ class LndException extends \Exception
 
 
         if ($response->getStatusCode() === 404)
-            throw new LndException("Wallet is not opened, unlock or create it with lncli", 3);
+            throw new LndException('Wallet is not opened, unlock or create it with lncli', 3);
 
         $body = $response->getBody()->getContents();
         try {

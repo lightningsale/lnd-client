@@ -1,11 +1,11 @@
 <?php
 
-namespace LightningSale\LndClient\Model;
+namespace LightningSale\LndClient\Model\PendingChannels;
 
-class PendingChannelResponseForceClosedChannel
+class ForceClosing
 {
     /**
-     * @var PendingChannelResponsePendingChannel
+     * @var PendingChannel
      */
     protected $channel;
     /**
@@ -33,7 +33,7 @@ class PendingChannelResponseForceClosedChannel
      */
     protected $pendingHtlcs;
 
-    public function getChannel(): PendingChannelResponsePendingChannel
+    public function getChannel(): PendingChannel
     {
         return $this->channel;
     }
@@ -73,7 +73,7 @@ class PendingChannelResponseForceClosedChannel
 
     /**
      * PendingChannelResponseForceClosedChannel constructor.
-     * @param PendingChannelResponsePendingChannel $channel
+     * @param PendingChannel $channel
      * @param string $closingTxid
      * @param string $limboBalance
      * @param int $maturityHeight
@@ -81,7 +81,7 @@ class PendingChannelResponseForceClosedChannel
      * @param string $recoveredBalance
      * @param PendingHTLC[] $pendingHtlcs
      */
-    public function __construct(PendingChannelResponsePendingChannel $channel, string $closingTxid, string $limboBalance, int $maturityHeight, int $blocksTilMaturity, string $recoveredBalance, array $pendingHtlcs)
+    public function __construct(PendingChannel $channel, string $closingTxid, string $limboBalance, int $maturityHeight, int $blocksTilMaturity, string $recoveredBalance, array $pendingHtlcs)
     {
         $this->channel = $channel;
         $this->closingTxid = $closingTxid;
@@ -95,7 +95,7 @@ class PendingChannelResponseForceClosedChannel
     public static function fromResponse($data): self
     {
         return new self(
-            PendingChannelResponsePendingChannel::fromResponse($data['channel']),
+            PendingChannel::fromResponse($data['channel']),
             $data['closing_txid'],
             $data['limbo_balance'],
             $data['maturity_height'] ?? 0,

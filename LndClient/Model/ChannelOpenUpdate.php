@@ -11,7 +11,7 @@ class ChannelOpenUpdate
     /**
      * @return ChannelPoint
      */
-    public function getChannelPoint()
+    public function getChannelPoint(): ChannelPoint
     {
         return $this->channelPoint;
     }
@@ -20,7 +20,7 @@ class ChannelOpenUpdate
      *
      * @return self
      */
-    public function setChannelPoint(ChannelPoint $channelPoint = null)
+    public function setChannelPoint(ChannelPoint $channelPoint = null): self
     {
         $this->channelPoint = $channelPoint;
         return $this;

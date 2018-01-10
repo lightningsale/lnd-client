@@ -19,7 +19,7 @@ class OpenStatusUpdate
     /**
      * @return PendingUpdate
      */
-    public function getChanPending()
+    public function getChanPending(): PendingUpdate
     {
         return $this->chanPending;
     }
@@ -28,7 +28,7 @@ class OpenStatusUpdate
      *
      * @return self
      */
-    public function setChanPending(PendingUpdate $chanPending = null)
+    public function setChanPending(PendingUpdate $chanPending = null): self
     {
         $this->chanPending = $chanPending;
         return $this;
@@ -36,7 +36,7 @@ class OpenStatusUpdate
     /**
      * @return ConfirmationUpdate
      */
-    public function getConfirmation()
+    public function getConfirmation(): ConfirmationUpdate
     {
         return $this->confirmation;
     }
@@ -45,7 +45,7 @@ class OpenStatusUpdate
      *
      * @return self
      */
-    public function setConfirmation(ConfirmationUpdate $confirmation = null)
+    public function setConfirmation(ConfirmationUpdate $confirmation = null): self
     {
         $this->confirmation = $confirmation;
         return $this;
@@ -53,7 +53,7 @@ class OpenStatusUpdate
     /**
      * @return ChannelOpenUpdate
      */
-    public function getChanOpen()
+    public function getChanOpen(): ChannelOpenUpdate
     {
         return $this->chanOpen;
     }
@@ -62,7 +62,7 @@ class OpenStatusUpdate
      *
      * @return self
      */
-    public function setChanOpen(ChannelOpenUpdate $chanOpen = null)
+    public function setChanOpen(ChannelOpenUpdate $chanOpen = null): self
     {
         $this->chanOpen = $chanOpen;
         return $this;

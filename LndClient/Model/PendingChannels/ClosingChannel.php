@@ -1,11 +1,11 @@
 <?php
 
-namespace LightningSale\LndClient\Model;
+namespace LightningSale\LndClient\Model\PendingChannels;
 
-class PendingChannelResponseClosedChannel
+class ClosingChannel
 {
     /**
-     * @var PendingChannelResponsePendingChannel
+     * @var PendingChannel
      */
     protected $channel;
     /**
@@ -13,7 +13,7 @@ class PendingChannelResponseClosedChannel
      */
     protected $closingTxid;
 
-    public function getChannel(): PendingChannelResponsePendingChannel
+    public function getChannel(): PendingChannel
     {
         return $this->channel;
     }
@@ -23,7 +23,7 @@ class PendingChannelResponseClosedChannel
         return $this->closingTxid;
     }
 
-    public function __construct(PendingChannelResponsePendingChannel $channel, string $closingTxid)
+    public function __construct(PendingChannel $channel, string $closingTxid)
     {
         $this->channel = $channel;
         $this->closingTxid = $closingTxid;
@@ -33,7 +33,7 @@ class PendingChannelResponseClosedChannel
     public static function fromResponse(array $data): self
     {
         return new self(
-            PendingChannelResponsePendingChannel::fromResponse($data['channel']),
+            PendingChannel::fromResponse($data['channel']),
             $data['closing_txid']
         );
     }

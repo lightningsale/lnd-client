@@ -11,7 +11,7 @@ class SignMessageResponse
     /**
      * @return string
      */
-    public function getSignature()
+    public function getSignature(): string
     {
         return $this->signature;
     }
@@ -20,7 +20,7 @@ class SignMessageResponse
      *
      * @return self
      */
-    public function setSignature($signature = null)
+    public function setSignature($signature = null): self
     {
         $this->signature = $signature;
         return $this;

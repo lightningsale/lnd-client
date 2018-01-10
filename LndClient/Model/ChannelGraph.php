@@ -41,7 +41,7 @@ class ChannelGraph
     }
 
 
-    public static function fromResponse($body)
+    public static function fromResponse($body): ChannelGraph
     {
         return new self(
             array_map(function($i) {return LightningNode::fromResponse($i);}, $body['nodes']),

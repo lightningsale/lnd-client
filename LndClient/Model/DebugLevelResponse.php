@@ -11,7 +11,7 @@ class DebugLevelResponse
     /**
      * @return string
      */
-    public function getSubSystems()
+    public function getSubSystems(): string
     {
         return $this->subSystems;
     }
@@ -20,7 +20,7 @@ class DebugLevelResponse
      *
      * @return self
      */
-    public function setSubSystems($subSystems = null)
+    public function setSubSystems($subSystems = null): self
     {
         $this->subSystems = $subSystems;
         return $this;

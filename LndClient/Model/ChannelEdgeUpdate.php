@@ -31,7 +31,7 @@ class ChannelEdgeUpdate
     /**
      * @return string
      */
-    public function getChanId()
+    public function getChanId(): string
     {
         return $this->chanId;
     }
@@ -40,7 +40,7 @@ class ChannelEdgeUpdate
      *
      * @return self
      */
-    public function setChanId($chanId = null)
+    public function setChanId($chanId = null): self
     {
         $this->chanId = $chanId;
         return $this;
@@ -48,7 +48,7 @@ class ChannelEdgeUpdate
     /**
      * @return ChannelPoint
      */
-    public function getChanPoint()
+    public function getChanPoint(): ChannelPoint
     {
         return $this->chanPoint;
     }
@@ -57,7 +57,7 @@ class ChannelEdgeUpdate
      *
      * @return self
      */
-    public function setChanPoint(ChannelPoint $chanPoint = null)
+    public function setChanPoint(ChannelPoint $chanPoint = null): self
     {
         $this->chanPoint = $chanPoint;
         return $this;
@@ -65,7 +65,7 @@ class ChannelEdgeUpdate
     /**
      * @return string
      */
-    public function getCapacity()
+    public function getCapacity(): string
     {
         return $this->capacity;
     }
@@ -74,7 +74,7 @@ class ChannelEdgeUpdate
      *
      * @return self
      */
-    public function setCapacity($capacity = null)
+    public function setCapacity($capacity = null): self
     {
         $this->capacity = $capacity;
         return $this;
@@ -82,7 +82,7 @@ class ChannelEdgeUpdate
     /**
      * @return RoutingPolicy
      */
-    public function getRoutingPolicy()
+    public function getRoutingPolicy(): RoutingPolicy
     {
         return $this->routingPolicy;
     }
@@ -91,7 +91,7 @@ class ChannelEdgeUpdate
      *
      * @return self
      */
-    public function setRoutingPolicy(RoutingPolicy $routingPolicy = null)
+    public function setRoutingPolicy(RoutingPolicy $routingPolicy = null): self
     {
         $this->routingPolicy = $routingPolicy;
         return $this;
@@ -99,7 +99,7 @@ class ChannelEdgeUpdate
     /**
      * @return string
      */
-    public function getAdvertisingNode()
+    public function getAdvertisingNode(): string
     {
         return $this->advertisingNode;
     }
@@ -108,7 +108,7 @@ class ChannelEdgeUpdate
      *
      * @return self
      */
-    public function setAdvertisingNode($advertisingNode = null)
+    public function setAdvertisingNode($advertisingNode = null): self
     {
         $this->advertisingNode = $advertisingNode;
         return $this;
@@ -116,7 +116,7 @@ class ChannelEdgeUpdate
     /**
      * @return string
      */
-    public function getConnectingNode()
+    public function getConnectingNode(): string
     {
         return $this->connectingNode;
     }
@@ -125,7 +125,7 @@ class ChannelEdgeUpdate
      *
      * @return self
      */
-    public function setConnectingNode($connectingNode = null)
+    public function setConnectingNode($connectingNode = null): self
     {
         $this->connectingNode = $connectingNode;
         return $this;

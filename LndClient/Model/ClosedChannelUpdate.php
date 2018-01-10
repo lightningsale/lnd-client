@@ -23,7 +23,7 @@ class ClosedChannelUpdate
     /**
      * @return string
      */
-    public function getChanId()
+    public function getChanId(): string
     {
         return $this->chanId;
     }
@@ -32,7 +32,7 @@ class ClosedChannelUpdate
      *
      * @return self
      */
-    public function setChanId($chanId = null)
+    public function setChanId($chanId = null): self
     {
         $this->chanId = $chanId;
         return $this;
@@ -40,7 +40,7 @@ class ClosedChannelUpdate
     /**
      * @return string
      */
-    public function getCapacity()
+    public function getCapacity(): string
     {
         return $this->capacity;
     }
@@ -49,7 +49,7 @@ class ClosedChannelUpdate
      *
      * @return self
      */
-    public function setCapacity($capacity = null)
+    public function setCapacity($capacity = null): self
     {
         $this->capacity = $capacity;
         return $this;
@@ -57,7 +57,7 @@ class ClosedChannelUpdate
     /**
      * @return int
      */
-    public function getClosedHeight()
+    public function getClosedHeight(): int
     {
         return $this->closedHeight;
     }
@@ -66,7 +66,7 @@ class ClosedChannelUpdate
      *
      * @return self
      */
-    public function setClosedHeight($closedHeight = null)
+    public function setClosedHeight($closedHeight = null): self
     {
         $this->closedHeight = $closedHeight;
         return $this;
@@ -74,7 +74,7 @@ class ClosedChannelUpdate
     /**
      * @return ChannelPoint
      */
-    public function getChanPoint()
+    public function getChanPoint(): ChannelPoint
     {
         return $this->chanPoint;
     }
@@ -83,7 +83,7 @@ class ClosedChannelUpdate
      *
      * @return self
      */
-    public function setChanPoint(ChannelPoint $chanPoint = null)
+    public function setChanPoint(ChannelPoint $chanPoint = null): self
     {
         $this->chanPoint = $chanPoint;
         return $this;

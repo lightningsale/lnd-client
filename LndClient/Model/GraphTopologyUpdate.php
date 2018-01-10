@@ -19,7 +19,7 @@ class GraphTopologyUpdate
     /**
      * @return NodeUpdate[]
      */
-    public function getNodeUpdates()
+    public function getNodeUpdates(): array
     {
         return $this->nodeUpdates;
     }
@@ -28,7 +28,7 @@ class GraphTopologyUpdate
      *
      * @return self
      */
-    public function setNodeUpdates(array $nodeUpdates = null)
+    public function setNodeUpdates(array $nodeUpdates = null): self
     {
         $this->nodeUpdates = $nodeUpdates;
         return $this;
@@ -36,7 +36,7 @@ class GraphTopologyUpdate
     /**
      * @return ChannelEdgeUpdate[]
      */
-    public function getChannelUpdates()
+    public function getChannelUpdates(): array
     {
         return $this->channelUpdates;
     }
@@ -45,7 +45,7 @@ class GraphTopologyUpdate
      *
      * @return self
      */
-    public function setChannelUpdates(array $channelUpdates = null)
+    public function setChannelUpdates(array $channelUpdates = null): self
     {
         $this->channelUpdates = $channelUpdates;
         return $this;
@@ -53,7 +53,7 @@ class GraphTopologyUpdate
     /**
      * @return ClosedChannelUpdate[]
      */
-    public function getClosedChans()
+    public function getClosedChans(): array
     {
         return $this->closedChans;
     }
@@ -62,7 +62,7 @@ class GraphTopologyUpdate
      *
      * @return self
      */
-    public function setClosedChans(array $closedChans = null)
+    public function setClosedChans(array $closedChans = null): self
     {
         $this->closedChans = $closedChans;
         return $this;

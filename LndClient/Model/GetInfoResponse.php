@@ -109,7 +109,8 @@ class GetInfoResponse
         $this->chains = $chains;
     }
 
-    public static function fromResponse(array $data) {
+    public static function fromResponse(array $data): GetInfoResponse
+    {
         return new self(
             $data['identity_pubkey'],
             $data['alias'] ?? "",

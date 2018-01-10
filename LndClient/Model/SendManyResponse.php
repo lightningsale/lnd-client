@@ -11,7 +11,7 @@ class SendManyResponse
     /**
      * @return string
      */
-    public function getTxid()
+    public function getTxid(): string
     {
         return $this->txid;
     }
@@ -20,7 +20,7 @@ class SendManyResponse
      *
      * @return self
      */
-    public function setTxid($txid = null)
+    public function setTxid($txid = null): self
     {
         $this->txid = $txid;
         return $this;

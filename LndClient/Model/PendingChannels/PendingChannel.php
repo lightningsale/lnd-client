@@ -1,8 +1,8 @@
 <?php
 
-namespace LightningSale\LndClient\Model;
+namespace LightningSale\LndClient\Model\PendingChannels;
 
-class PendingChannelResponsePendingChannel
+class PendingChannel
 {
     /**
      * @var string

@@ -2,12 +2,10 @@
 
 namespace LightningSale\LndClient;
 
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use LightningSale\LndClient\Model\ChannelFeeReport;
 use LightningSale\LndClient\Model\FeeUpdateRequest;
 use LightningSale\LndClient\Model\Invoice;
-use LightningSale\LndClient\Model\OpenChannelRequest;
 use LightningSale\LndClient\Model\Payment;
 use LightningSale\LndClient\Model\Peer;
 use LightningSale\LndClient\Model\Route;
@@ -38,7 +36,7 @@ class RestClient implements Client
 {
     private $httpClient;
 
-    public function __construct(Client $client)
+    public function __construct(\GuzzleHttp\Client $client)
     {
         $this->httpClient = $client;
     }
@@ -50,7 +48,7 @@ class RestClient implements Client
             $body = \GuzzleHttp\json_decode($response->getBody(), true);
             return $body;
         } catch (BadResponseException $exception) {
-            throw LndException::fromResponse($exception);
+            throw LndException::fromGuzzle($exception);
         }
     }
 
@@ -61,7 +59,7 @@ class RestClient implements Client
             $body = \GuzzleHttp\json_decode($response->getBody(), true);
             return $body;
         } catch (BadResponseException $exception) {
-            throw LndException::fromResponse($exception);
+            throw LndException::fromGuzzle($exception);
         }
     }
 
@@ -71,7 +69,7 @@ class RestClient implements Client
             $body = \GuzzleHttp\json_decode($response->getBody(), true);
             return $body;
         } catch (BadResponseException $exception) {
-            throw LndException::fromResponse($exception);
+            throw LndException::fromGuzzle($exception);
         }
     }
 
