@@ -11,7 +11,13 @@ namespace LightningSale\LndClient;
 
 class ClientFactory
 {
-    public static function createRestClient(string $lndHost, string $lndRestPort, string $rpcUsername, string $rpcPassword, string $lndCertificateFile): RestClient
+    public static function createRestClient(
+        string $lndHost,
+        string $lndRestPort,
+        string $rpcUsername,
+        string $rpcPassword,
+        string $lndCertificateFile
+    ): RestClient
     {
         $client = new \GuzzleHttp\Client([
             'base_uri' => "https://$rpcUsername:$rpcPassword@$lndHost:$lndRestPort",
