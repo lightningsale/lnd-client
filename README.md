@@ -1,12 +1,14 @@
-# lnd-rest-php
-A LND Client for PHP
+##A LND Client for PHP
 
-## Known issues:
-- `closeChannel` doesnt work
+### TODO:
+- Create a gRPC Client
+
+### Known issues for the Rest Client:
+- `closeChannel` doesn't work
   - No support for force closing a channel at this time
-- `lookupInvoice` doesnt work 
+- `lookupInvoice` doesn't work 
 
-How to use:
+### How to use:
 
 `composer require lightningsale\lnd-client`
 
@@ -26,5 +28,17 @@ $tlsCert = '/root/.lnd/tls.cert';
 
 
 $client = ClientFactory::createRestClient($rpcHost, $rpcPort, $rpcUsername, $rpcPassword, $tlsCert);
-var_dump($client);
+var_dump($client->getInfo());
 ```
+
+### Example Symfony configuration:
+```yaml
+# services.yml
+LightningSale\LndClient\Client: '@LightningSale\LndClient\RestClient'
+LightningSale\LndClient\RestClient:
+    class: LightningSale\LndClient\RestClient
+    factory: ['LightningSale\LndClient\ClientFactory','createRestClient']
+    arguments: ['127.0.0.1', '8080', 'rpcusername', 'rpcpassword', '/root/.lnd/tls.cert']
+```
+
+
