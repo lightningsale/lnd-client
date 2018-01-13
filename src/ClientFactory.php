@@ -9,15 +9,17 @@
 namespace LightningSale\LndClient;
 
 
+use Psr\Log\LoggerInterface;
+
 class ClientFactory
 {
-    public static function createRestClient(string $lndHost, string $lndRestPort, string $rpcUsername, string $rpcPassword, string $lndCertificateFile): RestClient
+    public static function createRestClient(string $lndHost, string $lndRestPort, string $rpcUsername, string $rpcPassword, string $lndCertificateFile, LoggerInterface $logger): RestClient
     {
         $client = new \GuzzleHttp\Client([
             'base_uri' => "https://$rpcUsername:$rpcPassword@$lndHost:$lndRestPort",
             'verify' => $lndCertificateFile,
         ]);
 
-        return new RestClient($client);
+        return new RestClient($client, $logger);
     }
 }

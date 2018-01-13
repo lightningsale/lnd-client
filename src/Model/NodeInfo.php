@@ -43,8 +43,8 @@ class NodeInfo
     {
         return new self(
             LightningNode::fromResponse($body['node']),
-            $body['num_channels'],
-            $body['total_capacity']
+            $body['num_channels'] ?? 0,
+            $body['total_capacity'] ?? 0
         );
     }
 }

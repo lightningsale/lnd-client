@@ -50,11 +50,11 @@ interface Client
     /** @return ActiveChannel[] */
     public function listChannels(): array;
 
-    public function openChannelSync(string $nodePubkey, string $amount, string $pushSat = "0", int $targetConf = 0, int $satoshiPrByte = 0, bool $private = false): ChannelPoint;
+    public function openChannel(string $nodePubkey, string $amount, string $pushSat = "0", int $targetConf = 0, int $satoshiPrByte = 0, bool $private = false): ChannelPoint;
 
     public function pendingChannels(): PendingChannelResponse;
 
-    public function sendPaymentSync(SendRequest $body): SendResponse;
+    public function sendPayment(SendRequest $body): SendResponse;
 
     public function sendPaymentRequest(string $paymentRequest): SendResponse;
 

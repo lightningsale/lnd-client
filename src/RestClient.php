@@ -25,6 +25,7 @@ use LightningSale\LndClient\Model\PendingChannelResponse;
 use LightningSale\LndClient\Model\ChannelPoint;
 use LightningSale\LndClient\Model\Transaction;
 use LightningSale\LndClient\Model\WalletBalanceResponse;
+use Psr\Log\LoggerInterface;
 
 
 /**
@@ -35,19 +36,29 @@ use LightningSale\LndClient\Model\WalletBalanceResponse;
 class RestClient implements Client
 {
     private $httpClient;
+    private $logger;
 
-    public function __construct(\GuzzleHttp\Client $client)
+    public function __construct(\GuzzleHttp\Client $client, LoggerInterface $logger)
     {
         $this->httpClient = $client;
+        $this->logger = $logger;
     }
 
     private function post(string $uri, $json): array
     {
         try {
+            $tmpData = json_encode($json);
+            if (isset($tmpData['password']))
+                $tmpData['password'] = "*** PASSWORD ***";
+            $this->logger->debug("LndClient Request (post)", [
+                'uri' => $uri,
+                'json' => $tmpData
+            ]);
             $response = $this->httpClient->post($uri, ['json' => $json]);
             $body = \GuzzleHttp\json_decode($response->getBody(), true);
             return $body;
         } catch (BadResponseException $exception) {
+            $this->logger->critical("LndClient Error", ['exception' => $exception]);
             throw LndException::fromGuzzle($exception);
         }
     }
@@ -55,20 +66,24 @@ class RestClient implements Client
     private function get(string $uri): array
     {
         try {
+            $this->logger->info("LndClient Request (Get)", ['uri' => $uri]);
             $response = $this->httpClient->get($uri);
             $body = \GuzzleHttp\json_decode($response->getBody(), true);
             return $body;
         } catch (BadResponseException $exception) {
+            $this->logger->critical("LndClient Error", $exception);
             throw LndException::fromGuzzle($exception);
         }
     }
 
     private function delete(string $uri){
         try {
+            $this->logger->info("LndClient Request (Delete)", ['uri' => $uri]);
             $response = $this->httpClient->delete($uri);
             $body = \GuzzleHttp\json_decode($response->getBody(), true);
             return $body;
         } catch (BadResponseException $exception) {
+            $this->logger->critical("LndClient Error", $exception);
             throw LndException::fromGuzzle($exception);
         }
     }
@@ -103,7 +118,7 @@ class RestClient implements Client
         return array_map(function ($f) {return ActiveChannel::fromResponse($f);}, $body['channels'] ?? []);
     }
 
-    public function openChannelSync(string $nodePubkey, string $amount, string $pushSat = "0", int $targetConf = 0, int $satoshiPrByte = 0, bool $private = false): ChannelPoint
+    public function openChannel(string $nodePubkey, string $amount, string $pushSat = "0", int $targetConf = 0, int $satoshiPrByte = 0, bool $private = false): ChannelPoint
     {
         $body = $this->post('/v1/channels', [
             'target_peer_id' => 0, // Not used
@@ -123,7 +138,7 @@ class RestClient implements Client
         return PendingChannelResponse::fromResponse($body);
     }
 
-    public function sendPaymentSync(SendRequest $body): SendResponse
+    public function sendPayment(SendRequest $body): SendResponse
     {
         $body = $this->post('/v1/channels', $body);
         return SendResponse::fromResponse($body);
