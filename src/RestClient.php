@@ -71,7 +71,7 @@ class RestClient implements Client
             $body = \GuzzleHttp\json_decode($response->getBody(), true);
             return $body;
         } catch (BadResponseException $exception) {
-            $this->logger->critical("LndClient Error", $exception);
+            $this->logger->critical("LndClient Error", ['exception' => $exception]);
             throw LndException::fromGuzzle($exception);
         }
     }
@@ -83,7 +83,7 @@ class RestClient implements Client
             $body = \GuzzleHttp\json_decode($response->getBody(), true);
             return $body;
         } catch (BadResponseException $exception) {
-            $this->logger->critical("LndClient Error", $exception);
+            $this->logger->critical("LndClient Error", ['exception' => $exception]);
             throw LndException::fromGuzzle($exception);
         }
     }

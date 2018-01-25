@@ -30,7 +30,7 @@ class LndException extends \Exception
         $body = $response->getBody()->getContents();
         try {
             $body = \GuzzleHttp\json_decode($body, true);
-            return new self($body['error'], (int) $body['code']);
+            return new self($body['error'], (int) $body['code'], $exception);
         } catch (\InvalidArgumentException $exception) {
             return new self($exception->getMessage(), (int) $exception->getCode(), $exception);
         }
