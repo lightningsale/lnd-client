@@ -29,7 +29,7 @@ class PendingChannel
 
     public function getRemotePubkey(): string
     {
-        return $this->getRemoteNodePub();
+        return bin2hex($this->getRemoteNodePub());
     }
 
     public function getRemoteNodePub(): string
@@ -77,7 +77,7 @@ class PendingChannel
         [$fundingTx, $outputIndex] = explode(":", $data['channel_point']);
 
         return new self(
-            $data['remote_node_pub'],
+            hex2bin($data['remote_node_pub']),
             ChannelPoint::fromResponse([
                 'funding_txid' => $fundingTx,
                 'output_index' => $outputIndex

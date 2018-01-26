@@ -78,7 +78,7 @@ class OpeningChannel
         return new self(
             PendingChannel::fromResponse($data['channel']),
             $data['confirmation_height'] ?? 0,
-            $data['blocks_till_open'],
+            $data['blocks_till_open'] ?? -1,
             $data['commit_fee'],
             $data['commit_weight'],
             $data['fee_per_kw']
