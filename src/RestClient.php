@@ -76,10 +76,10 @@ class RestClient implements Client
         }
     }
 
-    private function delete(string $uri){
+    private function delete(string $uri, array $queryParams = []){
         try {
             $this->logger->info("LndClient Request (Delete)", ['uri' => $uri]);
-            $response = $this->httpClient->delete($uri);
+            $response = $this->httpClient->delete($uri,['query' => $queryParams]);
             $body = \GuzzleHttp\json_decode($response->getBody(), true);
             return $body;
         } catch (BadResponseException $exception) {
@@ -150,15 +150,17 @@ class RestClient implements Client
         return SendResponse::fromResponse($body);
     }
 
-    public function closeChannel(string $fundingTxid, string $outputIndex, bool $force = false): CloseStatusUpdate
+    public function closeChannel(string $fundingTxid, string $outputIndex, bool $force = false, int $targetConf = 5, int $satPrByte = 10): CloseStatusUpdate
     {
         $url = '/v1/channels/{funding_txid}/{output_index}';
         $url = str_replace('{funding_txid}', urlencode($fundingTxid), $url);
         $url = str_replace('{output_index}', urlencode($outputIndex), $url);
-        if ($force)
-            $url .= "?force=true";
 
-        $body = $this->delete($url);
+        $body = $this->delete($url, [
+            'force' => $force,
+            'target_conf' => $targetConf,
+            'sat_per_byte' => $satPrByte
+        ]);
         return CloseStatusUpdate::fromResponse($body);
     }
 

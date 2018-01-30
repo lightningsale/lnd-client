@@ -45,6 +45,11 @@ class GetInfoResponse
      */
     protected $chains;
 
+    /**
+     * @var string[]
+     */
+    protected $uris;
+
     public function getIdentityPubkey(): string
     {
         return $this->identityPubkey;
@@ -90,12 +95,23 @@ class GetInfoResponse
         return $this->testnet;
     }
 
+    /**
+     * @return string[]
+     */
     public function getChains(): array
     {
         return $this->chains;
     }
 
-    public function __construct(string $identityPubkey, string $alias, int $numPendingChannels, int $numActiveChannels, int $numPeers, int $blockHeight, string $blockHash, bool $syncedToChain, bool $testnet, array $chains)
+    /**
+     * @return string[]
+     */
+    public function getUris(): array
+    {
+        return $this->uris;
+    }
+
+    public function __construct(string $identityPubkey, string $alias, int $numPendingChannels, int $numActiveChannels, int $numPeers, int $blockHeight, string $blockHash, bool $syncedToChain, bool $testnet, array $chains, array $uris)
     {
         $this->identityPubkey = $identityPubkey;
         $this->alias = $alias;
@@ -107,6 +123,7 @@ class GetInfoResponse
         $this->syncedToChain = $syncedToChain;
         $this->testnet = $testnet;
         $this->chains = $chains;
+        $this->uris = $uris;
     }
 
     public static function fromResponse(array $data): GetInfoResponse
@@ -121,7 +138,8 @@ class GetInfoResponse
             $data['block_hash'] ?? "",
             $data['synced_to_chain'] ?? false,
             $data['testnet'] ?? false,
-            $data['chains'] ?? []
+            $data['chains'] ?? [],
+            $data["uris"] ?? []
         );
     }
 }
