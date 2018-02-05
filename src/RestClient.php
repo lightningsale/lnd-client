@@ -150,17 +150,19 @@ class RestClient implements Client
         return SendResponse::fromResponse($body);
     }
 
-    public function closeChannel(string $fundingTxid, string $outputIndex, bool $force = false, int $targetConf = 5, int $satPrByte = 10): CloseStatusUpdate
+    public function closeChannel(string $fundingTxid, string $outputIndex, bool $force = false, ? int $targetConf = 5,? int $satPrByte = null): CloseStatusUpdate
     {
         $url = '/v1/channels/{funding_txid}/{output_index}';
         $url = str_replace('{funding_txid}', urlencode($fundingTxid), $url);
         $url = str_replace('{output_index}', urlencode($outputIndex), $url);
 
-        $body = $this->delete($url, [
-            'force' => $force,
-            'target_conf' => $targetConf,
-            'sat_per_byte' => $satPrByte
-        ]);
+        $query = [];
+        if ($force) $query['force'] = $force;
+        if ($targetConf && !$satPrByte) $query['target_conf'] = $targetConf;
+        if (!$targetConf && $satPrByte) $query['sat_per_byte'] = $satPrByte;
+        if ($targetConf && $satPrByte) throw new LndException("You must specify either 'targetConf' or 'satPrByte', not both!");
+
+        $body = $this->delete($url, $query);
         return CloseStatusUpdate::fromResponse($body);
     }
 
