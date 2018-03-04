@@ -77,6 +77,11 @@ class Invoice
         return $this->rHash;
     }
 
+    public function getRHashStr(): string
+    {
+        return bin2hex($this->rHash);
+    }
+
     public function getValue(): string
     {
         return $this->value;
@@ -150,7 +155,7 @@ class Invoice
             $body['memo'] ?? "",
             $body['receipt'] ?? "",
             $body['r_preimage'],
-            bin2hex(base64_decode($body['r_hash'])),
+            base64_decode($body['r_hash']),
             $body['value'],
             $body['settled'] ?? false,
             \DateTime::createFromFormat("U", $body['creation_date']),

@@ -47,9 +47,9 @@ class GetInfoResponse
     /**
      * @var \DateTime
      */
-    private $bestHeaderTimestamp;
+    protected $bestHeaderTimestamp;
     /** @var string[] */
-    private $uris;
+    protected $uris;
 
     public function getIdentityPubkey(): string
     {
@@ -96,14 +96,12 @@ class GetInfoResponse
         return $this->testnet;
     }
 
+    /**
+     * @return string[]
+     */
     public function getChains(): array
     {
         return $this->chains;
-    }
-
-    public function getBestHeaderTimestamp(): \DateTime
-    {
-        return $this->bestHeaderTimestamp;
     }
 
     /**
@@ -112,6 +110,11 @@ class GetInfoResponse
     public function getUris(): array
     {
         return $this->uris;
+    }
+
+    public function getBestHeaderTimestamp(): \DateTime
+    {
+        return $this->bestHeaderTimestamp;
     }
 
     public function __construct(

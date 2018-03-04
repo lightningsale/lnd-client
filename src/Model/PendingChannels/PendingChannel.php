@@ -2,6 +2,8 @@
 
 namespace LightningSale\LndClient\Model\PendingChannels;
 
+use LightningSale\LndClient\Model\ChannelPoint;
+
 class PendingChannel
 {
     /**
@@ -9,7 +11,7 @@ class PendingChannel
      */
     protected $remoteNodePub;
     /**
-     * @var string
+     * @var ChannelPoint
      */
     protected $channelPoint;
     /**
@@ -27,7 +29,7 @@ class PendingChannel
 
     public function getRemotePubkey(): string
     {
-        return $this->getRemoteNodePub();
+        return bin2hex($this->getRemoteNodePub());
     }
 
     public function getRemoteNodePub(): string
@@ -35,14 +37,14 @@ class PendingChannel
         return $this->remoteNodePub;
     }
 
-    public function getChannelPoint(): string
+    public function getChannelPoint(): ChannelPoint
     {
         return $this->channelPoint;
     }
 
     public function getFundingTxId(): string
     {
-        return substr($this->channelPoint, 0, strpos($this->channelPoint, ":"));
+        return $this->channelPoint->getFundingTxid();
     }
 
     public function getCapacity(): string
@@ -60,7 +62,7 @@ class PendingChannel
         return $this->remoteBalance;
     }
 
-    public function __construct(string $remoteNodePub, string $channelPoint, string $capacity, string $localBalance, string $remoteBalance)
+    public function __construct(string $remoteNodePub, ChannelPoint $channelPoint, string $capacity, string $localBalance, string $remoteBalance)
     {
         $this->remoteNodePub = $remoteNodePub;
         $this->channelPoint = $channelPoint;
@@ -72,9 +74,14 @@ class PendingChannel
 
     public static function fromResponse($data): self
     {
+        [$fundingTx, $outputIndex] = explode(":", $data['channel_point']);
+
         return new self(
-            $data['remote_node_pub'],
-            $data['channel_point'],
+            hex2bin($data['remote_node_pub']),
+            ChannelPoint::fromResponse([
+                'funding_txid' => $fundingTx,
+                'output_index' => $outputIndex
+            ]),
             $data['capacity'],
             $data['local_balance'] ?? "0",
             $data['remote_balance'] ?? "0"

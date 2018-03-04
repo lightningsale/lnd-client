@@ -1,4 +1,4 @@
-##A LND Client for PHP
+## A LND Client for PHP
 
 ### TODO:
 - Create a gRPC Client
@@ -18,18 +18,20 @@
 <?php
 
 use LightningSale\LndClient\ClientFactory;
+use Psr\Log\NullLogger;
 
 require './vendor/autoload.php';
 
 
 $rpcUsername = 'rpcusername';
 $rpcPassword = 'rpcpassword';
-$rpcHost = '127.0.0.1';
-$rpcPort = '8080';
-$tlsCert = '/root/.lnd/tls.cert';
+$rpcHost     = '127.0.0.1';
+$rpcPort     = '8080';
+$tlsCert     = '/root/.lnd/tls.cert';
+$macaroon    = '/root/.lnd/admin.macaroon';
 
 
-$client = ClientFactory::createRestClient($rpcHost, $rpcPort, $rpcUsername, $rpcPassword, $tlsCert);
+$client = ClientFactory::createRestClient($rpcHost, $rpcPort, $tlsCert, $macaroon, new NullLogger());
 var_dump($client->getInfo());
 ```
 
@@ -40,7 +42,7 @@ LightningSale\LndClient\Client: '@LightningSale\LndClient\RestClient'
 LightningSale\LndClient\RestClient:
     class: LightningSale\LndClient\RestClient
     factory: ['LightningSale\LndClient\ClientFactory','createRestClient']
-    arguments: ['127.0.0.1', '8080', 'rpcusername', 'rpcpassword', '/root/.lnd/tls.cert']
+    arguments: ['127.0.0.1', '8080', '/root/.lnd/tls.cert', '/root/.lnd/admin.macaroon', '@logger']
 ```
 
 

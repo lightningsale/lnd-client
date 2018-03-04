@@ -8,7 +8,6 @@ use LightningSale\LndClient\Model\Invoice;
 use LightningSale\LndClient\Model\Payment;
 use LightningSale\LndClient\Model\Peer;
 use LightningSale\LndClient\Model\Route;
-use LightningSale\LndClient\Model\SendCoinsResponse;
 use LightningSale\LndClient\Model\PayReq;
 use LightningSale\LndClient\Model\AddInvoiceResponse;
 use LightningSale\LndClient\Model\NodeInfo;
@@ -23,6 +22,7 @@ use LightningSale\LndClient\Model\PendingChannelResponse;
 use LightningSale\LndClient\Model\ChannelPoint;
 use LightningSale\LndClient\Model\Transaction;
 use LightningSale\LndClient\Model\WalletBalanceResponse;
+use Psr\Log\LoggerInterface;
 
 
 /**
@@ -33,19 +33,29 @@ use LightningSale\LndClient\Model\WalletBalanceResponse;
 class RestClient implements Client
 {
     private $httpClient;
+    private $logger;
 
-    public function __construct(\GuzzleHttp\Client $client)
+    public function __construct(\GuzzleHttp\Client $client, LoggerInterface $logger)
     {
         $this->httpClient = $client;
+        $this->logger = $logger;
     }
 
     private function post(string $uri, $json): array
     {
         try {
+            $tmpData = json_encode($json);
+            if (isset($tmpData['password']))
+                $tmpData['password'] = "*** PASSWORD ***";
+            $this->logger->debug("LndClient Request (post)", [
+                'uri' => $uri,
+                'json' => $tmpData
+            ]);
             $response = $this->httpClient->post($uri, ['json' => $json]);
             $body = \GuzzleHttp\json_decode($response->getBody(), true);
             return $body;
         } catch (BadResponseException $exception) {
+            $this->logger->critical("LndClient Error", ['exception' => $exception]);
             throw LndException::fromGuzzle($exception);
         }
     }
@@ -53,20 +63,24 @@ class RestClient implements Client
     private function get(string $uri, array $queryParams = []): array
     {
         try {
+            $this->logger->info("LndClient Request (Get)", ['uri' => $uri]);
             $response = $this->httpClient->get($uri, ['query' => $queryParams]);
             $body = \GuzzleHttp\json_decode($response->getBody(), true);
             return $body;
         } catch (BadResponseException $exception) {
+            $this->logger->critical("LndClient Error", ['exception' => $exception]);
             throw LndException::fromGuzzle($exception);
         }
     }
 
-    private function delete(string $uri){
+    private function delete(string $uri, array $queryParams = []){
         try {
-            $response = $this->httpClient->delete($uri);
+            $this->logger->info("LndClient Request (Delete)", ['uri' => $uri]);
+            $response = $this->httpClient->delete($uri,['query' => $queryParams]);
             $body = \GuzzleHttp\json_decode($response->getBody(), true);
             return $body;
         } catch (BadResponseException $exception) {
+            $this->logger->critical("LndClient Error", ['exception' => $exception]);
             throw LndException::fromGuzzle($exception);
         }
     }
@@ -101,26 +115,11 @@ class RestClient implements Client
         return array_map(function ($f) {return ActiveChannel::fromResponse($f);}, $body['channels'] ?? []);
     }
 
-    public function openChannelSync(string $nodePubkey, string $amount, string $pushSat = '0', int $targetConf = 0, int $satoshiPrByte = 0, bool $private = false): ChannelPoint
-    {
-        $body = $this->post('/v1/channels', [
-            'target_peer_id' => 0, // Not used
-            'node_pubkey_string' => $nodePubkey,
-            'local_funding_amount' => $amount,
-            'push_sat' => $pushSat,
-            'target_conf' => $targetConf,
-            'sat_per_byte' => $satoshiPrByte,
-            'private' => $private,
-        ]);
-        return ChannelPoint::fromResponse($body);
-    }
-
     public function pendingChannels(): PendingChannelResponse
     {
         $body = $this->get('/v1/channels/pending');
         return PendingChannelResponse::fromResponse($body);
     }
-
 
     public function sendPayment(string $paymentRequest): SendCoinsResponse
     {
@@ -145,15 +144,19 @@ class RestClient implements Client
         return ChannelPoint::fromResponse($body);
     }
 
-    public function closeChannel(string $fundingTxid, string $outputIndex, bool $force = false): CloseStatusUpdate
+    public function closeChannel(string $fundingTxid, string $outputIndex, bool $force = false, ? int $targetConf = 5,? int $satPrByte = null): CloseStatusUpdate
     {
         $url = '/v1/channels/{funding_txid}/{output_index}';
         $url = str_replace('{funding_txid}', urlencode($fundingTxid), $url);
         $url = str_replace('{output_index}', urlencode($outputIndex), $url);
-        if ($force)
-            $url .= '?force=true';
 
-        $body = $this->delete($url);
+        $query = [];
+        if ($force) $query['force'] = $force;
+        if ($targetConf && !$satPrByte) $query['target_conf'] = $targetConf;
+        if (!$targetConf && $satPrByte) $query['sat_per_byte'] = $satPrByte;
+        if ($targetConf && $satPrByte) throw new LndException("You must specify either 'targetConf' or 'satPrByte', not both!");
+
+        $body = $this->delete($url, $query);
         return CloseStatusUpdate::fromResponse($body);
     }
 
