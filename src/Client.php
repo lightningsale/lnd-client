@@ -15,7 +15,6 @@ use LightningSale\LndClient\Model\ChannelFeeReport;
 use LightningSale\LndClient\Model\ChannelGraph;
 use LightningSale\LndClient\Model\ChannelPoint;
 use LightningSale\LndClient\Model\CloseStatusUpdate;
-use LightningSale\LndClient\Model\FeeUpdateRequest;
 use LightningSale\LndClient\Model\GetInfoResponse;
 use LightningSale\LndClient\Model\Invoice;
 use LightningSale\LndClient\Model\NetworkInfo;
@@ -25,9 +24,7 @@ use LightningSale\LndClient\Model\PayReq;
 use LightningSale\LndClient\Model\Peer;
 use LightningSale\LndClient\Model\PendingChannelResponse;
 use LightningSale\LndClient\Model\Route;
-use LightningSale\LndClient\Model\SendCoinsRequest;
-use LightningSale\LndClient\Model\SendRequest;
-use LightningSale\LndClient\Model\SendResponse;
+use LightningSale\LndClient\Model\SendCoinsResponse;
 use LightningSale\LndClient\Model\Transaction;
 use LightningSale\LndClient\Model\WalletBalanceResponse;
 
@@ -50,22 +47,20 @@ interface Client
     /** @return ActiveChannel[] */
     public function listChannels(): array;
 
-    public function openChannelSync(string $nodePubkey, string $amount, string $pushSat = "0", int $targetConf = 0, int $satoshiPrByte = 0, bool $private = false): ChannelPoint;
+    public function openChannel(string $nodePubkey, string $amount, string $pushSat = "0", int $targetConf = 0, int $satoshiPrByte = 0, bool $private = false, ?string $minHtlcMsat = "0"): ChannelPoint;
 
     public function pendingChannels(): PendingChannelResponse;
 
-    public function sendPaymentSync(SendRequest $body): SendResponse;
-
-    public function sendPaymentRequest(string $paymentRequest): SendResponse;
+    public function sendPayment(string $paymentRequest): SendCoinsResponse;
 
     public function closeChannel(string $fundingTxid, string $outputIndex, bool $force = false): CloseStatusUpdate;
+
+    public function updateChannelPolicy(string $baseFeeMsat, int $feeRate, int $timeLockDelta, ?ChannelPoint $channelPoint = null);
 
     /**
      * @return ChannelFeeReport[]
      */
     public function feeReport(): array;
-
-    public function updateFees(FeeUpdateRequest $body): void;
 
     public function getInfo(): GetInfoResponse;
 
@@ -78,14 +73,14 @@ interface Client
     public function getNodeInfo(string $pubKey): NodeInfo;
 
     /** @return Route[] */
-    public function queryRoutes(string $pubKey, string $amt): array;
+    public function queryRoutes(string $pubKey, string $amt, ?int $numRoutes = 0): array;
 
     public function addInvoice(string $memo, string $value, $expiry = 3600): AddInvoiceResponse;
 
     /** @return Invoice[] */
     public function listInvoices(bool $pendingOnly = false): array;
 
-    public function lookupInvoice(string $rHashStr): Invoice;
+    public function lookupInvoice(string $rHash): Invoice;
 
     public function newWitnessAddress(): string;
 
@@ -111,6 +106,4 @@ interface Client
      * @return Transaction[]
      */
     public function getTransactions(): array;
-
-    public function sendCoins(SendCoinsRequest $body): string;
 }

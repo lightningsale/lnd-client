@@ -23,7 +23,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/WalletBalanceResponse"
+              "$ref": "#/definitions/lnrpcWalletBalanceResponse"
             }
           }
         },
@@ -50,7 +50,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/ChannelBalanceResponse"
+              "$ref": "#/definitions/lnrpcChannelBalanceResponse"
             }
           }
         },
@@ -67,7 +67,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/ListChannelsResponse"
+              "$ref": "#/definitions/lnrpcListChannelsResponse"
             }
           }
         },
@@ -82,7 +82,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/ChannelPoint"
+              "$ref": "#/definitions/lnrpcChannelPoint"
             }
           }
         },
@@ -92,7 +92,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/OpenChannelRequest"
+              "$ref": "#/definitions/lnrpcOpenChannelRequest"
             }
           }
         ],
@@ -109,7 +109,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/PendingChannelResponse"
+              "$ref": "#/definitions/lnrpcPendingChannelsResponse"
             }
           }
         },
@@ -126,7 +126,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/SendResponse"
+              "$ref": "#/definitions/lnrpcSendResponse"
             }
           }
         },
@@ -136,7 +136,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/SendRequest"
+              "$ref": "#/definitions/lnrpcSendRequest"
             }
           }
         ],
@@ -145,7 +145,7 @@
         ]
       }
     },
-    "/v1/channels/{channel_point.funding_txid}/{channel_point.output_index}": {
+    "/v1/channels/{channel_point.funding_txid_str}/{channel_point.output_index}": {
       "delete": {
         "summary": "* lncli: `closechannel`\nCloseChannel attempts to close an active channel identified by its channel\noutpoint (ChannelPoint). The actions of this method can additionally be\naugmented to attempt a force close after a timeout period in the case of an\ninactive peer. If a non-force close (cooperative closure) is requested,\nthen the user can specify either a target number of blocks until the\nclosure transaction is confirmed, or a manual fee rate. If neither are\nspecified, then a default lax, block confirmation target is used.",
         "operationId": "CloseChannel",
@@ -153,17 +153,16 @@
           "200": {
             "description": "(streaming responses)",
             "schema": {
-              "$ref": "#/definitions/CloseStatusUpdate"
+              "$ref": "#/definitions/lnrpcCloseStatusUpdate"
             }
           }
         },
         "parameters": [
           {
-            "name": "channel_point.funding_txid",
+            "name": "channel_point.funding_txid_str",
             "in": "path",
             "required": true,
-            "type": "string",
-            "format": "byte"
+            "type": "string"
           },
           {
             "name": "channel_point.output_index",
@@ -171,6 +170,33 @@
             "required": true,
             "type": "integer",
             "format": "int64"
+          }
+        ],
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/chanpolicy": {
+      "post": {
+        "summary": "* lncli: `updatechanpolicy`\nUpdateChannelPolicy allows the caller to update the fee schedule and\nchannel policies for all channels globally, or a particular channel.",
+        "operationId": "UpdateChannelPolicy",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/lnrpcPolicyUpdateResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/lnrpcPolicyUpdateRequest"
+            }
           }
         ],
         "tags": [
@@ -186,7 +212,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/CreateWalletResponse"
+              "$ref": "#/definitions/lnrpcCreateWalletResponse"
             }
           }
         },
@@ -196,7 +222,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/CreateWalletRequest"
+              "$ref": "#/definitions/lnrpcCreateWalletRequest"
             }
           }
         ],
@@ -213,35 +239,10 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/FeeReportResponse"
+              "$ref": "#/definitions/lnrpcFeeReportResponse"
             }
           }
         },
-        "tags": [
-          "Lightning"
-        ]
-      },
-      "post": {
-        "summary": "* lncli: `updatefees`\nUpdateFees allows the caller to update the fee schedule for all channels\nglobally, or a particular channel.",
-        "operationId": "UpdateFees",
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/FeeUpdateResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/FeeUpdateRequest"
-            }
-          }
-        ],
         "tags": [
           "Lightning"
         ]
@@ -255,7 +256,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/GetInfoResponse"
+              "$ref": "#/definitions/lnrpcGetInfoResponse"
             }
           }
         },
@@ -272,7 +273,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/ChannelGraph"
+              "$ref": "#/definitions/lnrpcChannelGraph"
             }
           }
         },
@@ -289,7 +290,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/ChannelEdge"
+              "$ref": "#/definitions/lnrpcChannelEdge"
             }
           }
         },
@@ -315,7 +316,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/NetworkInfo"
+              "$ref": "#/definitions/lnrpcNetworkInfo"
             }
           }
         },
@@ -332,7 +333,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/NodeInfo"
+              "$ref": "#/definitions/lnrpcNodeInfo"
             }
           }
         },
@@ -351,13 +352,13 @@
     },
     "/v1/graph/routes/{pub_key}/{amt}": {
       "get": {
-        "summary": "* lncli: `queryroutes`\nQueryRoutes attempts to query the daemon's Channel Router for a possible\nroute to a target destination capable of carrying a specific amount of\nsatoshis. The retuned route contains the full details required to craft and\nsend an HTLC, also including the necessary information that should be\npresent within the Sphinx packet encapsualted within the HTLC.",
+        "summary": "* lncli: `queryroutes`\nQueryRoutes attempts to query the daemon's Channel Router for a possible\nroute to a target destination capable of carrying a specific amount of\nsatoshis. The retuned route contains the full details required to craft and\nsend an HTLC, also including the necessary information that should be\npresent within the Sphinx packet encapsulated within the HTLC.",
         "operationId": "QueryRoutes",
         "responses": {
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/QueryRoutesResponse"
+              "$ref": "#/definitions/lnrpcQueryRoutesResponse"
             }
           }
         },
@@ -374,33 +375,14 @@
             "required": true,
             "type": "string",
             "format": "int64"
-          }
-        ],
-        "tags": [
-          "Lightning"
-        ]
-      }
-    },
-    "/v1/invoices": {
-      "post": {
-        "summary": "* lncli: `addinvoice`\nAddInvoice attempts to add a new invoice to the invoice database. Any\nduplicated invoices are rejected, therefore all invoices *must* have a\nunique payment preimage.",
-        "operationId": "AddInvoice",
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/AddInvoiceResponse"
-            }
-          }
-        },
-        "parameters": [
+          },
           {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Invoice"
-            }
+            "name": "num_routes",
+            "description": "/ The max number of routes to return.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
           }
         ],
         "tags": [
@@ -408,58 +390,15 @@
         ]
       }
     },
-    "/v1/invoices/subscribe": {
+    "/v1/invoice/{r_hash_str}": {
       "get": {
-        "summary": "*\nSubscribeInvoices returns a uni-directional stream (sever -\u003e client) for\nnotifying the client of newly added/settled invoices.",
-        "operationId": "SubscribeInvoices",
-        "responses": {
-          "200": {
-            "description": "(streaming responses)",
-            "schema": {
-              "$ref": "#/definitions/Invoice"
-            }
-          }
-        },
-        "tags": [
-          "Lightning"
-        ]
-      }
-    },
-    "/v1/invoices/{pending_only}": {
-      "get": {
-        "summary": "* lncli: `listinvoices`\nListInvoices returns a list of all the invoices currently stored within the\ndatabase. Any active debug invoices are ignored.",
-        "operationId": "ListInvoices",
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/ListInvoiceResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "pending_only",
-            "in": "path",
-            "required": true,
-            "type": "boolean",
-            "format": "boolean"
-          }
-        ],
-        "tags": [
-          "Lightning"
-        ]
-      }
-    },
-    "/v1/invoices/{r_hash_str}": {
-      "get": {
-        "summary": "* lncli: `lookupinvoice`\nLookupInvoice attemps to look up an invoice according to its payment hash.\nThe passed payment hash *must* be exactly 32 bytes, if not, an error is\nreturned.",
+        "summary": "* lncli: `lookupinvoice`\nLookupInvoice attempts to look up an invoice according to its payment hash.\nThe passed payment hash *must* be exactly 32 bytes, if not, an error is\nreturned.",
         "operationId": "LookupInvoice",
         "responses": {
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/Invoice"
+              "$ref": "#/definitions/lnrpcInvoice"
             }
           }
         },
@@ -484,6 +423,75 @@
         ]
       }
     },
+    "/v1/invoices": {
+      "get": {
+        "summary": "* lncli: `listinvoices`\nListInvoices returns a list of all the invoices currently stored within the\ndatabase. Any active debug invoices are ignored.",
+        "operationId": "ListInvoices",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/lnrpcListInvoiceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pending_only",
+            "description": "/ Toggles if all invoices should be returned, or only those that are currently unsettled.",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          }
+        ],
+        "tags": [
+          "Lightning"
+        ]
+      },
+      "post": {
+        "summary": "* lncli: `addinvoice`\nAddInvoice attempts to add a new invoice to the invoice database. Any\nduplicated invoices are rejected, therefore all invoices *must* have a\nunique payment preimage.",
+        "operationId": "AddInvoice",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/lnrpcAddInvoiceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/lnrpcInvoice"
+            }
+          }
+        ],
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
+    "/v1/invoices/subscribe": {
+      "get": {
+        "summary": "*\nSubscribeInvoices returns a uni-directional stream (sever -\u003e client) for\nnotifying the client of newly added/settled invoices.",
+        "operationId": "SubscribeInvoices",
+        "responses": {
+          "200": {
+            "description": "(streaming responses)",
+            "schema": {
+              "$ref": "#/definitions/lnrpcInvoice"
+            }
+          }
+        },
+        "tags": [
+          "Lightning"
+        ]
+      }
+    },
     "/v1/newaddress": {
       "get": {
         "summary": "*\nNewWitnessAddress creates a new witness address under control of the local wallet.",
@@ -492,7 +500,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/NewAddressResponse"
+              "$ref": "#/definitions/lnrpcNewAddressResponse"
             }
           }
         },
@@ -509,7 +517,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/ListPaymentsResponse"
+              "$ref": "#/definitions/lnrpcListPaymentsResponse"
             }
           }
         },
@@ -524,7 +532,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/DeleteAllPaymentsResponse"
+              "$ref": "#/definitions/lnrpcDeleteAllPaymentsResponse"
             }
           }
         },
@@ -541,7 +549,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/PayReq"
+              "$ref": "#/definitions/lnrpcPayReq"
             }
           }
         },
@@ -566,7 +574,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/ListPeersResponse"
+              "$ref": "#/definitions/lnrpcListPeersResponse"
             }
           }
         },
@@ -581,7 +589,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/ConnectPeerResponse"
+              "$ref": "#/definitions/lnrpcConnectPeerResponse"
             }
           }
         },
@@ -591,7 +599,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/ConnectPeerRequest"
+              "$ref": "#/definitions/lnrpcConnectPeerRequest"
             }
           }
         ],
@@ -608,7 +616,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/DisconnectPeerResponse"
+              "$ref": "#/definitions/lnrpcDisconnectPeerResponse"
             }
           }
         },
@@ -633,7 +641,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/TransactionDetails"
+              "$ref": "#/definitions/lnrpcTransactionDetails"
             }
           }
         },
@@ -648,7 +656,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/SendCoinsResponse"
+              "$ref": "#/definitions/lnrpcSendCoinsResponse"
             }
           }
         },
@@ -658,7 +666,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/SendCoinsRequest"
+              "$ref": "#/definitions/lnrpcSendCoinsRequest"
             }
           }
         ],
@@ -675,7 +683,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/UnlockWalletResponse"
+              "$ref": "#/definitions/lnrpcUnlockWalletResponse"
             }
           }
         },
@@ -685,7 +693,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/UnlockWalletRequest"
+              "$ref": "#/definitions/lnrpcUnlockWalletRequest"
             }
           }
         ],
@@ -696,11 +704,11 @@
     }
   },
   "definitions": {
-    "PendingChannelResponseClosedChannel": {
+    "PendingChannelsResponseClosedChannel": {
       "type": "object",
       "properties": {
         "channel": {
-          "$ref": "#/definitions/PendingChannelResponsePendingChannel",
+          "$ref": "#/definitions/PendingChannelsResponsePendingChannel",
           "title": "/ The pending channel to be closed"
         },
         "closing_txid": {
@@ -709,11 +717,11 @@
         }
       }
     },
-    "PendingChannelResponseForceClosedChannel": {
+    "PendingChannelsResponseForceClosedChannel": {
       "type": "object",
       "properties": {
         "channel": {
-          "$ref": "#/definitions/PendingChannelResponsePendingChannel",
+          "$ref": "#/definitions/PendingChannelsResponsePendingChannel",
           "title": "/ The pending channel to be force closed"
         },
         "closing_txid": {
@@ -743,12 +751,12 @@
         "pending_htlcs": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/PendingHTLC"
+            "$ref": "#/definitions/lnrpcPendingHTLC"
           }
         }
       }
     },
-    "PendingChannelResponsePendingChannel": {
+    "PendingChannelsResponsePendingChannel": {
       "type": "object",
       "properties": {
         "remote_node_pub": {
@@ -771,22 +779,17 @@
         }
       }
     },
-    "PendingChannelResponsePendingOpenChannel": {
+    "PendingChannelsResponsePendingOpenChannel": {
       "type": "object",
       "properties": {
         "channel": {
-          "$ref": "#/definitions/PendingChannelResponsePendingChannel",
+          "$ref": "#/definitions/PendingChannelsResponsePendingChannel",
           "title": "/ The pending channel"
         },
         "confirmation_height": {
           "type": "integer",
           "format": "int64",
           "title": "/ The height at which this channel will be confirmed"
-        },
-        "blocks_till_open": {
-          "type": "integer",
-          "format": "int32",
-          "title": "/ The number of blocks until this channel is open"
         },
         "commit_fee": {
           "type": "string",
@@ -805,7 +808,7 @@
         }
       }
     },
-    "ActiveChannel": {
+    "lnrpcActiveChannel": {
       "type": "object",
       "properties": {
         "active": {
@@ -879,7 +882,7 @@
         "pending_htlcs": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/HTLC"
+            "$ref": "#/definitions/lnrpcHTLC"
           },
           "description": "*\nThe list of active, uncleared HTLCs currently pending within the channel."
         },
@@ -890,7 +893,7 @@
         }
       }
     },
-    "AddInvoiceResponse": {
+    "lnrpcAddInvoiceResponse": {
       "type": "object",
       "properties": {
         "r_hash": {
@@ -903,7 +906,7 @@
         }
       }
     },
-    "ChannelBalanceResponse": {
+    "lnrpcChannelBalanceResponse": {
       "type": "object",
       "properties": {
         "balance": {
@@ -913,7 +916,7 @@
         }
       }
     },
-    "ChannelCloseUpdate": {
+    "lnrpcChannelCloseUpdate": {
       "type": "object",
       "properties": {
         "closing_txid": {
@@ -926,7 +929,7 @@
         }
       }
     },
-    "ChannelEdge": {
+    "lnrpcChannelEdge": {
       "type": "object",
       "properties": {
         "channel_id": {
@@ -952,15 +955,15 @@
           "format": "int64"
         },
         "node1_policy": {
-          "$ref": "#/definitions/RoutingPolicy"
+          "$ref": "#/definitions/lnrpcRoutingPolicy"
         },
         "node2_policy": {
-          "$ref": "#/definitions/RoutingPolicy"
+          "$ref": "#/definitions/lnrpcRoutingPolicy"
         }
       },
       "description": "*\nA fully authenticated channel along with all its unique attributes.\nOnce an authenticated channel announcement has been processed on the network,\nthen a instance of ChannelEdgeInfo encapsulating the channels attributes is\nstored. The other portions relevant to routing policy of a channel are stored\nwithin a ChannelEdgePolicy for each direction of the channel."
     },
-    "ChannelEdgeUpdate": {
+    "lnrpcChannelEdgeUpdate": {
       "type": "object",
       "properties": {
         "chan_id": {
@@ -969,14 +972,14 @@
           "description": "*\nThe unique channel ID for the channel. The first 3 bytes are the block\nheight, the next 3 the index within the block, and the last 2 bytes are the\noutput index for the channel."
         },
         "chan_point": {
-          "$ref": "#/definitions/ChannelPoint"
+          "$ref": "#/definitions/lnrpcChannelPoint"
         },
         "capacity": {
           "type": "string",
           "format": "int64"
         },
         "routing_policy": {
-          "$ref": "#/definitions/RoutingPolicy"
+          "$ref": "#/definitions/lnrpcRoutingPolicy"
         },
         "advertising_node": {
           "type": "string"
@@ -986,7 +989,7 @@
         }
       }
     },
-    "ChannelFeeReport": {
+    "lnrpcChannelFeeReport": {
       "type": "object",
       "properties": {
         "chan_point": {
@@ -1010,38 +1013,38 @@
         }
       }
     },
-    "ChannelGraph": {
+    "lnrpcChannelGraph": {
       "type": "object",
       "properties": {
         "nodes": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/LightningNode"
+            "$ref": "#/definitions/lnrpcLightningNode"
           },
           "title": "/ The list of `LightningNode`s in this channel graph"
         },
         "edges": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ChannelEdge"
+            "$ref": "#/definitions/lnrpcChannelEdge"
           },
           "title": "/ The list of `ChannelEdge`s in this channel graph"
         }
       },
       "description": "/ Returns a new instance of the directed channel graph."
     },
-    "ChannelOpenUpdate": {
+    "lnrpcChannelOpenUpdate": {
       "type": "object",
       "properties": {
         "channel_point": {
-          "$ref": "#/definitions/ChannelPoint"
+          "$ref": "#/definitions/lnrpcChannelPoint"
         }
       }
     },
-    "ChannelPoint": {
+    "lnrpcChannelPoint": {
       "type": "object",
       "properties": {
-        "funding_txid": {
+        "funding_txid_bytes": {
           "type": "string",
           "format": "byte",
           "title": "/ Txid of the funding transaction"
@@ -1057,21 +1060,21 @@
         }
       }
     },
-    "CloseStatusUpdate": {
+    "lnrpcCloseStatusUpdate": {
       "type": "object",
       "properties": {
         "close_pending": {
-          "$ref": "#/definitions/PendingUpdate"
+          "$ref": "#/definitions/lnrpcPendingUpdate"
         },
         "confirmation": {
-          "$ref": "#/definitions/ConfirmationUpdate"
+          "$ref": "#/definitions/lnrpcConfirmationUpdate"
         },
         "chan_close": {
-          "$ref": "#/definitions/ChannelCloseUpdate"
+          "$ref": "#/definitions/lnrpcChannelCloseUpdate"
         }
       }
     },
-    "ClosedChannelUpdate": {
+    "lnrpcClosedChannelUpdate": {
       "type": "object",
       "properties": {
         "chan_id": {
@@ -1088,11 +1091,11 @@
           "format": "int64"
         },
         "chan_point": {
-          "$ref": "#/definitions/ChannelPoint"
+          "$ref": "#/definitions/lnrpcChannelPoint"
         }
       }
     },
-    "ConfirmationUpdate": {
+    "lnrpcConfirmationUpdate": {
       "type": "object",
       "properties": {
         "block_sha": {
@@ -1109,11 +1112,11 @@
         }
       }
     },
-    "ConnectPeerRequest": {
+    "lnrpcConnectPeerRequest": {
       "type": "object",
       "properties": {
         "addr": {
-          "$ref": "#/definitions/LightningAddress",
+          "$ref": "#/definitions/lnrpcLightningAddress",
           "title": "/ Lightning address of the peer, in the format `\u003cpubkey\u003e@host`"
         },
         "perm": {
@@ -1123,17 +1126,10 @@
         }
       }
     },
-    "ConnectPeerResponse": {
-      "type": "object",
-      "properties": {
-        "peer_id": {
-          "type": "integer",
-          "format": "int32",
-          "title": "/ The id of the newly connected peer"
-        }
-      }
+    "lnrpcConnectPeerResponse": {
+      "type": "object"
     },
-    "CreateWalletRequest": {
+    "lnrpcCreateWalletRequest": {
       "type": "object",
       "properties": {
         "password": {
@@ -1142,10 +1138,10 @@
         }
       }
     },
-    "CreateWalletResponse": {
+    "lnrpcCreateWalletResponse": {
       "type": "object"
     },
-    "DebugLevelResponse": {
+    "lnrpcDebugLevelResponse": {
       "type": "object",
       "properties": {
         "sub_systems": {
@@ -1153,52 +1149,25 @@
         }
       }
     },
-    "DeleteAllPaymentsResponse": {
+    "lnrpcDeleteAllPaymentsResponse": {
       "type": "object"
     },
-    "DisconnectPeerResponse": {
+    "lnrpcDisconnectPeerResponse": {
       "type": "object"
     },
-    "FeeReportResponse": {
+    "lnrpcFeeReportResponse": {
       "type": "object",
       "properties": {
         "channel_fees": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ChannelFeeReport"
+            "$ref": "#/definitions/lnrpcChannelFeeReport"
           },
           "description": "/ An array of channel fee reports which describes the current fee schedule for each channel."
         }
       }
     },
-    "FeeUpdateRequest": {
-      "type": "object",
-      "properties": {
-        "global": {
-          "type": "boolean",
-          "format": "boolean",
-          "description": "/ If set, then this fee update applies to all currently active channels."
-        },
-        "chan_point": {
-          "$ref": "#/definitions/ChannelPoint",
-          "description": "/ If set, this fee update will target a specific channel."
-        },
-        "base_fee_msat": {
-          "type": "string",
-          "format": "int64",
-          "description": "/ The base fee charged regardless of the number of milli-satoshis sent."
-        },
-        "fee_rate": {
-          "type": "number",
-          "format": "double",
-          "description": "/ The effective fee rate in milli-satoshis. The precision of this value goes up to 6 decimal places, so 1e-6."
-        }
-      }
-    },
-    "FeeUpdateResponse": {
-      "type": "object"
-    },
-    "GetInfoResponse": {
+    "lnrpcGetInfoResponse": {
       "type": "object",
       "properties": {
         "identity_pubkey": {
@@ -1249,33 +1218,45 @@
             "type": "string"
           },
           "title": "/ A list of active chains the node is connected to"
+        },
+        "uris": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "/ The URIs of the current node."
+        },
+        "best_header_timestamp": {
+          "type": "string",
+          "format": "int64",
+          "title": "/ Timestamp of the block best known to the wallet"
         }
       }
     },
-    "GraphTopologyUpdate": {
+    "lnrpcGraphTopologyUpdate": {
       "type": "object",
       "properties": {
         "node_updates": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/NodeUpdate"
+            "$ref": "#/definitions/lnrpcNodeUpdate"
           }
         },
         "channel_updates": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ChannelEdgeUpdate"
+            "$ref": "#/definitions/lnrpcChannelEdgeUpdate"
           }
         },
         "closed_chans": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ClosedChannelUpdate"
+            "$ref": "#/definitions/lnrpcClosedChannelUpdate"
           }
         }
       }
     },
-    "HTLC": {
+    "lnrpcHTLC": {
       "type": "object",
       "properties": {
         "incoming": {
@@ -1296,7 +1277,7 @@
         }
       }
     },
-    "Hop": {
+    "lnrpcHop": {
       "type": "object",
       "properties": {
         "chan_id": {
@@ -1322,7 +1303,7 @@
         }
       }
     },
-    "Invoice": {
+    "lnrpcInvoice": {
       "type": "object",
       "properties": {
         "memo": {
@@ -1389,7 +1370,7 @@
         }
       }
     },
-    "LightningAddress": {
+    "lnrpcLightningAddress": {
       "type": "object",
       "properties": {
         "pubkey": {
@@ -1402,7 +1383,7 @@
         }
       }
     },
-    "LightningNode": {
+    "lnrpcLightningNode": {
       "type": "object",
       "properties": {
         "last_update": {
@@ -1418,7 +1399,7 @@
         "addresses": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/NodeAddress"
+            "$ref": "#/definitions/lnrpcNodeAddress"
           }
         },
         "color": {
@@ -1427,54 +1408,54 @@
       },
       "description": "*\nAn individual vertex/node within the channel graph. A node is\nconnected to other nodes by one or more channel edges emanating from it. As the\ngraph is directed, a node will also have an incoming edge attached to it for\neach outgoing edge."
     },
-    "ListChannelsResponse": {
+    "lnrpcListChannelsResponse": {
       "type": "object",
       "properties": {
         "channels": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ActiveChannel"
+            "$ref": "#/definitions/lnrpcActiveChannel"
           },
           "title": "/ The list of active channels"
         }
       }
     },
-    "ListInvoiceResponse": {
+    "lnrpcListInvoiceResponse": {
       "type": "object",
       "properties": {
         "invoices": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Invoice"
+            "$ref": "#/definitions/lnrpcInvoice"
           }
         }
       }
     },
-    "ListPaymentsResponse": {
+    "lnrpcListPaymentsResponse": {
       "type": "object",
       "properties": {
         "payments": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Payment"
+            "$ref": "#/definitions/lnrpcPayment"
           },
           "title": "/ The list of payments"
         }
       }
     },
-    "ListPeersResponse": {
+    "lnrpcListPeersResponse": {
       "type": "object",
       "properties": {
         "peers": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Peer"
+            "$ref": "#/definitions/lnrpcPeer"
           },
           "title": "/ The list of currently connected peers"
         }
       }
     },
-    "NetworkInfo": {
+    "lnrpcNetworkInfo": {
       "type": "object",
       "properties": {
         "graph_diameter": {
@@ -1515,7 +1496,7 @@
         }
       }
     },
-    "NewAddressResponse": {
+    "lnrpcNewAddressResponse": {
       "type": "object",
       "properties": {
         "address": {
@@ -1524,7 +1505,7 @@
         }
       }
     },
-    "NodeAddress": {
+    "lnrpcNodeAddress": {
       "type": "object",
       "properties": {
         "network": {
@@ -1535,11 +1516,11 @@
         }
       }
     },
-    "NodeInfo": {
+    "lnrpcNodeInfo": {
       "type": "object",
       "properties": {
         "node": {
-          "$ref": "#/definitions/LightningNode",
+          "$ref": "#/definitions/lnrpcLightningNode",
           "description": "*\nAn individual vertex/node within the channel graph. A node is\nconnected to other nodes by one or more channel edges emanating from it. As\nthe graph is directed, a node will also have an incoming edge attached to\nit for each outgoing edge."
         },
         "num_channels": {
@@ -1552,7 +1533,7 @@
         }
       }
     },
-    "NodeUpdate": {
+    "lnrpcNodeUpdate": {
       "type": "object",
       "properties": {
         "addresses": {
@@ -1573,14 +1554,9 @@
         }
       }
     },
-    "OpenChannelRequest": {
+    "lnrpcOpenChannelRequest": {
       "type": "object",
       "properties": {
-        "target_peer_id": {
-          "type": "integer",
-          "format": "int32",
-          "title": "/ The peer_id of the node to open a channel with"
-        },
         "node_pubkey": {
           "type": "string",
           "format": "byte",
@@ -1588,7 +1564,7 @@
         },
         "node_pubkey_string": {
           "type": "string",
-          "title": "/ The hex encorded pubkey of the node to open a channel with"
+          "title": "/ The hex encoded pubkey of the node to open a channel with"
         },
         "local_funding_amount": {
           "type": "string",
@@ -1614,24 +1590,29 @@
           "type": "boolean",
           "format": "boolean",
           "description": "/ Whether this channel should be private, not announced to the greater network."
+        },
+        "min_htlc_msat": {
+          "type": "string",
+          "format": "int64",
+          "description": "/ The minimum value in millisatoshi we will require for incoming HTLCs on the channel."
         }
       }
     },
-    "OpenStatusUpdate": {
+    "lnrpcOpenStatusUpdate": {
       "type": "object",
       "properties": {
         "chan_pending": {
-          "$ref": "#/definitions/PendingUpdate"
+          "$ref": "#/definitions/lnrpcPendingUpdate"
         },
         "confirmation": {
-          "$ref": "#/definitions/ConfirmationUpdate"
+          "$ref": "#/definitions/lnrpcConfirmationUpdate"
         },
         "chan_open": {
-          "$ref": "#/definitions/ChannelOpenUpdate"
+          "$ref": "#/definitions/lnrpcChannelOpenUpdate"
         }
       }
     },
-    "PayReq": {
+    "lnrpcPayReq": {
       "type": "object",
       "properties": {
         "destination": {
@@ -1667,7 +1648,7 @@
         }
       }
     },
-    "Payment": {
+    "lnrpcPayment": {
       "type": "object",
       "properties": {
         "payment_hash": {
@@ -1695,20 +1676,19 @@
           "type": "string",
           "format": "int64",
           "title": "/ The fee paid for this payment in satoshis"
+        },
+        "payment_preimage": {
+          "type": "string",
+          "title": "/ The payment preimage"
         }
       }
     },
-    "Peer": {
+    "lnrpcPeer": {
       "type": "object",
       "properties": {
         "pub_key": {
           "type": "string",
           "title": "/ The identity pubkey of the peer"
-        },
-        "peer_id": {
-          "type": "integer",
-          "format": "int32",
-          "title": "/ The peer's id from the local point of view"
         },
         "address": {
           "type": "string",
@@ -1746,7 +1726,7 @@
         }
       }
     },
-    "PendingChannelResponse": {
+    "lnrpcPendingChannelsResponse": {
       "type": "object",
       "properties": {
         "total_limbo_balance": {
@@ -1757,27 +1737,27 @@
         "pending_open_channels": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/PendingChannelResponsePendingOpenChannel"
+            "$ref": "#/definitions/PendingChannelsResponsePendingOpenChannel"
           },
           "title": "/ Channels pending opening"
         },
         "pending_closing_channels": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/PendingChannelResponseClosedChannel"
+            "$ref": "#/definitions/PendingChannelsResponseClosedChannel"
           },
           "title": "/ Channels pending closing"
         },
         "pending_force_closing_channels": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/PendingChannelResponseForceClosedChannel"
+            "$ref": "#/definitions/PendingChannelsResponseForceClosedChannel"
           },
           "title": "/ Channels pending force closing"
         }
       }
     },
-    "PendingHTLC": {
+    "lnrpcPendingHTLC": {
       "type": "object",
       "properties": {
         "incoming": {
@@ -1811,7 +1791,7 @@
         }
       }
     },
-    "PendingUpdate": {
+    "lnrpcPendingUpdate": {
       "type": "object",
       "properties": {
         "txid": {
@@ -1824,18 +1804,50 @@
         }
       }
     },
-    "QueryRoutesResponse": {
+    "lnrpcPolicyUpdateRequest": {
+      "type": "object",
+      "properties": {
+        "global": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": "/ If set, then this update applies to all currently active channels."
+        },
+        "chan_point": {
+          "$ref": "#/definitions/lnrpcChannelPoint",
+          "description": "/ If set, this update will target a specific channel."
+        },
+        "base_fee_msat": {
+          "type": "string",
+          "format": "int64",
+          "description": "/ The base fee charged regardless of the number of milli-satoshis sent."
+        },
+        "fee_rate": {
+          "type": "number",
+          "format": "double",
+          "description": "/ The effective fee rate in milli-satoshis. The precision of this value goes up to 6 decimal places, so 1e-6."
+        },
+        "time_lock_delta": {
+          "type": "integer",
+          "format": "int64",
+          "description": "/ The required timelock delta for HTLCs forwarded over the channel."
+        }
+      }
+    },
+    "lnrpcPolicyUpdateResponse": {
+      "type": "object"
+    },
+    "lnrpcQueryRoutesResponse": {
       "type": "object",
       "properties": {
         "routes": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Route"
+            "$ref": "#/definitions/lnrpcRoute"
           }
         }
       }
     },
-    "Route": {
+    "lnrpcRoute": {
       "type": "object",
       "properties": {
         "total_time_lock": {
@@ -1856,14 +1868,14 @@
         "hops": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Hop"
+            "$ref": "#/definitions/lnrpcHop"
           },
           "description": "*\nContains details concerning the specific forwarding details at each hop."
         }
       },
       "description": "*\nA path through the channel graph which runs over one or more channels in\nsuccession. This struct carries all the information required to craft the\nSphinx onion packet, and send the payment along the first hop in the path. A\nroute is only selected as valid if all the channels have sufficient capacity to\ncarry the initial payment amount after fees are accounted for."
     },
-    "RoutingPolicy": {
+    "lnrpcRoutingPolicy": {
       "type": "object",
       "properties": {
         "time_lock_delta": {
@@ -1884,7 +1896,7 @@
         }
       }
     },
-    "SendCoinsRequest": {
+    "lnrpcSendCoinsRequest": {
       "type": "object",
       "properties": {
         "addr": {
@@ -1908,7 +1920,7 @@
         }
       }
     },
-    "SendCoinsResponse": {
+    "lnrpcSendCoinsResponse": {
       "type": "object",
       "properties": {
         "txid": {
@@ -1917,7 +1929,7 @@
         }
       }
     },
-    "SendManyResponse": {
+    "lnrpcSendManyResponse": {
       "type": "object",
       "properties": {
         "txid": {
@@ -1926,7 +1938,7 @@
         }
       }
     },
-    "SendRequest": {
+    "lnrpcSendRequest": {
       "type": "object",
       "properties": {
         "dest": {
@@ -1955,10 +1967,16 @@
         "payment_request": {
           "type": "string",
           "description": "*\nA bare-bones invoice for a payment within the Lightning Network.  With the\ndetails of the invoice, the sender has all the data necessary to send a\npayment to the recipient."
+        },
+        "
+        ": {
+          "type": "integer",
+          "format": "int32",
+          "description": "/ The CLTV delta from the current height that should be used to set the timelock for the final hop."
         }
       }
     },
-    "SendResponse": {
+    "lnrpcSendResponse": {
       "type": "object",
       "properties": {
         "payment_error": {
@@ -1969,14 +1987,11 @@
           "format": "byte"
         },
         "payment_route": {
-          "$ref": "#/definitions/Route"
+          "$ref": "#/definitions/lnrpcRoute"
         }
       }
     },
-    "SetAliasResponse": {
-      "type": "object"
-    },
-    "SignMessageResponse": {
+    "lnrpcSignMessageResponse": {
       "type": "object",
       "properties": {
         "signature": {
@@ -1985,10 +2000,10 @@
         }
       }
     },
-    "StopResponse": {
+    "lnrpcStopResponse": {
       "type": "object"
     },
-    "Transaction": {
+    "lnrpcTransaction": {
       "type": "object",
       "properties": {
         "tx_hash": {
@@ -2033,19 +2048,19 @@
         }
       }
     },
-    "TransactionDetails": {
+    "lnrpcTransactionDetails": {
       "type": "object",
       "properties": {
         "transactions": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Transaction"
+            "$ref": "#/definitions/lnrpcTransaction"
           },
           "description": "/ The list of transactions relevant to the wallet."
         }
       }
     },
-    "UnlockWalletRequest": {
+    "lnrpcUnlockWalletRequest": {
       "type": "object",
       "properties": {
         "password": {
@@ -2054,10 +2069,10 @@
         }
       }
     },
-    "UnlockWalletResponse": {
+    "lnrpcUnlockWalletResponse": {
       "type": "object"
     },
-    "VerifyMessageResponse": {
+    "lnrpcVerifyMessageResponse": {
       "type": "object",
       "properties": {
         "valid": {
@@ -2071,7 +2086,7 @@
         }
       }
     },
-    "WalletBalanceResponse": {
+    "lnrpcWalletBalanceResponse": {
       "type": "object",
       "properties": {
         "total_balance": {

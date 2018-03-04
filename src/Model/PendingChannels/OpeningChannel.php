@@ -13,10 +13,6 @@ class OpeningChannel
      */
     protected $confirmationHeight;
     /**
-     * @var int
-     */
-    protected $blocksTillOpen;
-    /**
      * @var string
      */
     protected $commitFee;
@@ -42,11 +38,6 @@ class OpeningChannel
         return $this->confirmationHeight;
     }
 
-    public function getBlocksTillOpen(): int
-    {
-        return $this->blocksTillOpen;
-    }
-
     public function getCommitFee(): string
     {
         return $this->commitFee;
@@ -62,11 +53,10 @@ class OpeningChannel
         return $this->feePerKw;
     }
 
-    public function __construct(PendingChannel $channel, int $confirmationHeight, int $blocksTillOpen, string $commitFee, string $commitWeight, string $feePerKw)
+    public function __construct(PendingChannel $channel, int $confirmationHeight, string $commitFee, string $commitWeight, string $feePerKw)
     {
         $this->channel = $channel;
         $this->confirmationHeight = $confirmationHeight;
-        $this->blocksTillOpen = $blocksTillOpen;
         $this->commitFee = $commitFee;
         $this->commitWeight = $commitWeight;
         $this->feePerKw = $feePerKw;
@@ -78,7 +68,6 @@ class OpeningChannel
         return new self(
             PendingChannel::fromResponse($data['channel']),
             $data['confirmation_height'] ?? 0,
-            $data['blocks_till_open'],
             $data['commit_fee'],
             $data['commit_weight'],
             $data['fee_per_kw']

@@ -24,7 +24,7 @@ class ChannelPoint implements \JsonSerializable
     
     public function getFundingTxidStr(): string
     {
-        return $this->fundingTxidStr;
+        return bin2hex($this->fundingTxid);
     }
     
     public function getOutputIndex(): int
@@ -35,7 +35,6 @@ class ChannelPoint implements \JsonSerializable
     public function __construct(string $fundingTxid, int $outputIndex)
     {
         $this->fundingTxid = $fundingTxid;
-        $this->fundingTxidStr = bin2hex($fundingTxid);
         $this->outputIndex = $outputIndex;
     }
 
@@ -51,7 +50,7 @@ class ChannelPoint implements \JsonSerializable
     {
         return [
             'funding_txid' => $this->fundingTxid,
-            'funding_txid_str' => $this->fundingTxidStr,
+            'funding_txid_str' => $this->getFundingTxidStr(),
             'output_index' => $this->outputIndex,
         ];
     }

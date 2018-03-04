@@ -2,6 +2,8 @@
 
 ### TODO:
 - Create a gRPC Client
+- An Async Rest Client using Proxy Objects (http://ocramius.github.io/ProxyManager/)
+- An Async gRPC client using Proxy Objects? (Or by default?)
 
 ### Known issues for the Rest Client:
 - `closeChannel` doesn't work
@@ -17,7 +19,7 @@
 
 use LightningSale\LndClient\ClientFactory;
 
-require 'vendor/autoload.php';
+require './vendor/autoload.php';
 
 
 $rpcUsername = 'rpcusername';

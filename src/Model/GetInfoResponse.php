@@ -44,6 +44,12 @@ class GetInfoResponse
      * @var string[]
      */
     protected $chains;
+    /**
+     * @var \DateTime
+     */
+    private $bestHeaderTimestamp;
+    /** @var string[] */
+    private $uris;
 
     public function getIdentityPubkey(): string
     {
@@ -95,8 +101,33 @@ class GetInfoResponse
         return $this->chains;
     }
 
-    public function __construct(string $identityPubkey, string $alias, int $numPendingChannels, int $numActiveChannels, int $numPeers, int $blockHeight, string $blockHash, bool $syncedToChain, bool $testnet, array $chains)
+    public function getBestHeaderTimestamp(): \DateTime
     {
+        return $this->bestHeaderTimestamp;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getUris(): array
+    {
+        return $this->uris;
+    }
+
+    public function __construct(
+        string $identityPubkey,
+        string $alias,
+        int $numPendingChannels,
+        int $numActiveChannels,
+        int $numPeers,
+        int $blockHeight,
+        string $blockHash,
+        bool $syncedToChain,
+        bool $testnet,
+        array $chains,
+        \DateTime $bestHeaderTimestamp,
+        array $uris
+    ){
         $this->identityPubkey = $identityPubkey;
         $this->alias = $alias;
         $this->numPendingChannels = $numPendingChannels;
@@ -107,6 +138,8 @@ class GetInfoResponse
         $this->syncedToChain = $syncedToChain;
         $this->testnet = $testnet;
         $this->chains = $chains;
+        $this->bestHeaderTimestamp = $bestHeaderTimestamp;
+        $this->uris = $uris;
     }
 
     public static function fromResponse(array $data): GetInfoResponse
@@ -121,7 +154,9 @@ class GetInfoResponse
             $data['block_hash'] ?? "",
             $data['synced_to_chain'] ?? false,
             $data['testnet'] ?? false,
-            $data['chains'] ?? []
+            $data['chains'] ?? [],
+            new \DateTime($data['best_header_timestamp']),
+            $data['uris']
         );
     }
 }

@@ -13,6 +13,8 @@ use GuzzleHttp\Exception\BadResponseException;
 
 class LndException extends \Exception
 {
+    const SEND_COINS_EXCEPTION = 1000;
+
     public function __construct(string $message, int $code, \Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);

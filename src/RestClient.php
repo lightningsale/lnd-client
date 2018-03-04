@@ -4,13 +4,11 @@ namespace LightningSale\LndClient;
 
 use GuzzleHttp\Exception\BadResponseException;
 use LightningSale\LndClient\Model\ChannelFeeReport;
-use LightningSale\LndClient\Model\FeeUpdateRequest;
 use LightningSale\LndClient\Model\Invoice;
 use LightningSale\LndClient\Model\Payment;
 use LightningSale\LndClient\Model\Peer;
 use LightningSale\LndClient\Model\Route;
-use LightningSale\LndClient\Model\SendCoinsRequest;
-use LightningSale\LndClient\Model\SendRequest;
+use LightningSale\LndClient\Model\SendCoinsResponse;
 use LightningSale\LndClient\Model\PayReq;
 use LightningSale\LndClient\Model\AddInvoiceResponse;
 use LightningSale\LndClient\Model\NodeInfo;
@@ -52,10 +50,10 @@ class RestClient implements Client
         }
     }
 
-    private function get(string $uri): array
+    private function get(string $uri, array $queryParams = []): array
     {
         try {
-            $response = $this->httpClient->get($uri);
+            $response = $this->httpClient->get($uri, ['query' => $queryParams]);
             $body = \GuzzleHttp\json_decode($response->getBody(), true);
             return $body;
         } catch (BadResponseException $exception) {
@@ -76,12 +74,12 @@ class RestClient implements Client
 
     public function createWallet(string $password): void
     {
-        $this->post("/v1/createwallet", ['password' => base64_encode($password)]);
+        $this->post('/v1/createwallet', ['password' => base64_encode($password)]);
     }
 
     public function unlockWallet(string $password): void
     {
-        $this->post("/v1/unlockwallet", ['password' => base64_encode($password)]);
+        $this->post('/v1/unlockwallet', ['password' => base64_encode($password)]);
     }
 
     public function walletBalance(): WalletBalanceResponse
@@ -93,7 +91,7 @@ class RestClient implements Client
     public function channelBalance(): string
     {
         $body = $this->get('/v1/balance/channels');
-        return $body['balance'] ?? "0";
+        return $body['balance'] ?? '0';
     }
 
     /** @return ActiveChannel[] */
@@ -103,7 +101,7 @@ class RestClient implements Client
         return array_map(function ($f) {return ActiveChannel::fromResponse($f);}, $body['channels'] ?? []);
     }
 
-    public function openChannelSync(string $nodePubkey, string $amount, string $pushSat = "0", int $targetConf = 0, int $satoshiPrByte = 0, bool $private = false): ChannelPoint
+    public function openChannelSync(string $nodePubkey, string $amount, string $pushSat = '0', int $targetConf = 0, int $satoshiPrByte = 0, bool $private = false): ChannelPoint
     {
         $body = $this->post('/v1/channels', [
             'target_peer_id' => 0, // Not used
@@ -123,16 +121,28 @@ class RestClient implements Client
         return PendingChannelResponse::fromResponse($body);
     }
 
-    public function sendPaymentSync(SendRequest $body): SendResponse
-    {
-        $body = $this->post('/v1/channels', $body);
-        return SendResponse::fromResponse($body);
-    }
 
-    public function sendPaymentRequest(string $paymentRequest): SendResponse
+    public function sendPayment(string $paymentRequest): SendCoinsResponse
     {
         $body = $this->post('/v1/channels/transactions', ['payment_request' => $paymentRequest]);
-        return SendResponse::fromResponse($body);
+        return SendCoinsResponse::fromResponse($body);
+    }
+
+
+    public function openChannel(string $nodePubkey, string $amount, string $pushSat = '0', int $targetConf = 0, int $satoshiPrByte = 0, bool $private = false, ?string $minHtlcMsat = '0'): ChannelPoint
+    {
+        $body = $this->post('/v1/channels', [
+            'node_pubkey_string' => bin2hex($nodePubkey),
+            'local_funding_amount' => $amount,
+            'push_sat' => $pushSat,
+            'target_conf' => $targetConf,
+            'sat_per_byte' => $satoshiPrByte,
+            'private' => $private,
+        ]);
+        if ($minHtlcMsat)
+            $body['min_htlc_msat'] = $minHtlcMsat;
+
+        return ChannelPoint::fromResponse($body);
     }
 
     public function closeChannel(string $fundingTxid, string $outputIndex, bool $force = false): CloseStatusUpdate
@@ -141,7 +151,7 @@ class RestClient implements Client
         $url = str_replace('{funding_txid}', urlencode($fundingTxid), $url);
         $url = str_replace('{output_index}', urlencode($outputIndex), $url);
         if ($force)
-            $url .= "?force=true";
+            $url .= '?force=true';
 
         $body = $this->delete($url);
         return CloseStatusUpdate::fromResponse($body);
@@ -156,9 +166,20 @@ class RestClient implements Client
         return array_map(function($i) {return ChannelFeeReport::fromResponse($i);}, $body['channel_fees'] ?? []);
     }
 
-    public function updateFees(FeeUpdateRequest $body): void
+    public function updateChannelPolicy(string $baseFeeMsat, int $feeRate, int $timeLockDelta, ?ChannelPoint $channelPoint = null): void
     {
-        $this->post('/v1/fees', $body);
+        $json = [
+            'base_fee_msat' => $baseFeeMsat,
+            'fee_rate' => $feeRate,
+            'time_lock_delta' => $timeLockDelta,
+        ];
+
+        if ($channelPoint)
+            $json['chan_point'] = $channelPoint;
+        else
+            $json['global'] = true;
+
+        $this->post('/v1/chanpolicy', $json);
     }
 
     public function getInfo(): GetInfoResponse
@@ -198,13 +219,14 @@ class RestClient implements Client
     }
 
     /** @return Route[] */
-    public function queryRoutes(string $pubKey, string $amt): array
+    public function queryRoutes(string $pubKey, string $amt, ?int $numRoutes = 0): array
     {
         $url = '/v1/graph/routes/{pub_key}/{amt}';
         $url = str_replace('{pub_key}', urlencode($pubKey), $url);
         $url = str_replace('{amt}', urlencode($amt), $url);
 
-        $body = $this->get($url);
+        $query = null === $numRoutes ? ['num_routes' => $numRoutes] : [];
+        $body = $this->get($url, $query);
         return array_map(function($i) {return Route::fromResponse($i);}, $body['routes']);
     }
 
@@ -215,8 +237,6 @@ class RestClient implements Client
             'value' => $value,
             'expiry' => $expiry,
         ]);
-        // handle error:
-        // {"error":"payment of 0.33858134 BTC is too large, max payment allowed is 0.04294967 BTC","code":2}
 
         return AddInvoiceResponse::fromResponse($body);
     }
@@ -225,7 +245,7 @@ class RestClient implements Client
     public function listInvoices(bool $pendingOnly = false): array
     {
         $url = '/v1/invoices/{pending_only}';
-        $url = str_replace('{pending_only}', $pendingOnly ? "true" : "false", $url);
+        $url = str_replace('{pending_only}', $pendingOnly ? 'true' : 'false', $url);
 
         $body = $this->get($url);
         return array_map(function($f) {return Invoice::fromResponse($f);}, $body['invoices'] ?? []);
@@ -304,11 +324,5 @@ class RestClient implements Client
     {
         $body = $this->get('/v1/transactions');
         return array_map(function($f) {return Transaction::fromResponse($f);}, $body['transactions'] ?? []);
-    }
-
-    public function sendCoins(SendCoinsRequest $body): string
-    {
-        $body = $this->post('/v1/transactions', $body);
-        return $body['txid'];
     }
 }

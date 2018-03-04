@@ -24,6 +24,8 @@ class Payment
      * @var string
      */
     protected $fee;
+    /** @var string  */
+    private $paymentPreImage;
 
     public function getPaymentHash(): string
     {
@@ -47,11 +49,17 @@ class Payment
     {
         return $this->path;
     }
+
     public function getFee(): string
     {
         return $this->fee;
     }
-    
+
+    public function getPaymentPreImage(): string
+    {
+        return $this->paymentPreImage;
+    }
+
     /**
      * Payment constructor.
      * @param string $paymentHash
@@ -60,13 +68,14 @@ class Payment
      * @param string[] $path
      * @param string $fee
      */
-    public function __construct(string $paymentHash, string $value, string $creationDate, array $path, string $fee)
+    public function __construct(string $paymentHash, string $value, string $creationDate, array $path, string $fee, string $paymentPreImage)
     {
         $this->paymentHash = $paymentHash;
         $this->value = $value;
         $this->creationDate = $creationDate;
         $this->path = $path;
         $this->fee = $fee;
+        $this->paymentPreImage = $paymentPreImage;
     }
     
     public static function fromResponse(array $data): self
@@ -76,7 +85,8 @@ class Payment
             $data['value'],
             $data['creation_date'],
             $data['path'],
-            $data['fee']
+            $data['fee'],
+            $data['payment_preimage']
         );
     }
 }
