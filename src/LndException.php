@@ -14,6 +14,7 @@ use GuzzleHttp\Exception\BadResponseException;
 class LndException extends \Exception
 {
     const SEND_COINS_EXCEPTION = 1000;
+    const INVALID_PARAMETER_TARGET_CONF = 2001;
 
     public function __construct(string $message, int $code, \Exception $previous = null)
     {

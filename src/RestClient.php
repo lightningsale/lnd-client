@@ -17,9 +17,9 @@ use LightningSale\LndClient\Model\ChannelEdge;
 use LightningSale\LndClient\Model\ChannelGraph;
 use LightningSale\LndClient\Model\GetInfoResponse;
 use LightningSale\LndClient\Model\CloseStatusUpdate;
-use LightningSale\LndClient\Model\SendResponse;
 use LightningSale\LndClient\Model\PendingChannelResponse;
 use LightningSale\LndClient\Model\ChannelPoint;
+use LightningSale\LndClient\Model\SendCoinsResponse;
 use LightningSale\LndClient\Model\Transaction;
 use LightningSale\LndClient\Model\WalletBalanceResponse;
 use Psr\Log\LoggerInterface;
@@ -44,10 +44,11 @@ class RestClient implements Client
     private function post(string $uri, $json): array
     {
         try {
-            $tmpData = json_encode($json);
+            $tmpData = $json;
             if (isset($tmpData['password']))
-                $tmpData['password'] = "*** PASSWORD ***";
-            $this->logger->debug("LndClient Request (post)", [
+                $tmpData['password'] = '*** PASSWORD ***';
+
+            $this->logger->debug('LndClient Request (post)', [
                 'uri' => $uri,
                 'json' => $tmpData
             ]);
@@ -55,7 +56,7 @@ class RestClient implements Client
             $body = \GuzzleHttp\json_decode($response->getBody(), true);
             return $body;
         } catch (BadResponseException $exception) {
-            $this->logger->critical("LndClient Error", ['exception' => $exception]);
+            $this->logger->critical('LndClient Error', ['exception' => $exception]);
             throw LndException::fromGuzzle($exception);
         }
     }
@@ -63,24 +64,24 @@ class RestClient implements Client
     private function get(string $uri, array $queryParams = []): array
     {
         try {
-            $this->logger->info("LndClient Request (Get)", ['uri' => $uri]);
+            $this->logger->info('LndClient Request (Get)', ['uri' => $uri]);
             $response = $this->httpClient->get($uri, ['query' => $queryParams]);
             $body = \GuzzleHttp\json_decode($response->getBody(), true);
             return $body;
         } catch (BadResponseException $exception) {
-            $this->logger->critical("LndClient Error", ['exception' => $exception]);
+            $this->logger->critical('LndClient Error', ['exception' => $exception]);
             throw LndException::fromGuzzle($exception);
         }
     }
 
     private function delete(string $uri, array $queryParams = []){
         try {
-            $this->logger->info("LndClient Request (Delete)", ['uri' => $uri]);
+            $this->logger->info('LndClient Request (Delete)', ['uri' => $uri]);
             $response = $this->httpClient->delete($uri,['query' => $queryParams]);
             $body = \GuzzleHttp\json_decode($response->getBody(), true);
             return $body;
         } catch (BadResponseException $exception) {
-            $this->logger->critical("LndClient Error", ['exception' => $exception]);
+            $this->logger->critical('LndClient Error', ['exception' => $exception]);
             throw LndException::fromGuzzle($exception);
         }
     }
@@ -144,7 +145,7 @@ class RestClient implements Client
         return ChannelPoint::fromResponse($body);
     }
 
-    public function closeChannel(string $fundingTxid, string $outputIndex, bool $force = false, ? int $targetConf = 5,? int $satPrByte = null): CloseStatusUpdate
+    public function closeChannel(string $fundingTxid, string $outputIndex, ? bool $force = false, ? int $targetConf = 5,? int $satPrByte = null): CloseStatusUpdate
     {
         $url = '/v1/channels/{funding_txid}/{output_index}';
         $url = str_replace('{funding_txid}', urlencode($fundingTxid), $url);
@@ -154,7 +155,7 @@ class RestClient implements Client
         if ($force) $query['force'] = $force;
         if ($targetConf && !$satPrByte) $query['target_conf'] = $targetConf;
         if (!$targetConf && $satPrByte) $query['sat_per_byte'] = $satPrByte;
-        if ($targetConf && $satPrByte) throw new LndException("You must specify either 'targetConf' or 'satPrByte', not both!");
+        if ($targetConf && $satPrByte) throw new LndException("You must specify either 'targetConf' or 'satPrByte', not both!", LndException::INVALID_PARAMETER_TARGET_CONF);
 
         $body = $this->delete($url, $query);
         return CloseStatusUpdate::fromResponse($body);
@@ -247,17 +248,13 @@ class RestClient implements Client
     /** @return Invoice[] */
     public function listInvoices(bool $pendingOnly = false): array
     {
-        $url = '/v1/invoices/{pending_only}';
-        $url = str_replace('{pending_only}', $pendingOnly ? 'true' : 'false', $url);
-
-        $body = $this->get($url);
+        $body = $this->get('/v1/invoices', ['pending_only' => $pendingOnly]);
         return array_map(function($f) {return Invoice::fromResponse($f);}, $body['invoices'] ?? []);
     }
 
-    public function lookupInvoice(string $rHashStr): Invoice
+    public function lookupInvoice(string $rHash): Invoice
     {
-        $url = '/v1/invoices/{r_hash_str}';
-        $url = str_replace('{r_hash_str}', urlencode($rHashStr), $url);
+        $url = '/v1/invoice/' . base64_encode($rHash);
 
         $body = $this->get($url);
         return Invoice::fromResponse($body);

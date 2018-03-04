@@ -53,7 +53,7 @@ interface Client
 
     public function sendPayment(string $paymentRequest): SendCoinsResponse;
 
-    public function closeChannel(string $fundingTxid, string $outputIndex, bool $force = false): CloseStatusUpdate;
+    public function closeChannel(string $fundingTxid, string $outputIndex, ?bool $force = false): CloseStatusUpdate;
 
     public function updateChannelPolicy(string $baseFeeMsat, int $feeRate, int $timeLockDelta, ?ChannelPoint $channelPoint = null);
 

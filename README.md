@@ -5,11 +5,6 @@
 - An Async Rest Client using Proxy Objects (http://ocramius.github.io/ProxyManager/)
 - An Async gRPC client using Proxy Objects? (Or by default?)
 
-### Known issues for the Rest Client:
-- `closeChannel` doesn't work
-  - No support for force closing a channel at this time
-- `lookupInvoice` doesn't work 
-
 ### How to use:
 
 `composer require lightningsale\lnd-client`
