@@ -106,4 +106,6 @@ interface Client
      * @return Transaction[]
      */
     public function getTransactions(): array;
+
+    public function sendCoins(string $addr, string $amount,? int $targetConf = 0, ? string $satPrByte = ''): string;
 }

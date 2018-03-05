@@ -325,4 +325,24 @@ class RestClient implements Client
         $body = $this->get('/v1/transactions');
         return array_map(function($f) {return Transaction::fromResponse($f);}, $body['transactions'] ?? []);
     }
+
+    public function sendCoins(string $addr, string $amount,? int $targetConf = 0, ? string $satPrByte = ''): string
+    {
+        $json = [
+            'addr' => $addr,
+            'amount' => $amount,
+        ];
+
+        if ($targetConf !== null)
+            $json['target_conf'] = $targetConf;
+
+        if ($satPrByte !== null)
+            $json['sat_per_byte'] = $satPrByte;
+
+        $body = $this->post('/v1/transactions', $json);
+
+        return $body['txid'];
+    }
+
+
 }
