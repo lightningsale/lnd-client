@@ -2,6 +2,8 @@
 
 namespace LightningSale\LndClient\Model\PendingChannels;
 
+use LightningSale\LndClient\Model\PendingHTLC;
+
 class ForceClosingChannel
 {
     /**
