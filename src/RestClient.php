@@ -254,7 +254,7 @@ class RestClient implements Client
 
     public function lookupInvoice(string $rHash): Invoice
     {
-        $url = '/v1/invoice/' . base64_encode($rHash);
+        $url = '/v1/invoice/' . $rHash;
 
         $body = $this->get($url);
         return Invoice::fromResponse($body);
