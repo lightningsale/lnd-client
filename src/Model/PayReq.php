@@ -29,11 +29,11 @@ class PayReq
      */
     protected $description;
     /**
-     * @var string
+     * @var string|null
      */
     protected $descriptionHash;
     /**
-     * @var string
+     * @var string|null
      */
     protected $fallbackAddr;
     /**
@@ -71,12 +71,12 @@ class PayReq
         return $this->description;
     }
 
-    public function getDescriptionHash(): string
+    public function getDescriptionHash(): ?string
     {
         return $this->descriptionHash;
     }
 
-    public function getFallbackAddr(): string
+    public function getFallbackAddr(): ?string
     {
         return $this->fallbackAddr;
     }
@@ -109,8 +109,8 @@ class PayReq
             $body['timestamp'],
             $body['expiry'],
             $body['description'],
-            $body['description_hash'],
-            $body['fallback_addr'],
+            $body['description_hash'] ?? "",
+            $body['fallback_addr'] ?? "",
             $body['cltv_expiry']
         );
     }
