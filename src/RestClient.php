@@ -64,7 +64,7 @@ class RestClient implements Client
     private function get(string $uri, array $queryParams = []): array
     {
         try {
-            $this->logger->info('LndClient Request (Get)', ['uri' => $uri]);
+            $this->logger->info('LndClient Request (Get) ' . $uri, ['uri' => $uri]);
             $response = $this->httpClient->get($uri, ['query' => $queryParams]);
             $body = \GuzzleHttp\json_decode($response->getBody(), true);
             return $body;
