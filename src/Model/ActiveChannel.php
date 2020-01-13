@@ -68,6 +68,14 @@ class ActiveChannel
      * @var int
      */
     protected $csvDelay;
+    /**
+     * @var string
+     */
+    protected $localChanReservSat;
+    /**
+     * @var string
+     */
+    protected $remoteChanReservSat;    
 
     public function isActive(): bool
     {
@@ -162,7 +170,17 @@ class ActiveChannel
         return $this->csvDelay;
     }
 
-    public function __construct(bool $active, string $remotePubkey, string $channelPoint, string $chanId, string $capacity, string $localBalance, string $remoteBalance, string $commitFee, string $commitWeight, string $feePerKw, string $unsettledBalance, string $totalSatoshisSent, string $totalSatoshisReceived, string $numUpdates, array $pendingHtlcs, int $csvDelay)
+    public function getLocalChanReservSat()
+    {
+        return $this->localChanReservSat;
+    }
+
+    public function getRemoteChanReservSat()
+    {
+        return $this->remoteChanReservSat;
+    }
+
+    public function __construct(bool $active, string $remotePubkey, string $channelPoint, string $chanId, string $capacity, string $localBalance, string $remoteBalance, string $commitFee, string $commitWeight, string $feePerKw, string $unsettledBalance, string $totalSatoshisSent, string $totalSatoshisReceived, string $numUpdates, array $pendingHtlcs, int $csvDelay, string $localChanReservSat, string $remoteChanReservSat)
     {
         $this->active = $active;
         $this->remotePubkey = $remotePubkey;
@@ -180,6 +198,8 @@ class ActiveChannel
         $this->numUpdates = $numUpdates;
         $this->pendingHtlcs = $pendingHtlcs;
         $this->csvDelay = $csvDelay;
+        $this->localChanReservSat = $localChanReservSat;
+        $this->remoteChanReservSat = $remoteChanReservSat;
     }
 
 
@@ -201,7 +221,9 @@ class ActiveChannel
             $data['total_satoshis_received'] ?? 0,
             $data['num_updates'] ?? 0,
             array_map(function($f) {return HTLC::fromResponse($f);},$data['pending_htlcs'] ?? []),
-            $data['csv_delay']
+            $data['csv_delay'],
+            $data['local_chan_reserve_sat'],
+            $data['remote_chan_reserve_sat']
         );
     }
 
