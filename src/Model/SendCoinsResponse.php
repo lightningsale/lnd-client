@@ -14,43 +14,62 @@ use LightningSale\LndClient\LndException;
 class SendCoinsResponse
 {
     /**
-     * @var Route
+     * @var string
      */
-    private $paymentRoute;
+    protected $paymentPreimage;
     /**
      * @var string
      */
-    private $txid;
+    protected $paymentRoute;
+    /**
+     * @var string
+     */
+    protected $paymentHash;
+    /**
+     * @return string
+     */
+    public function getPaymentPreimage(): string
+    {
+        return bin2hex(base64_decode($this->paymentPreimage));
+    }
 
+    /**
+     * @var string
+     */
     public function getPaymentRoute(): Route
     {
         return $this->paymentRoute;
     }
 
-    public function getTxid(): string
+    /**
+     * @return string
+     */
+    public function getPaymentHash()
     {
-        return $this->txid;
+        return bin2hex(base64_decode($this->paymentHash));
     }
 
     /**
      * SendCoinsResponse constructor.
      */
-    public function __construct(string $txid, Route $paymentRoute)
+    public function __construct(string $paymentPreimage, Route $paymentRoute, string $paymentHash)
     {
-        $this->txid = $txid;
+        $this->paymentPreimage = $paymentPreimage;
         $this->paymentRoute = $paymentRoute;
+        $this->paymentHash = $paymentHash;
     }
 
-    public static function fromResponse(array $body): self {
-
-        $error = $body['payment_error']?? '';
+    public static function fromResponse(array $body): SendCoinsResponse
+    {
+        $error = $body['payment_error'] ?? '';
 
         if ($error)
-            throw new LndException('Could not send coins!', LndException::SEND_COINS_EXCEPTION);
+            throw new LndException($body['payment_error'], LndException::SEND_COINS_EXCEPTION);
 
         return new self(
-            $body['txid'],
-            Route::fromResponse($body['payment_route'])
+            $body['payment_preimage'],
+            Route::fromResponse($body['payment_route']),
+            $body['payment_hash'] ?? ''
         );
     }
 }

@@ -31,15 +31,15 @@ class PayReq
     /**
      * @var string
      */
-    protected $descriptionHash;
-    /**
-     * @var string
-     */
-    protected $fallbackAddr;
-    /**
-     * @var string
-     */
     protected $cltvExpiry;
+    /**
+     * @var string
+     */
+    protected $paymentAddr;
+    /**
+     * @var string
+     */
+    protected $numMSat;
 
     public function getDestination(): string
     {
@@ -61,7 +61,7 @@ class PayReq
         return $this->timestamp;
     }
 
-    public function getExpiry(): string
+    public function getExpiry(): \DateTime
     {
         return $this->expiry;
     }
@@ -71,22 +71,22 @@ class PayReq
         return $this->description;
     }
 
-    public function getDescriptionHash(): string
-    {
-        return $this->descriptionHash;
-    }
-
-    public function getFallbackAddr(): string
-    {
-        return $this->fallbackAddr;
-    }
-
     public function getCltvExpiry(): string
     {
         return $this->cltvExpiry;
     }
 
-    public function __construct(string $destination, string $paymentHash, string $numSatoshis, string $timestamp, string $expiry, string $description, string $descriptionHash, string $fallbackAddr, string $cltvExpiry)
+    public function getPaymentAddr()
+    {
+        return $this->paymentAddr;
+    }
+
+    public function getNumMSat()
+    {
+        return $this->numMSat;
+    }
+
+    public function __construct(string $destination, string $paymentHash, string $numSatoshis, string $timestamp, \DateTime $expiry, string $description, string $cltvExpiry, string $paymentAddr, string $numMSat)
     {
         $this->destination = $destination;
         $this->paymentHash = $paymentHash;
@@ -94,9 +94,9 @@ class PayReq
         $this->timestamp = $timestamp;
         $this->expiry = $expiry;
         $this->description = $description;
-        $this->descriptionHash = $descriptionHash;
-        $this->fallbackAddr = $fallbackAddr;
         $this->cltvExpiry = $cltvExpiry;
+        $this->paymentAddr = $paymentAddr;
+        $this->numMSat = $numMSat;
     }
 
 
@@ -107,11 +107,11 @@ class PayReq
             $body['payment_hash'],
             $body['num_satoshis'],
             $body['timestamp'],
-            $body['expiry'],
-            $body['description'],
-            $body['description_hash'],
-            $body['fallback_addr'],
-            $body['cltv_expiry']
+            \DateTime::createFromFormat("U", $body['timestamp'] + $body['expiry']),
+            $body['description'] ?? "",
+            $body['cltv_expiry'],
+            $body['payment_addr'],
+            $body['num_msat']
         );
     }
 }

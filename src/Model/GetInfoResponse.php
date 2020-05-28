@@ -147,8 +147,6 @@ class GetInfoResponse
 
     public static function fromResponse(array $data): GetInfoResponse
     {
-        $timestamp = $data['best_header_timestamp'];
-        $timestamp = new \DateTime("@$timestamp");
         return new self(
             $data['identity_pubkey'],
             $data['alias'] ?? "",
@@ -160,7 +158,7 @@ class GetInfoResponse
             $data['synced_to_chain'] ?? false,
             $data['testnet'] ?? false,
             $data['chains'] ?? [],
-            $timestamp,
+            new \DateTime('@' . $data['best_header_timestamp']),
             $data['uris']
         );
     }

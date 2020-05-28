@@ -119,7 +119,7 @@ class Invoice
 
     public function isExpired(): bool
     {
-        return !$this->expiry && $this->expiry < new \DateTime();
+        return $this->expiry < new \DateTime();
     }
 
     public function getFallbackAddr(): string
@@ -155,7 +155,7 @@ class Invoice
             $body['memo'] ?? "",
             $body['receipt'] ?? "",
             $body['r_preimage'],
-            base64_decode($body['r_hash']),
+            $body['r_hash'],
             $body['value'],
             $body['settled'] ?? false,
             \DateTime::createFromFormat("U", $body['creation_date']),

@@ -64,7 +64,7 @@ class RestClient implements Client
     private function get(string $uri, array $queryParams = []): array
     {
         try {
-            $this->logger->info('LndClient Request (Get)', ['uri' => $uri]);
+            $this->logger->info('LndClient Request (Get) ' . $uri, ['uri' => $uri]);
             $response = $this->httpClient->get($uri, ['query' => $queryParams]);
             $body = \GuzzleHttp\json_decode($response->getBody(), true);
             return $body;
@@ -254,7 +254,7 @@ class RestClient implements Client
 
     public function lookupInvoice(string $rHash): Invoice
     {
-        $url = '/v1/invoice/' . base64_encode($rHash);
+        $url = '/v1/invoice/' . $rHash;
 
         $body = $this->get($url);
         return Invoice::fromResponse($body);
